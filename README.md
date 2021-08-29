@@ -20,6 +20,8 @@
 
 >`python manage.py migrate` - выполнение миграций
 
+>`python manage.py collectstatic` - сборка стандартных и подготовленных статических файлов
+
 >`python manage.py createsuperuser` - создание супер-пользователя
 
 >`python manage.py runserver 0.0.0.0:3333` - запуск проекта на порту 3333 (доступ http://localhost:3333)
