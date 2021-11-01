@@ -20,6 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# Секретный ключ из настроек переменных окружения, иначе иначе из default
 SECRET_KEY = os.environ.get('SECRET_KEY', default='yp@cq+i8hq^nta7i_)a-')
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -60,7 +61,11 @@ ROOT_URLCONF = 'library.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            # Добавление шаблонов из корневой директории templates
+            os.path.join(BASE_DIR, 'templates')
+        ],
+        # Поиск шаблонов будет вестись по установленным приложениям (APP_DIRS):
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,7 +98,6 @@ DATABASES = {
         'PORT': os.environ.get('SQL_PORT', default='5432'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -146,4 +150,29 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Пользовательская модель авторизации:
 AUTH_USER_MODEL = 'authors.Author'
+
+if DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        # Вывод запросов к бд в консоль
+        'loggers': {
+            'django.db.backends': {
+                'level': 'DEBUG',
+                'handlers': ['console'],
+            },
+        },
+    }
+
+# Затирание переменных локальными настройками (если есть):
+try:
+    from .local_settings import *
+except ImportError:
+    pass
