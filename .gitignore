@@ -15,6 +15,7 @@
 **/mediafiles/
 
 # Переменные окружения, секреты
+local_settings
 #**/.env
 #**/.env.dev
 #**/.env.def.db
