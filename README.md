@@ -1,10 +1,18 @@
 # Django REST framework. Проект «Web-сервис для работы с TODO-заметками».
 
+## Стек технологий
+
+### Python
+> `django, djangorestframework, markdown, django-filter, django-cors-headers`
+
+### JavaScript
+> `React, npx, axios`
+
 ## Методы API проекта
 
->`/api/author/` - GET, POST, HEAD, OPTIONS - в зависимости от метода запроса - вывод всех пользователей, создание пользователя и т.д.
+>`/api/users/` - GET, POST, HEAD, OPTIONS - в зависимости от метода запроса - вывод всех пользователей, создание пользователя и т.д.
 
->`/api/author/<int:pk>` - GET, PUT, PATCH, DELETE, HEAD, OPTIONS - в зависимости от метода запроса - вывод пользователя по id, редактирование, удаление и т.д.
+>`/api/users/<int:pk>` - GET, PUT, PATCH, DELETE, HEAD, OPTIONS - в зависимости от метода запроса - вывод пользователя по id, редактирование, удаление и т.д.
 
 ## Консольные команды в рамках проекта для запуска моих скриптов:
 
@@ -26,7 +34,7 @@
 
 >`django-admin startproject library` - создание проекта "Библиотека"
 
->`python manage.py startapp authors` - создание приложения "Авторы"
+>`python manage.py startapp users` - создание приложения "Авторы"
 
 >`python manage.py makemigrations` - создание миграций, необходимо после создания/обновления моделей
 
@@ -42,7 +50,10 @@
 
 ### Консольные команды (JavaScript, NodeJS, npx, React)
 
->`npx create-react-app frontend` - создание проекта на React, `npx` - режим одноразового запуска. 
+>`npx create-react-app frontend` - создание/установка проекта на React, `npx` - режим одноразового запуска. 
+
+>`npm run start` - запуск фронтенд проекта, выполнять в корне фронта (в данном случае в каталоге frontend)
+
 
 
 ### Консольные команды для Docker-compose: 
