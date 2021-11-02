@@ -1,10 +1,10 @@
 from rest_framework.serializers import HyperlinkedModelSerializer
-from .models import Author
+from .models import User
 
 
-class AuthorModelSerializer(HyperlinkedModelSerializer):
+class UserModelSerializer(HyperlinkedModelSerializer):
     """Сериализация модели пользователя Автор"""
     class Meta:
-        model = Author
+        model = User
         fields = ('username', 'first_name', 'last_name', 'middle_name',
                   'email', 'birthdate')
