@@ -1,8 +1,13 @@
 import React from "react";
-import './App.css';
-import UsersList from './Users';
+
 import axios from 'axios';
 
+import './App.css';
+import UsersList from './components/Users/Users';
+import Header from "./components/Header/Header";
+import Footer from "./components/Footer/Footer";
+
+// Применение архитектуры One Way Data Flow
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -27,7 +32,11 @@ class App extends React.Component {
 
     render() {
         return (
-            <div><UsersList users={this.state.users}/></div>
+            <div>
+                <Header/>
+                <UsersList users={this.state.users}/>
+                <Footer/>
+            </div>
         )
     }
 }
