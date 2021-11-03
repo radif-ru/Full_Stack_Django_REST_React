@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
-    # Работа с заголовками для доступа React к Django
+    # Настройка политики CORS. Работа с заголовками для доступа React к Django
     'corsheaders',
 
     'users.apps.AuthorsConfig',
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # Работа с заголовками для доступа React к Django
+    # Настройка политики CORS. Работа с заголовками для доступа React к Django
     'corsheaders.middleware.CorsMiddleware',
 
     'django.middleware.common.CommonMiddleware',
@@ -62,6 +62,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'library.urls'
 
+# Настройка политики CORS - доступ с другого домена/порта
 # Работа с заголовками для доступа React к Django, разрешенные адреса
 # CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOWED_ORIGINS = [
