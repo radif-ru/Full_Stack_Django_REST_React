@@ -6,7 +6,7 @@
 > `django, djangorestframework, markdown, django-filter, django-cors-headers`
 
 ### JavaScript
-> `React, npx, axios`
+> `npx, create-react-app (среда на React + Babel, Webpack и др. полезные зависимости), axios`
 
 ## Методы API проекта
 
@@ -50,7 +50,7 @@
 
 ### Консольные команды (JavaScript, NodeJS, npx, React)
 
->`npx create-react-app frontend` - создание/установка проекта на React, `npx` - режим одноразового запуска. 
+>`npx create-react-app frontend` - создание/установка проекта на React + Babel, webpack и другие полезные зависимости для комфортной работы, `npx` - режим одноразового запуска, пакет для запуска пакетов без установки в систему.
 
 >`npm run start` - запуск фронтенд проекта, выполнять в корне фронта (в данном случае в каталоге frontend)
 
