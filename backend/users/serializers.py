@@ -8,6 +8,22 @@ from .models import User
 
 class UserModelSerializer(serializers.ModelSerializer):
     """Сериализация модели пользователя"""
+    password = serializers.CharField(
+        max_length=128, write_only=True, allow_blank=False)
+
+    def create(self, *args, **kwargs):
+        user = super().create(*args, **kwargs)
+        password = user.password
+        user.set_password(password)
+        user.save()
+        return user
+
+    def update(self, *args, **kwargs):
+        user = super().update(*args, **kwargs)
+        password = user.password
+        user.set_password(password)
+        user.save()
+        return user
 
     def validate(self, attrs):
         # Разница дней между текущей датой и ДР
@@ -21,5 +37,5 @@ class UserModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'middle_name',
-                  'email', 'birthdate')
+        fields = ('id', 'username', 'first_name', 'last_name', 'middle_name',
+                  'email', 'birthdate', 'password')
