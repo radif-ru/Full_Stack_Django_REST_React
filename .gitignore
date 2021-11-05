@@ -15,7 +15,8 @@
 **/mediafiles/
 
 # Переменные окружения, секреты
-local_settings
+**/local_settings
+**/local_settings.py
 #**/.env
 #**/.env.dev
 #**/.env.def.db
@@ -62,4 +63,3 @@ local_settings
 **/venv38
 **/venv_3_9
 **/venv39
-
