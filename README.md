@@ -2,10 +2,10 @@
 
 ## Стек технологий
 
-### Python
+### Python 3.10
 > `django, djangorestframework, markdown, django-filter, django-cors-headers`
 
-### JavaScript
+### JavaScript, Node.js
 > `npx, create-react-app (среда на React + Babel, Webpack и др. полезные зависимости), axios`
 
 ## Методы API проекта
@@ -32,9 +32,9 @@
 
 >`pip list` - удобное отображение всех установленных приложений, библиотек
 
->`django-admin startproject library` - создание проекта "Библиотека"
+>`django-admin startproject config` - создание проекта 'config'
 
->`python manage.py startapp users` - создание приложения "Авторы"
+>`python manage.py startapp users` - создание приложения 'Пользователи'
 
 >`python manage.py makemigrations` - создание миграций, необходимо после создания/обновления моделей
 
