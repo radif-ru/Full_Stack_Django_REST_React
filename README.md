@@ -3,16 +3,46 @@
 ## Стек технологий
 
 ### Python 3.10
-> `django, djangorestframework, markdown, django-filter, django-cors-headers`
+> `django` - Django framework
+> 
+> `djangorestframework` - Django REST framework
+> 
+> `markdown` - язык разметки
+> 
+> `django-filter` - фильтрация запросов
+> 
+> `django-cors-headers` - Настройка политики CORS. Работа с заголовками для доступа React к Django
+> 
+> `djangorestframework-camel-case` - Визуализация в верблюжий стиль для отображения JSON и браузерного API. И наоборот в змеиный стиль для питона
 
 ### JavaScript, Node.js
-> `npx, create-react-app (среда на React + Babel, Webpack и др. полезные зависимости), axios`
+> `npx` - режим одноразового запуска, пакет для запуска пакетов без установки в систему.
+> 
+> `create-react-app` создание/установка проекта на `React` + `Babel`, `Webpack` и другие полезные зависимости для комфортной работы
+> 
+> `axios` - библиотека для браузеров и Node.js, HTTP-клиент
 
-## Методы API проекта
+## Web-ресурсы
+
+>`/admin/` - админка
+
+## Методы API проекта, Endpoint-ы 
+
+>`/api/auth/login/` - Авторизация пользователя
+
+>`/api/auth/logout/` - Деавторизация пользователя
 
 >`/api/users/` - GET, POST, HEAD, OPTIONS - в зависимости от метода запроса - вывод всех пользователей, создание пользователя и т.д.
 
 >`/api/users/<int:pk>` - GET, PUT, PATCH, DELETE, HEAD, OPTIONS - в зависимости от метода запроса - вывод пользователя по id, редактирование, удаление и т.д.
+
+>`/api/projects/` - GET, POST, HEAD, OPTIONS - список проектов, создание проекта
+
+>`/api/projects/<int:pk>` - GET, PUT, PATCH, DELETE, HEAD, OPTIONS - вывод, редактирование, удаление проекта
+
+>`/api/todos/` - GET, POST, HEAD, OPTIONS - список заметок, создание заметки
+
+>`/api/todos/<int:pk>` - GET, PUT, PATCH, DELETE, HEAD, OPTIONS - вывод, редактирование, удаление заметки
 
 ## Консольные команды в рамках проекта для запуска моих скриптов:
 
