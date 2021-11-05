@@ -13,7 +13,7 @@ class User(AbstractUser):
         verbose_name='электронная почта', blank=True, unique=True)
 
     birthdate = models.DateField(
-        max_length=8, verbose_name='Дата рождения', blank=True, null=True)
+        max_length=8, verbose_name='дата рождения', blank=True, null=True)
 
     def __str__(self):
         return f'{self.username}'
