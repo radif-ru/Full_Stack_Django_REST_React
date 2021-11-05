@@ -7,8 +7,7 @@ class Project(models.Model):
     """Модель проекта, для которого записаны заметки"""
     name = models.CharField(
         verbose_name='название', max_length=64, blank=False, unique=True)
-    repository = models.URLField(
-        name='url', verbose_name='url-адрес', max_length=200)
+    repository = models.URLField(verbose_name='url-адрес', max_length=200)
     users = models.ManyToManyField(User, verbose_name='работают с проектом')
 
     def __str__(self):
@@ -21,7 +20,7 @@ class Project(models.Model):
 
 
 class Todo(models.Model):
-    """Модель заметок"""
+    """Модель заметки"""
     project = models.ForeignKey(
         Project, verbose_name='проект', on_delete=models.CASCADE)
     user = models.ForeignKey(
