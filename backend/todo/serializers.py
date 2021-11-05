@@ -3,19 +3,18 @@ from rest_framework import serializers
 from todo.models import Project, Todo
 
 
-class ProjectModelSerializer(serializers.ModelSerializer):
+class ProjectModelSerializer(serializers.HyperlinkedModelSerializer):
     """Сериализация модели проектов"""
-    users = serializers.StringRelatedField(many=True)
+    # users = serializers.StringRelatedField(many=True)
+    # users = UserModelSerializer(many=True)
 
     class Meta:
         model = Project
         fields = '__all__'
 
 
-class TodoModelSerializer(serializers.ModelSerializer):
+class TodoModelSerializer(serializers.HyperlinkedModelSerializer):
     """Сериализация модели заметок"""
-    user = serializers.StringRelatedField()
-    project = serializers.StringRelatedField()
 
     class Meta:
         model = Todo
