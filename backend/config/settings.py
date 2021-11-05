@@ -164,7 +164,34 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Пользовательская модель авторизации:
 AUTH_USER_MODEL = 'users.User'
 
+# Глобальные настрой рендеринга
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        # Верблюжий стиль для отображения JSON и браузерного API
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+        'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
+        # 'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': (
+        # If you use MultiPartFormParser or FormParser,
+        # we also have a camel case version
+        'djangorestframework_camel_case.parser.CamelCaseFormParser',
+        'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
+        # Any other parsers
+    ),
+}
+
 if DEBUG:
+    # API в браузере
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
+    # Стиль удобного администрирования в браузере
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
+        'rest_framework.renderers.AdminRenderer'
+    )
+    # Логирование
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
