@@ -1,9 +1,21 @@
 from djangorestframework_camel_case.render import CamelCaseJSONRenderer, \
     CamelCaseBrowsableAPIRenderer
-from rest_framework.renderers import AdminRenderer
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
 from .models import Todo, Project
 from .serializers import TodoModelSerializer, ProjectModelSerializer
+
+
+# Кастомизация пагинатора заметок
+class TodoPageNumberPagination(PageNumberPagination):
+    # По умолчанию вывод 2 пользователей
+    page_size = 20
+
+
+# Кастомизация пагинатора проектов
+class ProjectPageNumberPagination(PageNumberPagination):
+    # По умолчанию вывод 2 пользователей
+    page_size = 10
 
 
 class TodoModelViewSet(ModelViewSet):
@@ -14,6 +26,7 @@ class TodoModelViewSet(ModelViewSet):
     )
     queryset = Todo.objects.all()
     serializer_class = TodoModelSerializer
+    pagination_class = TodoPageNumberPagination
 
 
 class ProjectModelViewSet(ModelViewSet):
@@ -24,3 +37,4 @@ class ProjectModelViewSet(ModelViewSet):
     )
     queryset = Project.objects.all()
     serializer_class = ProjectModelSerializer
+    pagination_class = ProjectPageNumberPagination
