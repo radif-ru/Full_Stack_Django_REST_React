@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'rest_framework',
     # Настройка политики CORS. Работа с заголовками для доступа React к Django
     'corsheaders',
+    # Библиотека для фильтрации запросов
+    'django_filters',
 
     'users.apps.UsersConfig',
     'todo.apps.TodoConfig',
@@ -164,14 +166,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Пользовательская модель авторизации:
 AUTH_USER_MODEL = 'users.User'
 
-# Глобальные настрой рендеринга
+# Глобальные настройки DRF
+# Каждые из них можно настроить индивидуально - приоритет будет выше!:
 REST_FRAMEWORK = {
+    # Настройки рендеринга
     'DEFAULT_RENDERER_CLASSES': [
         # Верблюжий стиль для отображения JSON и браузерного API
         'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
         'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
         # 'rest_framework.renderers.JSONRenderer',
     ],
+    # Настройки парсеров
     'DEFAULT_PARSER_CLASSES': (
         # If you use MultiPartFormParser or FormParser,
         # we also have a camel case version
@@ -180,6 +185,13 @@ REST_FRAMEWORK = {
         'djangorestframework_camel_case.parser.CamelCaseJSONParser',
         # Any other parsers
     ),
+    # Библиотека для фильтрации запросов
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'],
+    # Настройки пагинации
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 3
 }
 
 if DEBUG:
