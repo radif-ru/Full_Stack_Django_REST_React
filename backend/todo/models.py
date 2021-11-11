@@ -28,8 +28,8 @@ class Todo(models.Model):
     text = models.TextField(
         verbose_name='текст', max_length=999, blank=False)
     active = models.BooleanField(verbose_name='активность', default=True)
-    created = models.DateTimeField(verbose_name='создана', auto_now_add=True)
-    updated = models.DateTimeField(verbose_name='обновлена', auto_now=True)
+    created = models.DateTimeField(verbose_name='дата создания', auto_now_add=True)
+    updated = models.DateTimeField(verbose_name='дата обновления', auto_now=True)
 
     def __str__(self):
         return f'{self.project}, обновлен - {self.updated}, ' \
