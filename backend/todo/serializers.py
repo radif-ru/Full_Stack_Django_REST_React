@@ -18,4 +18,4 @@ class TodoModelSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Todo
-        exclude = ('active', 'created', 'updated')
+        exclude = ('active',)
