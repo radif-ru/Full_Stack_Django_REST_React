@@ -191,7 +191,7 @@ REST_FRAMEWORK = {
     # Настройки пагинации
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 3
+    'PAGE_SIZE': 100
 }
 
 if DEBUG:
