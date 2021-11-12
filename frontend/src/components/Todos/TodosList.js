@@ -3,7 +3,7 @@ import {TodoItem} from "./TodoItem";
 
 export class TodosList extends PureComponent {
   render() {
-    const {todos} = this.props
+    const {todos, projects} = this.props
 
     return (
       <div>
@@ -11,9 +11,6 @@ export class TodosList extends PureComponent {
         <table className='table'>
           <thead>
           <tr>
-            <th>
-              Url
-            </th>
             <th>
               Text
             </th>
@@ -29,7 +26,7 @@ export class TodosList extends PureComponent {
           </tr>
           </thead>
           <tbody>
-          {todos.map((todo, idx) =><TodoItem key={idx} todo={todo}/>)}
+          {todos.map((todo, idx) =><TodoItem key={idx} todo={todo} projects={projects}/>)}
           </tbody>
         </table>
       </div>

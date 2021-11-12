@@ -1,29 +1,28 @@
 import {PureComponent} from "react";
+import {Link} from "react-router-dom";
+import dateFormat from "dateformat";
 
 export class TodoItem extends PureComponent {
+
   render() {
-    const {todo} = this.props;
+
+    let {todo, projects} = this.props;
 
     return (
       <tr>
         <td>
-          <a target='_blank' rel='noreferrer' href={todo.url}>
-            {todo.url}
-          </a>
-        </td>
-        <td>
           {todo.text}
         </td>
         <td>
-          <a target='_blank' rel='noreferrer' href={todo.project}>
-            {todo.project}
-          </a>
+          <Link to={`/projects/${todo.project}`}>
+            {projects.filter((project) => project.id === todo.project)[0].name}
+          </Link>
         </td>
         <td>
-          {todo.created}
+          {dateFormat(todo.created, 'dddd, mmmm dS, yyyy, h:MM:ss TT')}
         </td>
         <td>
-          {todo.updated}
+          {dateFormat(todo.updated, 'dddd, mmmm dS, yyyy, h:MM:ss TT')}
         </td>
       </tr>
     )
