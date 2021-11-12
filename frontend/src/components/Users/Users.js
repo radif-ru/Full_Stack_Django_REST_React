@@ -15,15 +15,18 @@ export class Users extends PureComponent {
   }
 
   componentDidMount() {
+    this.upd_users_state(50);
+  }
+
+  upd_users_state(limit = 100, offset = 0) {
     axios
-      .get('http://localhost:3333/api/users/?limit=100&offset=0/')
+      .get(`http://localhost:3333/api/users/?limit=${limit}&offset=${offset}/`)
       .then(response => {
         const users = response.data;
         this.setState(
           {
             'users': users.results
-          }
-        );
+          })
       })
       .catch(error => console.log(error));
   }

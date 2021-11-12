@@ -14,15 +14,18 @@ export class Todos extends PureComponent {
   }
 
   componentDidMount() {
+    this.upd_todos_state();
+  }
+
+  upd_todos_state() {
     axios
-      .get('http://localhost:3333/api/todos/')
+      .get(`http://localhost:3333/api/todos/`)
       .then(response => {
         const todos = response.data;
         this.setState(
           {
             'todos': todos.results
-          }
-        );
+          })
       })
       .catch(error => console.log(error));
   }

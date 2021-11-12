@@ -15,6 +15,10 @@ export class Projects extends PureComponent {
   }
 
   componentDidMount() {
+    this.upd_projects_state()
+  }
+
+  upd_projects_state() {
     axios
       .get('http://localhost:3333/api/projects/')
       .then(response => {
