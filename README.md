@@ -21,12 +21,24 @@
 > `create-react-app` Создание/установка проекта на `React` + `Babel`, `Webpack` и другие полезные зависимости для комфортной работы
 > 
 > `axios` - Библиотека для браузеров и Node.js, HTTP-клиент
+> 
+> `react-router-dom` - Маршрутизация `<BrowserRouter>` и `<HashRouter>`.
 
-## Web-ресурсы
+## Frontend. SPA. Точка входа http://localhost:3000/.
+
+> `/` - Single Page Application - вход в приложение, дальше перемещение по всем компонентам с помощью меню, без перезагрузки страницы
+>
+> `/#/users` - подгрузка компонента Пользователи
+>
+> `/#/projects `- подгрузка компонента Проекты
+> 
+> `/#/todos` - подгрузка компонента Заметки
+
+## Backend. Точка входа http://localhost:3333/. Web-ресурсы
 
 > `/admin/` - админка
 
-## Методы API проекта, Endpoint-ы 
+## Backend. Точка входа http://localhost:3333/. Методы API проекта, Endpoint-ы 
 
 > `/api/auth/login/` - Авторизация пользователя
 
@@ -73,7 +85,7 @@
 
 # Полезные команды:
 
-### Консольные команды (Python, Django, DRF)
+### Консольные команды Backend-а (Python, Django, DRF)
 
 > `python venv env` - создание виртуального окружения
 
@@ -101,7 +113,7 @@
 
 > `python manage.py runserver 0.0.0.0:3333` - запуск проекта на порту 3333 (доступ http://localhost:3333)
 
-### Консольные команды (JavaScript, NodeJS, npx, React)
+### Консольные команды Frontend-а (JavaScript, NodeJS, npx, React)
 
 > `npx create-react-app frontend` - создание/установка проекта на React + Babel, webpack и другие полезные зависимости для комфортной работы, `npx` - режим одноразового запуска, пакет для запуска пакетов без установки в систему.
 
