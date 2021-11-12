@@ -5,7 +5,7 @@ import {ProjectItem} from "./ProjectItem";
 
 export class ProjectsList extends PureComponent {
   render() {
-    const {projects} = this.props
+    const {projects, users} = this.props
 
     return (
       <div>
@@ -13,9 +13,6 @@ export class ProjectsList extends PureComponent {
         <table className='table'>
           <thead>
           <tr>
-            <th>
-              Url
-            </th>
             <th>
               Name
             </th>
@@ -29,7 +26,7 @@ export class ProjectsList extends PureComponent {
           </thead>
           <tbody>
           {projects.map((project, idx) =>
-            <ProjectItem key={idx} project={project}/>)}
+            <ProjectItem key={idx} project={project} users={users}/>)}
           </tbody>
         </table>
       </div>

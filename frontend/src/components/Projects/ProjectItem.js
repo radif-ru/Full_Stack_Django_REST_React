@@ -1,13 +1,10 @@
-export const ProjectItem = ({project}) => {
+import {Link} from "react-router-dom";
+
+export const ProjectItem = ({project, users}) => {
   return (
     <tr>
       <td>
-        <a target='_blank' rel='noreferrer' href={project.url}>
-          {project.url}
-        </a>
-      </td>
-      <td>
-        {project.name}
+        <Link to={`/projects/${project.id}`}>{project.name}</Link>
       </td>
       <td>
         <a target='_blank' rel='noreferrer' href={project.repository}>
@@ -16,7 +13,10 @@ export const ProjectItem = ({project}) => {
       </td>
       <td>
         {project.users.map((user, idx) => <p key={idx}>
-          <a target='_blank' rel='noreferrer' href={user}>{user}</a></p>)}
+          <Link to={`/users/${user}`}>
+            {users.filter((user_data) => user_data.id === user)[0].username}
+          </Link>
+        </p>)}
       </td>
     </tr>
   )
