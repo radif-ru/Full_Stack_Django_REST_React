@@ -6,11 +6,15 @@ export class UsersList extends PureComponent {
     const {users} = this.props
 
     return (
+
       <div>
         <h3>Users</h3>
         <table className='table'>
           <thead>
           <tr>
+            <th>
+              Login
+            </th>
             <th>
               First name
             </th>
