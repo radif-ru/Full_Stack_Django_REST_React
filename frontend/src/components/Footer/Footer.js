@@ -1,6 +1,6 @@
-import React, {PureComponent} from 'react';
-
 import './Footer.css'
+
+import React, {PureComponent} from 'react';
 
 import logo from './logo.svg';
 

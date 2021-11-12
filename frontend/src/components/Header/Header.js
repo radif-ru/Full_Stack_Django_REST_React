@@ -1,6 +1,6 @@
-import React, {PureComponent} from 'react';
-
 import './Header.css'
+
+import React, {PureComponent} from 'react';
 
 import {Link} from "react-router-dom";
 
