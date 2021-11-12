@@ -1,23 +1,33 @@
-import React from "react";
+import React, {PureComponent} from 'react';
+
+import './Header.css'
+import {Link} from "react-router-dom";
 
 const Menu = () => {
     return (
-        <nav className="menu">
+        <nav className='menu'>
             <ul>
-                <li><a href="#1">Начало</a></li>
-                <li><a href="#2">Середина</a></li>
-                <li><a href="#3">Конец</a></li>
+                {/*Якоря (были раньше):*/}
+                <li>
+                    <Link to='/users'>Пользователи</Link>
+                </li>
+                <li>
+                    <Link to='/projects'>Проекты</Link>
+                </li>
+                <li>
+                    <Link to='/todos'>Заметки</Link>
+                </li>
             </ul>
         </nav>
     )
 }
 
-const Header = () => {
-    return (
-        <header id={1}>
-            <Menu/>
-        </header>
-    )
+export class Header extends PureComponent {
+    render() {
+        return (
+            <header>
+                <Menu/>
+            </header>
+        )
+    }
 }
-
-export default Header;

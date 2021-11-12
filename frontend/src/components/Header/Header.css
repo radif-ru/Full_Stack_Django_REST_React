@@ -1,0 +1,22 @@
+/*Стили Header*/
+.menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.menu ul li {
+    display: inline-block;
+}
+
+.menu a {
+    text-decoration: none;
+    color: salmon;
+    border: 2px salmon solid;
+    padding: 5px;
+    margin: 5px
+}
+
+.menu a:hover {
+    color: crimson;
+    background: gainsboro;
+}
