@@ -1,54 +1,38 @@
-import React from "react";
+import React, {PureComponent} from 'react';
+import axios from "axios";
 
-const UserItem = ({user}) => {
-    return (
-        <tr>
-            <td>
-                {user.first_name}
-            </td>
-            <td>
-                {user.last_name}
-            </td>
-            <td>
-                {user.middle_name}
-            </td>
-            <td>
-                {user.email}
-            </td>
-            <td>
-                {user.birthdate}
-            </td>
-        </tr>
-    )
+import './Users.css'
+
+import {UsersList} from "./UsersList";
+
+
+export class Users extends PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            'users': [],
+        }
+    }
+
+    componentDidMount() {
+        axios
+            .get('http://localhost:3333/api/users/?limit=100&offset=0/')
+            .then(response => {
+                const users = response.data;
+                this.setState(
+                    {
+                        'users': users.results
+                    }
+                );
+            })
+            .catch(error => console.log(error));
+    }
+
+    render() {
+        return (
+            <div>
+                <UsersList users={this.state.users}/>
+            </div>
+        )
+    }
 }
-
-const UsersList = ({users}) => {
-    return (
-        <table id={2}>
-            <thead>
-            <tr>
-                <th>
-                    First name
-                </th>
-                <th>
-                    Last name
-                </th>
-                <th>
-                    Middle name
-                </th>
-                <th>
-                    Email
-                </th>
-                <th>
-                    Birthdate
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            {users.map((user) => <UserItem user={user}/>)}
-            </tbody>
-        </table>
-    )
-}
-
-export default UsersList;
