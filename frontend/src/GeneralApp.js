@@ -21,73 +21,63 @@ export class GeneralApp extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.upd_projects_state();
-    this.upd_users_state(50);
-    this.upd_todos_state();
+  async componentDidMount() {
+    try {
+      const users = await this.get_users_data(50);
+      const projects = await this.het_projects_data();
+      const todos = await this.get_todos_data();
+
+      this.setState({
+        'users': users.data.results,
+        'projects': projects.data.results,
+        'todos': todos.data.results
+      })
+    } catch (error) {
+      console.log(`Ошибка запроса данных: ${error}`)
+      alert(`Ошибка запроса данных: ${error}`)
+    }
 
   }
 
-  upd_projects_state() {
-    axios
-      .get('http://localhost:3333/api/projects/')
-      .then(response => {
-        const projects = response.data;
-        this.setState(
-          {
-            'projects': projects.results
-          }
-        );
-      })
-      .catch(error => console.log(error));
+
+  get_users_data(limit = 100, offset = 0) {
+    return axios.get(`http://localhost:3333/api/users/?limit=${limit}&offset=${offset}/`)
   }
 
-  upd_users_state(limit = 100, offset = 0) {
-    axios
-      .get(`http://localhost:3333/api/users/?limit=${limit}&offset=${offset}/`)
-      .then(response => {
-        const users = response.data;
-        this.setState(
-          {
-            'users': users.results
-          })
-      })
-      .catch(error => console.log(error));
+  het_projects_data() {
+    return axios.get('http://localhost:3333/api/projects/')
   }
 
-  upd_todos_state() {
-    axios
-      .get(`http://localhost:3333/api/todos/`)
-      .then(response => {
-        const todos = response.data;
-        this.setState(
-          {
-            'todos': todos.results
-          })
-      })
-      .catch(error => console.log(error));
+  get_todos_data() {
+    return axios.get(`http://localhost:3333/api/todos/`)
   }
 
   render() {
     const {users, projects, todos} = this.state
 
+    console.log(this.state)
+
     return (
       <BrowserRouter>
-        <Header/>
-        <Routes>
-          <Route exact path='/users' element={<Users users={users}/>}/>
-          <Route exact path='/users/:id'
-                 element={<UserPage users={users}/>}/>
-          <Route exact path='/projects'
-                 element={<Projects projects={projects} users={users}/>}/>
-          <Route exact path='/projects/:id'
-                 element={<ProjectPage projects={projects} users={users}
-                                       todos={todos}/>}/>
-          <Route exact path='/todos'
-                 element={<Todos todos={todos} projects={projects}/>}/>
-          <Route exact path='/' element={<Navigate to='/users'/>}/>
-          <Route path='*' element={<NotFound404/>}/>
-        </Routes>
+        <div className="content">
+          <Header/>
+          <div className='main-content'>
+            <Routes>
+              <Route exact path='/users' element={<Users users={users}/>}/>
+              <Route exact path='/users/:id'
+                     element={<UserPage users={users}/>}/>
+              <Route exact path='/projects'
+                     element={<Projects projects={projects} users={users}/>}/>
+              <Route exact path='/projects/:id'
+                     element={<ProjectPage projects={projects} users={users}
+                                           todos={todos}/>}/>
+              <Route exact path='/todos'
+                     element={<Todos todos={todos} projects={projects}/>}/>
+              <Route exact path='/' element={<Navigate to='/todos'/>}/>
+              <Route path='*' element={<NotFound404/>}/>
+            </Routes>
+          </div>
+        </div>
         <Footer/>
       </BrowserRouter>
     )
