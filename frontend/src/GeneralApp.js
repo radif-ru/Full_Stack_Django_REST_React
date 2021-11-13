@@ -39,7 +39,6 @@ export class GeneralApp extends React.Component {
 
   }
 
-
   get_users_data(limit = 100, offset = 0) {
     return axios.get(`http://localhost:3333/api/users/?limit=${limit}&offset=${offset}/`)
   }
@@ -54,8 +53,6 @@ export class GeneralApp extends React.Component {
 
   render() {
     const {users, projects, todos} = this.state
-
-    console.log(this.state)
 
     return (
       <BrowserRouter>

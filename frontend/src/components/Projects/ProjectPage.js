@@ -6,8 +6,8 @@ import dateFormat from "dateformat";
 export const ProjectPage = (props) => {
 
   const {id} = useParams();
-  let {projects, users, todos} = props
-  let project = projects.filter((project) => project.id.toString() === id)
+  const {projects, users, todos} = props
+  const project = projects.filter((project) => project.id.toString() === id)
   const noData = 'нет данных!'
 
   return (
