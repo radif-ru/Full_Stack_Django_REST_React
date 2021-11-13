@@ -3,28 +3,28 @@
 ## Стек технологий
 
 ### Python 3.10
-> `django` - Django framework
+> `django` (v. 3.2.9) - Django framework
 > 
-> `djangorestframework` - Django REST framework
+> `djangorestframework` (v. 3.12.4) - Django REST framework
 > 
-> `markdown` - Язык разметки
+> `markdown` (v. 3.3.4) - Язык разметки
 > 
-> `django-filter` - Библиотека для фильтрации запросов + визуализация в браузерном API
+> `django-filter` (v. 21.1) - Библиотека для фильтрации запросов + визуализация в браузерном API
 > 
-> `django-cors-headers` - Настройка политики CORS. Работа с заголовками для доступа React к Django
+> `django-cors-headers` (v. 3.10.0) - Настройка политики CORS. Работа с заголовками для доступа React к Django
 > 
-> `djangorestframework-camel-case` - Визуализация в верблюжий стиль для отображения JSON и браузерного API. И наоборот в змеиный стиль для питона
+> `djangorestframework-camel-case` (v. 1.2.0) - Визуализация в верблюжий стиль для отображения JSON и браузерного API. И наоборот в змеиный стиль для питона
 
 ### JavaScript, Node.js
 > `npx` - Режим одноразового запуска, пакет для запуска пакетов без установки в систему.
 > 
-> `create-react-app` Создание/установка проекта на `React` + `Babel`, `Webpack` и другие полезные зависимости для комфортной работы
+> `create-react-app` Создание/установка проекта на `React` (v. 17.0.2) + `Babel`, `Webpack` и другие полезные зависимости для комфортной работы
 > 
-> `axios` - Библиотека для браузеров и Node.js, HTTP-клиент
+> `axios` (v. 0.24.0)  - Библиотека для браузеров и Node.js, HTTP-клиент
 > 
-> `react-router-dom` - Маршрутизация `<BrowserRouter>` и `<HashRouter>`.
+> `react-router-dom` (v. 6.0.2) - Маршрутизация `<BrowserRouter>` и `<HashRouter>`.
 > 
-> `dateformat` - Преобразование даты
+> `dateformat` (v. 5.0.2) - Преобразование даты
 
 ## Frontend. SPA. Точка входа http://localhost:3000/.
 
@@ -125,6 +125,7 @@
 
 > `npm run start` - запуск фронтенд проекта, выполнять в корне фронта (в данном случае в каталоге frontend)
 
+> `npx react-codemod rename-unsafe-lifecycles` - переименовать все устаревшие жизненные циклы на их новые имена
 
 
 ### Консольные команды для Docker-compose: 
