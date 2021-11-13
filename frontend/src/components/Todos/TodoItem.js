@@ -7,6 +7,7 @@ export class TodoItem extends PureComponent {
   render() {
 
     let {todo, projects} = this.props;
+    let project_name = projects.filter((project) => project.id === todo.project)[0].name
 
     return (
       <tr>
@@ -15,7 +16,7 @@ export class TodoItem extends PureComponent {
         </td>
         <td>
           <Link to={`/projects/${todo.project}`}>
-            {projects.filter((project) => project.id === todo.project)[0].name}
+            {project_name}
           </Link>
         </td>
         <td>
