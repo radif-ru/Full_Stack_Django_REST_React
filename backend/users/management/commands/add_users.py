@@ -1,43 +1,21 @@
-import os
-
 from django.core.management.base import BaseCommand
 from django.db import OperationalError, ProgrammingError
 
+from scripts import load_from_json
 from users.models import User
 
 
 class Command(BaseCommand):
     help = 'Создание админа и пользователей'
-    users = [
-        {'name': 'olyalya',
-         'first_name': 'Olga',
-         'last_name': 'Buzova',
-         'middle_name': 'Kikabidze',
-         'email': 'olyalya@local.ru',
-         'birthdate': '1985-08-11',
-         'password': 'qwertytrewq'},
-        {'name': 'vas',
-         'first_name': 'Vasya',
-         'last_name': 'Petrov',
-         'middle_name': 'Nikolayevich',
-         'email': 'vasya@local.ru',
-         'birthdate': '1995-06-18',
-         'password': 'qwertytrewq'},
-        {'name': 'irik',
-         'first_name': 'Irina',
-         'last_name': 'Takayato',
-         'middle_name': 'Rotshildova',
-         'email': 'ira@local.ru',
-         'birthdate': '2005-06-26',
-         'password': 'qwertytrewq'}
-    ]
+    users = load_from_json('users')
 
     def handle(self, *args, **options):
         """Команды на выполнение"""
         self.create_admin()
         self.create_users(self.users)
 
-    def create_admin(self) -> None:
+    @staticmethod
+    def create_admin() -> None:
         """Создание супер-юзера"""
         try:
             if not User.objects.filter(username='radif'):
@@ -45,12 +23,11 @@ class Command(BaseCommand):
                     username='radif',
                     email='mail@radif.ru',
                     password='qwertytrewq')
-        except OperationalError or ProgrammingError:
-            self.migrate()
-            self.collect_static()
-            self.create_admin()
+        except OperationalError or ProgrammingError as error:
+            print(error)
 
-    def create_users(self, users: list[dict]) -> None:
+    @staticmethod
+    def create_users(users: list[dict]) -> None:
         """ Создание пользователей
         :param users: список словарей с данными пользователей
         """
@@ -65,17 +42,5 @@ class Command(BaseCommand):
                         email=user['email'],
                         birthdate=user['birthdate'],
                         password=user['password'])
-            except OperationalError or ProgrammingError:
-                self.create_admin()
-
-    @staticmethod
-    def migrate():
-        """Подготовка и выполнение миграций"""
-        os.system('python manage.py makemigrations --noinput')
-        os.system('python manage.py migrate --noinput')
-
-    @staticmethod
-    def collect_static():
-        """Сборка стандартных и подготовленных статических файлов"""
-        os.system('mkdir static')
-        os.system('python manage.py collectstatic --no-input --clear')
+            except OperationalError or ProgrammingError as error:
+                print(error)
