@@ -1,4 +1,5 @@
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.permissions import BasePermission
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
@@ -7,6 +8,7 @@ from djangorestframework_camel_case.render import CamelCaseJSONRenderer, \
     CamelCaseBrowsableAPIRenderer
 from django_filters import rest_framework as filters
 
+from config.settings import Roles
 from .models import Todo, Project
 from .serializers import TodoModelSerializer, ProjectModelSerializer
 
@@ -44,8 +46,36 @@ class TodoFilter(filters.FilterSet):
         fields = ['created', 'project', 'project__name']
 
 
+# Кастомизация прав для пользователя
+class TodoPermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.method == 'POST' or request.method == 'PUT' or \
+                request.method == 'PATCH':
+            if request.user.is_authenticated:
+                return request.user.roles.filter(
+                    role=Roles.DEVELOPER) or request.user.roles.filter(
+                    role=Roles.PROJECT_OWNER) or request.user.roles.filter(
+                    role=Roles.ADMINISTRATOR) or request.user.is_superuser
+            return False
+        return True
+
+
+# Кастомизация прав для пользователя
+class ProjectPermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.method == 'POST' or request.method == 'PUT' or \
+                request.method == 'PATCH':
+            if request.user.is_authenticated:
+                return request.user.roles.filter(
+                    role=Roles.PROJECT_OWNER) or request.user.roles.filter(
+                    role=Roles.ADMINISTRATOR) or request.user.is_superuser
+            return False
+        return True
+
+
 class TodoModelViewSet(ModelViewSet):
     """Набор представлений для модели заметок"""
+    permission_classes = [TodoPermission]
     renderer_classes = (
         # Верблюжий стиль JSON и браузерного API
         CamelCaseJSONRenderer, CamelCaseBrowsableAPIRenderer
@@ -71,6 +101,7 @@ class TodoModelViewSet(ModelViewSet):
 
 class ProjectModelViewSet(ModelViewSet):
     """Набор представлений для модели проектов"""
+    permission_classes = [ProjectPermission]
     renderer_classes = (
         # Верблюжий стиль JSON и браузерного API
         CamelCaseJSONRenderer, CamelCaseBrowsableAPIRenderer
