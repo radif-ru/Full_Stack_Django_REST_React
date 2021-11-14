@@ -8,7 +8,7 @@
     justify-content: center;
     z-index: 1000;
     bottom: 15px;
-    opacity: 0.8;
+    opacity: 0.6;
 }
 
 @media (prefers-reduced-motion: no-preference) {

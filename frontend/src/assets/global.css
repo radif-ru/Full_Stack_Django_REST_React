@@ -63,6 +63,7 @@ body {
 
 .table th, td {
     border: 2px solid #69c;
+    padding: 5px;
 }
 
 .table a {

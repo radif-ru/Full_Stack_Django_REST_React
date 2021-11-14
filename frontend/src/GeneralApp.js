@@ -23,9 +23,9 @@ export class GeneralApp extends React.Component {
 
   async componentDidMount() {
     try {
-      const users = await this.get_users_data(50);
-      const projects = await this.het_projects_data();
-      const todos = await this.get_todos_data();
+      const users = await this.get_users_promise(50);
+      const projects = await this.get_projects_promise();
+      const todos = await this.get_todos_promise();
 
       this.setState({
         'users': users.data.results,
@@ -33,21 +33,21 @@ export class GeneralApp extends React.Component {
         'todos': todos.data.results
       })
     } catch (error) {
-      console.log(`Ошибка запроса данных: ${error}`)
-      alert(`Ошибка запроса данных: ${error}`)
+      console.log(`Ошибка запроса данных: ${error}`);
+      alert(`Ошибка запроса данных: ${error}`);
     }
 
   }
 
-  get_users_data(limit = 100, offset = 0) {
+  get_users_promise(limit = 100, offset = 0) {
     return axios.get(`http://localhost:3333/api/users/?limit=${limit}&offset=${offset}/`)
   }
 
-  het_projects_data() {
+  get_projects_promise() {
     return axios.get('http://localhost:3333/api/projects/')
   }
 
-  get_todos_data() {
+  get_todos_promise() {
     return axios.get(`http://localhost:3333/api/todos/`)
   }
 
