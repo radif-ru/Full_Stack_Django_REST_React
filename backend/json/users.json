@@ -1,0 +1,29 @@
+[
+  {
+    "name": "olyalya",
+    "first_name": "Olga",
+    "last_name": "Buzova",
+    "middle_name": "Kikabidze",
+    "email": "olyalya@local.ru",
+    "birthdate": "1985-08-11",
+    "password": "qwertytrewq"
+  },
+  {
+    "name": "vas",
+    "first_name": "Vasya",
+    "last_name": "Petrov",
+    "middle_name": "Nikolayevich",
+    "email": "vasya@local.ru",
+    "birthdate": "1995-06-18",
+    "password": "qwertytrewq"
+  },
+  {
+    "name": "irik",
+    "first_name": "Irina",
+    "last_name": "Takayato",
+    "middle_name": "Rotshildova",
+    "email": "ira@local.ru",
+    "birthdate": "2005-06-26",
+    "password": "qwertytrewq"
+  }
+]
