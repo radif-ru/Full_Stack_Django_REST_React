@@ -1,4 +1,4 @@
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,15 +12,15 @@ from .serializers import TodoModelSerializer, ProjectModelSerializer
 
 
 # Кастомизация пагинатора заметок
-class TodoPageNumberPagination(PageNumberPagination):
-    # По умолчанию вывод 2 пользователей
-    page_size = 20
+class TodoLimitOffsetPagination(LimitOffsetPagination):
+    # По умолчанию вывод 20 заметок
+    default_limit = 20
 
 
 # Кастомизация пагинатора проектов
-class ProjectPageNumberPagination(PageNumberPagination):
-    # По умолчанию вывод 2 пользователей
-    page_size = 10
+class ProjectLimitOffsetPagination(LimitOffsetPagination):
+    # По умолчанию вывод 10 проектов
+    default_limit = 10
 
 
 # Кастомизация django-filter для Проектов
@@ -54,7 +54,7 @@ class TodoModelViewSet(ModelViewSet):
     queryset = Todo.objects.filter(active=1)
     serializer_class = TodoModelSerializer
     # Подключение кастомного пагинатора
-    pagination_class = TodoPageNumberPagination
+    pagination_class = TodoLimitOffsetPagination
 
     # Подключение кастомного фильтра django-filter
     filterset_class = TodoFilter
@@ -78,6 +78,6 @@ class ProjectModelViewSet(ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectModelSerializer
     # Подключение кастомного пагинатора
-    pagination_class = ProjectPageNumberPagination
+    pagination_class = ProjectLimitOffsetPagination
     # Подключение кастомного фильтра django-filter
     filterset_class = ProjectFilter

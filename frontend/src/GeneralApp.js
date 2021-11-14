@@ -23,9 +23,9 @@ export class GeneralApp extends React.Component {
 
   async componentDidMount() {
     try {
-      const users = await this.get_users_promise(50);
-      const projects = await this.get_projects_promise();
-      const todos = await this.get_todos_promise();
+      const users = await this.get_users_promise(33);
+      const projects = await this.get_projects_promise(33);
+      const todos = await this.get_todos_promise(99);
 
       this.setState({
         'users': users.data.results,
@@ -43,16 +43,17 @@ export class GeneralApp extends React.Component {
     return axios.get(`http://localhost:3333/api/users/?limit=${limit}&offset=${offset}/`)
   }
 
-  get_projects_promise() {
-    return axios.get('http://localhost:3333/api/projects/')
+  get_projects_promise(limit = 100, offset = 0) {
+    return axios.get(`http://localhost:3333/api/projects/?limit=${limit}&offset=${offset}/`)
   }
 
-  get_todos_promise() {
-    return axios.get(`http://localhost:3333/api/todos/`)
+  get_todos_promise(limit = 100, offset = 0) {
+    return axios.get(`http://localhost:3333/api/todos/?limit=${limit}&offset=${offset}/`)
   }
 
   render() {
     const {users, projects, todos} = this.state
+    console.log(users, projects, todos)
 
     return (
       <BrowserRouter>
