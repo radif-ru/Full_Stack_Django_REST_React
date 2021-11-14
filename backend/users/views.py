@@ -2,8 +2,6 @@ from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.mixins import ListModelMixin, UpdateModelMixin, \
     RetrieveModelMixin
-from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.permissions import BasePermission
 from rest_framework.renderers import AdminRenderer
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -11,41 +9,12 @@ from rest_framework.viewsets import GenericViewSet
 from djangorestframework_camel_case.render import CamelCaseJSONRenderer, \
     CamelCaseBrowsableAPIRenderer
 from django_filters.rest_framework import DjangoFilterBackend
-from django_filters import rest_framework as filters
 
-from config.settings import Roles
+from .filters import UserFilter
 from .models import User
+from .paginators import UserLimitOffsetPagination
+from .permissions import UserPermission
 from .serializers import UserModelSerializer
-
-
-# Кастомизация пагинатора пользователей
-class UserLimitOffsetPagination(LimitOffsetPagination):
-    # По умолчанию вывод 2 пользователей
-    default_limit = 2
-
-
-# Кастомизация django-filter для Пользователей
-class UserFilter(filters.FilterSet):
-    # Фильтрация по части имени, фамилии, отчества
-    first_name = filters.CharFilter(lookup_expr='contains')
-    last_name = filters.CharFilter(lookup_expr='contains')
-    middle_name = filters.CharFilter(lookup_expr='contains')
-
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'middle_name']
-
-
-# Кастомизация прав для пользователя
-class UserPermission(BasePermission):
-    def has_permission(self, request, view):
-        if request.method == 'POST' or request.method == 'PUT' or \
-                request.method == 'PATCH':
-            if request.user.is_authenticated:
-                return request.user.roles.filter(
-                    role=Roles.ADMINISTRATOR) or request.user.is_superuser
-            return False
-        return True
 
 
 class UserModelViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin,
