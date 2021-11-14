@@ -13,6 +13,8 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from Metaclases import IterAttrValues
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
@@ -41,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    # Авторизация по Токену
+    'rest_framework.authtoken',
     # Настройка политики CORS. Работа с заголовками для доступа React к Django
     'corsheaders',
     # Библиотека для фильтрации запросов
@@ -166,6 +170,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Пользовательская модель авторизации:
 AUTH_USER_MODEL = 'users.User'
 
+
+# Роли пользователей
+class Roles(metaclass=IterAttrValues):
+    ADMINISTRATOR = 'администратор'
+    DEVELOPER = 'разработчик'
+    PROJECT_OWNER = 'владелец проекта'
+
+
+JSON_PATH = 'json'
+
 # Глобальные настройки DRF
 # Каждые из них можно настроить индивидуально - приоритет будет выше!:
 REST_FRAMEWORK = {
@@ -191,7 +205,19 @@ REST_FRAMEWORK = {
     # Настройки пагинации
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 100
+    'PAGE_SIZE': 100,
+    # Права по умолчанию для всего проекта
+    'DEFAULT_PERMISSION_CLASSES': [
+        # Анонимные пользователи могут читать любые данные,
+        # остальные права зависят от групп и кастомных настроек
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ],
+    # Методы авторизации для всего проекта
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ],
 }
 
 if DEBUG:
