@@ -22,7 +22,7 @@ class Command(BaseCommand):
                 User.objects.create_superuser(
                     username='radif',
                     email='mail@radif.ru',
-                    password='qwertytrewq')
+                    password='qwertytrewq').roles.add(1)
         except OperationalError or ProgrammingError as error:
             print(error)
 
@@ -33,7 +33,7 @@ class Command(BaseCommand):
         """
         for user in users:
             try:
-                if not User.objects.filter(email=user['email']):
+                if not User.objects.filter(username=user['name']):
                     User.objects.create_user(
                         username=user['name'],
                         first_name=user['first_name'],
@@ -41,6 +41,6 @@ class Command(BaseCommand):
                         middle_name=user['middle_name'],
                         email=user['email'],
                         birthdate=user['birthdate'],
-                        password=user['password'])
+                        password=user['password']).roles.add(2)
             except OperationalError or ProgrammingError as error:
                 print(error)
