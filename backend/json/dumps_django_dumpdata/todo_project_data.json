@@ -1,0 +1,70 @@
+[
+  {
+    "model": "todo.project",
+    "pk": 2,
+    "fields": {
+      "name": "╩ЁєЄющ",
+      "repository": "https://github.com/radif-ru/Django_REST",
+      "users": [
+        1,
+        4,
+        2
+      ]
+    }
+  },
+  {
+    "model": "todo.project",
+    "pk": 3,
+    "fields": {
+      "name": "─Ёєующ",
+      "repository": "https://github.com/radif-ru/Desktop_Apps_Messenger_PyQt",
+      "users": [
+        2
+      ]
+    }
+  },
+  {
+    "model": "todo.project",
+    "pk": 4,
+    "fields": {
+      "name": "╤Єюя Є√щ",
+      "repository": "https://github.com/radif-ru/Python_Architecture_and_Design_patterns",
+      "users": [
+        3
+      ]
+    }
+  },
+  {
+    "model": "todo.project",
+    "pk": 5,
+    "fields": {
+      "name": "╤тхЄы√х ышъш",
+      "repository": "https://github.com/radif-ru/Django_optimization_tools",
+      "users": [
+        2
+      ]
+    }
+  },
+  {
+    "model": "todo.project",
+    "pk": 6,
+    "fields": {
+      "name": "┴рчют√щ тхъЄюЁ",
+      "repository": "https://github.com/radif-ru/JavaScriptProfessional-v2",
+      "users": [
+        4
+      ]
+    }
+  },
+  {
+    "model": "todo.project",
+    "pk": 7,
+    "fields": {
+      "name": "╬Ёурэшўхёъшщ ЄЁрЇшъ",
+      "repository": "https://github.com/radif-ru/reactjs-18.11",
+      "users": [
+        3
+      ]
+    }
+  }
+]

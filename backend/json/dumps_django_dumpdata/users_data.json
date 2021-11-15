@@ -1,0 +1,109 @@
+[
+  {
+    "model": "users.permissiongroups",
+    "pk": 1,
+    "fields": {
+      "role": "рфьшэшёЄЁрЄюЁ"
+    }
+  },
+  {
+    "model": "users.permissiongroups",
+    "pk": 2,
+    "fields": {
+      "role": "ЁрчЁрсюЄўшъ"
+    }
+  },
+  {
+    "model": "users.permissiongroups",
+    "pk": 3,
+    "fields": {
+      "role": "тырфхыхЎ яЁюхъЄр"
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$260000$ai4TrKdHKtMJBIF0cBuMI9$ZY30rhGq1vQUkLxh4W1ggJbKUo/JzmYyCI3HUfTW8Bs=",
+      "last_login": "2021-11-14T21:33:38.243Z",
+      "is_superuser": true,
+      "username": "radif",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2021-11-14T21:07:30.590Z",
+      "first_name": "",
+      "last_name": "",
+      "middle_name": "",
+      "email": "mail@radif.ru",
+      "birthdate": "1999-02-15",
+      "groups": [],
+      "user_permissions": [],
+      "roles": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$260000$Yv7w9Eem7LhAkAbe5V6x5r$O3OOuk3Rz/Q/3EVEu5VTvjDxjtg97NKptkOtPnpyafo=",
+      "last_login": "2021-11-14T21:32:46Z",
+      "is_superuser": false,
+      "username": "olyalya",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2021-11-14T21:07:31Z",
+      "first_name": "Olga",
+      "last_name": "Buzova",
+      "middle_name": "Kikabidze",
+      "email": "olyalya@local.ru",
+      "birthdate": "1985-08-11",
+      "groups": [],
+      "user_permissions": [],
+      "roles": [
+        2
+      ]
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$260000$fJUIQKve5ssn0BYTfdUjQY$a9cW2ZH7Q5AeHL1vRNRTS2mq73sijOrGfMajmZ+SAOQ=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "vas",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2021-11-14T21:07:31.710Z",
+      "first_name": "Vasya",
+      "last_name": "Petrov",
+      "middle_name": "Nikolayevich",
+      "email": "vasya@local.ru",
+      "birthdate": "1995-06-18",
+      "groups": [],
+      "user_permissions": [],
+      "roles": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$260000$xiJ4ktJ0KGVhIV92kpOWKe$oOIyW835pI2NT+kcdYo6Zej9JzmYSHrhB5JjCaNf/rs=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "irik",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2021-11-14T21:07:32.125Z",
+      "first_name": "Irina",
+      "last_name": "Takayato",
+      "middle_name": "Rotshildova",
+      "email": "ira@local.ru",
+      "birthdate": "2005-06-26",
+      "groups": [],
+      "user_permissions": [],
+      "roles": []
+    }
+  }
+]
