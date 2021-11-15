@@ -51,7 +51,7 @@ body {
 /* Прижатие footer вниз (стили footer находятся в папке с компонентом) */
 
 .main-content{
-    margin: 40px 1vh 0 1vh;
+    margin: 40px 2% 0 2%;
 }
 
 /* Стилизация таблиц */
