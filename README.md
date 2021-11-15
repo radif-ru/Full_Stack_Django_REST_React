@@ -89,11 +89,15 @@
 
 ## Консольные команды в рамках проекта для запуска моих скриптов:
 
-> `python manage.py add_data` - скрипт единой точки создания дефолтных данных
+> `python manage.py add_all_data` - скрипт единой точки создания дефолтных данных в БД
 
-> `python manage.py add_roles` - скрипт заполнения таблиц дефолтными группами прав, ролями
+> `python manage.py add_roles` - скрипт заполнения таблиц БД дефолтными группами прав, ролями
 
-> `python manage.py add_users` - скрипт заполнения таблиц дефолтным админом и пользователями
+> `python manage.py add_users` - скрипт заполнения таблиц БД дефолтным админом и пользователями. Так же админ добавляется в группу разрешений Администратор, остальные дефолтные пользователи в группу Разработчик. В группу Владелец проекта будут попадать те, кто будут создавать свои проекты
+
+> `python manage.py add_projects` - скрипт заполнения таблиц БД дефолтным проектами, те в свою очередь связываются с дефолтными пользователями, работающими с каждым проектом
+
+> `python manage.py add_todos` - скрипт заполнения таблиц БД дефолтным заметками, привязанными к конкретным проектам 
 
 # Полезные команды:
 
@@ -126,6 +130,18 @@
 > `python manage.py createsuperuser` - создание супер-пользователя
 
 > `python manage.py runserver 0.0.0.0:3333` - запуск проекта на порту 3333 (доступ http://localhost:3333)
+
+#### Работа с дампами БД. В проекте не использую, так как не поддерживается кириллица. Использую export БД в json файл от IDE Pycharm, дампы в каталоге `dumps_pycharm_export`
+
+> `python manage.py dumpdata --indent 2 --exclude auth.permission --exclude contenttypes > ./json/dumps_django_dumpdata/all_data.json` - Дамп всей БД, за исключением некоторых таблиц `--exclude auth.permission` и `--exclude contenttypes`, мешающих восстановлению БД из дампа. `--indent 2` - количество отступов в json файле
+> 
+> `python manage.py dumpdata users > ./json/dumps_django_dumpdata/users_data.json` - Дамп БД приложения `users`
+> 
+> `python manage.py dumpdata todo.project > ./json/dumps_django_dumpdata/todo_project_data.json` - Дамп БД конкретной таблицы модели `project` приложения `todo`
+> 
+> `python manage.py dumpdata todo.todo > ./json/dumps_django_dumpdata/todo_todo_data.json` - Дамп БД конкретной таблицы модели `todo` приложения `todo`
+> 
+> `python manage.py loaddata ./json/dumps_django_dumpdata/all_data.json` - импорт данных из дампа
 
 ### Консольные команды Frontend-а (JavaScript, NodeJS, npx, React)
 
