@@ -6,8 +6,9 @@ from users.models import User
 class Project(models.Model):
     """Модель проекта, для которого записаны заметки"""
     name = models.CharField(
-        verbose_name='название', max_length=64, blank=False, unique=True)
-    repository = models.URLField(verbose_name='url-адрес', max_length=200)
+        verbose_name='название', max_length=33, blank=False, unique=True)
+    repository = models.URLField(
+        verbose_name='репозиторий (url-адрес)', max_length=99)
     users = models.ManyToManyField(User, verbose_name='работают с проектом')
 
     def __str__(self):
@@ -26,7 +27,7 @@ class Todo(models.Model):
     user = models.ForeignKey(
         User, verbose_name='автор заметки', on_delete=models.CASCADE)
     text = models.TextField(
-        verbose_name='текст', max_length=999, blank=False)
+        verbose_name='текст', max_length=333, blank=False)
     active = models.BooleanField(verbose_name='активность', default=True)
     created = models.DateTimeField(verbose_name='дата создания',
                                    auto_now_add=True)
@@ -34,8 +35,8 @@ class Todo(models.Model):
                                    auto_now=True)
 
     def __str__(self):
-        return f'{self.project}, обновлен - {self.updated}, ' \
-               f'активный - {self.active}'
+        return f'{self.user} / {self.project} / {self.updated.ctime()} / ' \
+               f'{self.text}'
 
     class Meta:
         verbose_name = 'Заметка'
