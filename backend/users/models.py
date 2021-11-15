@@ -3,7 +3,7 @@ from django.db import models
 
 
 class PermissionGroups(models.Model):
-    role = models.CharField(verbose_name='роль', max_length=64, null=False,
+    role = models.CharField(verbose_name='роль', max_length=33, null=False,
                             unique=True)
 
     def __str__(self):
@@ -17,10 +17,10 @@ class PermissionGroups(models.Model):
 class User(AbstractUser):
     """Модель пользователя"""
     first_name = models.CharField(
-        verbose_name='имя', max_length=64, blank=True)
+        verbose_name='имя', max_length=44, blank=True)
     last_name = models.CharField(
-        verbose_name='фамилия', max_length=64, blank=True)
-    middle_name = models.CharField('отчество', max_length=150, blank=True)
+        verbose_name='фамилия', max_length=55, blank=True)
+    middle_name = models.CharField('отчество', max_length=66, blank=True)
     email = models.EmailField(
         verbose_name='электронная почта', blank=True, unique=True)
 
