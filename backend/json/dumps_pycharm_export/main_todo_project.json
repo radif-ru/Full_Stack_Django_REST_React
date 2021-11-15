@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Крутой",
+    "repository": "https://github.com/radif-ru/Django_REST"
+  },
+  {
+    "id": 2,
+    "name": "Другой",
+    "repository": "https://github.com/radif-ru/Desktop_Apps_Messenger_PyQt"
+  },
+  {
+    "id": 3,
+    "name": "Стопятый",
+    "repository": "https://github.com/radif-ru/Python_Architecture_and_Design_patterns"
+  },
+  {
+    "id": 4,
+    "name": "Светлые лики",
+    "repository": "https://github.com/radif-ru/Django_optimization_tools"
+  },
+  {
+    "id": 5,
+    "name": "Базовый вектор",
+    "repository": "https://github.com/radif-ru/JavaScriptProfessional-v2"
+  },
+  {
+    "id": 6,
+    "name": "Органический трафик",
+    "repository": "https://github.com/radif-ru/reactjs-18.11"
+  }
+]

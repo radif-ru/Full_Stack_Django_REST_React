@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "password": "pbkdf2_sha256$260000$ai4TrKdHKtMJBIF0cBuMI9$ZY30rhGq1vQUkLxh4W1ggJbKUo/JzmYyCI3HUfTW8Bs=",
+    "last_login": "2021-11-14 21:33:38.243404",
+    "is_superuser": 1,
+    "username": "radif",
+    "is_staff": 1,
+    "is_active": 1,
+    "date_joined": "2021-11-14 21:07:30.590174",
+    "first_name": "",
+    "last_name": "",
+    "email": "mail@radif.ru",
+    "birthdate": "",
+    "middle_name": ""
+  },
+  {
+    "id": 2,
+    "password": "pbkdf2_sha256$260000$Yv7w9Eem7LhAkAbe5V6x5r$O3OOuk3Rz/Q/3EVEu5VTvjDxjtg97NKptkOtPnpyafo=",
+    "last_login": "2021-11-14 21:32:46",
+    "is_superuser": 0,
+    "username": "olyalya",
+    "is_staff": 0,
+    "is_active": 1,
+    "date_joined": "2021-11-14 21:07:31",
+    "first_name": "Olga",
+    "last_name": "Buzova",
+    "email": "olyalya@local.ru",
+    "birthdate": "1985-08-11",
+    "middle_name": "Kikabidze"
+  },
+  {
+    "id": 3,
+    "password": "pbkdf2_sha256$260000$fJUIQKve5ssn0BYTfdUjQY$a9cW2ZH7Q5AeHL1vRNRTS2mq73sijOrGfMajmZ+SAOQ=",
+    "last_login": null,
+    "is_superuser": 0,
+    "username": "vas",
+    "is_staff": 0,
+    "is_active": 1,
+    "date_joined": "2021-11-14 21:07:31.710895",
+    "first_name": "Vasya",
+    "last_name": "Petrov",
+    "email": "vasya@local.ru",
+    "birthdate": "1995-06-18",
+    "middle_name": "Nikolayevich"
+  },
+  {
+    "id": 4,
+    "password": "pbkdf2_sha256$260000$xiJ4ktJ0KGVhIV92kpOWKe$oOIyW835pI2NT+kcdYo6Zej9JzmYSHrhB5JjCaNf/rs=",
+    "last_login": null,
+    "is_superuser": 0,
+    "username": "irik",
+    "is_staff": 0,
+    "is_active": 1,
+    "date_joined": "2021-11-14 21:07:32.125607",
+    "first_name": "Irina",
+    "last_name": "Takayato",
+    "email": "ira@local.ru",
+    "birthdate": "2005-06-26",
+    "middle_name": "Rotshildova"
+  }
+]
