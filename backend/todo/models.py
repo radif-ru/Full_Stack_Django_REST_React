@@ -41,5 +41,5 @@ class Todo(models.Model):
     class Meta:
         verbose_name = 'Заметка'
         verbose_name_plural = 'Заметки'
-        ordering = ['active', 'updated', 'project']
+        ordering = ['active', '-updated', 'project']
         unique_together = (('user', 'text'),)

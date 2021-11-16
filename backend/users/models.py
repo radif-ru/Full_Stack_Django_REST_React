@@ -12,6 +12,7 @@ class PermissionGroups(models.Model):
     class Meta:
         verbose_name = 'группа разрешений'
         verbose_name_plural = 'группы разрешений'
+        ordering = ['id']
 
 
 class User(AbstractUser):
