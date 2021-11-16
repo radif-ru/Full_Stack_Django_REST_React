@@ -14,11 +14,14 @@ class Command(BaseCommand):
         self.add_groups(self.roles)
 
     @staticmethod
-    def add_groups(roles: iter):
+    def add_groups(roles: iter) -> None:
+        """ Создание группы зависимостей
+        :param roles: роли для группы зависимостей
+        """
         try:
             permission_groups_objs = PermissionGroups.objects
             for role in roles:
                 if not permission_groups_objs.filter(role=role):
                     permission_groups_objs.create(role=role)
         except OperationalError or ProgrammingError as error:
-            print(error)
+            print(f'\n{error}\n')

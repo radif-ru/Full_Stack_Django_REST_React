@@ -16,12 +16,12 @@ class Command(BaseCommand):
         self.migrate()
         self.collect_static()
 
-        AddRoles.add_groups(AddRoles.roles)
+        AddRoles.add_groups(roles=AddRoles.roles)
         AddUsers.create_admin()
-        AddUsers.create_users(AddUsers.users)
+        AddUsers.create_users(users=AddUsers.users)
 
-        AddProjects.add_projects(AddProjects.projects)
-        AddTodos.add_todos(AddTodos.todos)
+        AddProjects.add_projects(projects=AddProjects.projects)
+        AddTodos.add_todos(todos=AddTodos.todos)
 
     @staticmethod
     def migrate():
