@@ -35,15 +35,24 @@
     display: inline-block;
 }
 
-.menu a {
+.menu-link{
     text-decoration: none;
     color: salmon;
     border: 2px salmon solid;
     padding: 5px;
-    margin: 5px
+    margin: 5px;
+    cursor: pointer;
 }
 
-.menu a:hover {
+.menu-link:hover {
     color: crimson;
     background: gainsboro;
+}
+
+.menu-login {
+    border: 2px salmon dashed;
+}
+
+.menu-logout {
+    border: 2px #f5351f dashed;
 }
