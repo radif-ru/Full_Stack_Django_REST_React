@@ -2,7 +2,6 @@ import {Link, useParams} from "react-router-dom";
 import dateFormat from "dateformat";
 
 
-
 export const ProjectPage = (props) => {
 
   const {id} = useParams();
@@ -26,22 +25,24 @@ export const ProjectPage = (props) => {
               {users.filter((user_data) => user_data.id === user)[0].username}
             </Link>
           , </span>)}
-        </span></p>
+        </span></p><br/><br/>
 
-        <p>Заметки к проекту: <span className='project-data'><br/>
-          {todos.filter((todo) => todo.project === data.id).map((todo, idx) =>
-            <span key={idx}>
-              <span><span className='comment'>{todo.text}</span> от пользователя </span>
-              <Link to={`/users/${todo.user}`}>
-                {users.filter((user) => user.id === todo.user)[0].username}
-              </Link><span>. </span>
-              <span>Оставлен: <span
-                className='datetime'>{dateFormat(todo.created, 'dddd, mmmm dS, yyyy, h:MM:ss TT')}, </span> </span>
-              <span>обновлен: <span className='datetime'>{dateFormat(todo.updated, 'dddd, mmmm dS, yyyy, h:MM:ss TT')}</span> </span><br/>
-            </span>)}
+        <h3>Заметки к проекту: </h3><br/>
+        {todos.filter((todo) => todo.project === data.id).map((todo, idx) =>
+          <div key={idx}>
+            <p className='comment'>{todo.text}</p>
+
+            <div className='comment-info'><span> От пользователя </span>
+            <Link to={`/users/${todo.user}`}>
+              {users.filter((user) => user.id === todo.user)[0].username}
+            </Link><span>. </span>
+            <span>Создан: <span
+              className='datetime'>{dateFormat(todo.created, 'dddd, mmmm dS, yyyy, h:MM:ss TT')}. </span></span>
+            <span>Обновлён: <span
+              className='datetime'>{dateFormat(todo.updated, 'dddd, mmmm dS, yyyy, h:MM:ss TT')}</span></span></div><br/><br/>
+          </div>)}
 
 
-            </span></p>
       </div>)}
     </div>
   )

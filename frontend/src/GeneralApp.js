@@ -53,7 +53,6 @@ export class GeneralApp extends React.Component {
 
   render() {
     const {users, projects, todos} = this.state
-    console.log(users, projects, todos)
 
     return (
       <BrowserRouter>

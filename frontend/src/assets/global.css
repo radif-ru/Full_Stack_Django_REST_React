@@ -25,11 +25,16 @@ code {
     padding: 0;
 }
 
+
 html,
 body {
     height: 100%;
 
     background: lightgrey;
+}
+
+body {
+    overflow-y: scroll;
 }
 
 .wrapper, #root {
@@ -48,9 +53,10 @@ body {
 .content {
     flex: 1 0 auto;
 }
+
 /* Прижатие footer вниз (стили footer находятся в папке с компонентом) */
 
-.main-content{
+.main-content {
     margin: 40px 2% 0 2%;
 }
 
@@ -74,6 +80,7 @@ body {
 .table a:hover {
     color: red;
 }
+
 /* Стилизация таблиц */
 
 /* Кастомные стили. Стили компонентов расположены в их каталогах */
