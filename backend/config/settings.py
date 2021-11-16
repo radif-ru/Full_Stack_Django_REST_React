@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'corsheaders',
     # Библиотека для фильтрации запросов
     'django_filters',
+    # Библиотека JSON Web Token
+    'rest_framework_simplejwt',
 
     'users.apps.UsersConfig',
     'todo.apps.TodoConfig',
@@ -214,21 +216,28 @@ REST_FRAMEWORK = {
     ],
     # Методы авторизации для всего проекта
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+        # Аутентификация с помощью JSON токенов JWT. Наиболее безопасная
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
 
 if DEBUG:
-    # API в браузере
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].extend([
+        # API в браузере
         'rest_framework.renderers.BrowsableAPIRenderer',
-    )
-    # Стиль удобного администрирования в браузере
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append(
-        'rest_framework.renderers.AdminRenderer'
-    )
+        # Стиль удобного администрирования в браузере
+        'rest_framework.renderers.AdminRenderer',
+    ])
+    # Методы авторизации для всего проекта
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'].extend([
+        # Базовая аутентификация Django REST по HTTP. Не безопасно!
+        # 'rest_framework.authentication.BasicAuthentication',
+        # Аутентификация Django REST, позволяет хранить сессии для работы в
+        # браузере с API
+        'rest_framework.authentication.SessionAuthentication',
+        # Аутентификация Django REST с помощью токенов
+        # 'rest_framework.authentication.TokenAuthentication',
+    ])
     # Логирование
     LOGGING = {
         'version': 1,
