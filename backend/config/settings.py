@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import datetime
 import os
 from pathlib import Path
 
@@ -220,6 +221,17 @@ REST_FRAMEWORK = {
         # Аутентификация с помощью JSON токенов JWT. Наиболее безопасная
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+}
+
+# Настройка JWT
+JWT_AUTH = {
+    # Срок действия исходного токена
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=22),
+    # Разрешить обновление токенов
+    'JWT_ALLOW_REFRESH': True,
+    # Максимальное время в течении которого можно обновить токен, после выдачи
+    # При истечении срока действия обновление невозможно
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=33),
 }
 
 if DEBUG:
