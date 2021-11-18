@@ -1,6 +1,9 @@
 # IntellijIdea files
 **/.idea
 
+# Карты сгенерированные препроцессорами (в моём случае Sass)
+**/*css.map
+
 # Генерируемые PyTest данные
 **/.coverage
 
