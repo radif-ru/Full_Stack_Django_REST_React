@@ -1,7 +1,8 @@
 .user {
-    color: #1d5a08;
+  color: #1d5a08;
+}
+.user .user-data {
+  font-weight: bold;
 }
 
-.user-data {
-    font-weight: bold;
-}
+/*# sourceMappingURL=Users.css.map */

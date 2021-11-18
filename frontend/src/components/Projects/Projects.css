@@ -1,28 +1,30 @@
-.project a {
-    text-decoration: none;
-    color: #003366;
-    font-weight: bold;
+.project-page a {
+  text-decoration: none;
+  color: #003366;
+  font-weight: bold;
+}
+.project-page a:hover {
+  color: #009926;
+}
+.project-page .project-data {
+  font-weight: bold;
+  color: #761c19;
+}
+.project-page .comment {
+  font-size: 1.2em;
+  color: #1d5a08;
+}
+.project-page .comment-info {
+  font-size: 0.9em;
+}
+.project-page .comment-info .comment-user {
+  font-size: 1.3em;
+  padding-right: 0.5em;
+}
+.project-page .comment-info .comment-datetime {
+  color: #5a626c;
+  font-weight: bold;
+  padding-right: 0.5em;
 }
 
-.project a:hover {
-    color: #009926;
-}
-
-.project-data {
-    font-weight: bold;
-    color: #761c19;
-}
-
-.comment {
-    font-size: 1.2em;
-    color: #1d5a08;
-}
-
-.comment-info {
-    font-size: 0.9em;
-}
-
-.datetime {
-    color: #5a626c;
-    font-weight: bold;
-}
+/*# sourceMappingURL=Projects.css.map */
