@@ -32,7 +32,7 @@ class Todo(models.Model):
     created = models.DateTimeField(verbose_name='дата создания',
                                    auto_now_add=True)
     updated = models.DateTimeField(verbose_name='дата обновления',
-                                   auto_now=True)
+                                   auto_now=True, null=True, blank=True)
 
     def __str__(self):
         return f'{self.user} / {self.project} / {self.updated.ctime()} / ' \
