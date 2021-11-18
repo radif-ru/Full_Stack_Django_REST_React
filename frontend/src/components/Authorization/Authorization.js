@@ -1,3 +1,5 @@
+import './Authorization.css'
+
 import React from "react";
 
 
@@ -17,7 +19,7 @@ export class LoginForm extends React.Component {
   }
 
   handleSubmit(event) {
-    this.props.get_token(this.state.login, this.state.password)
+    this.props.auth(this.state.login, this.state.password)
     this.setState({
       'login': '',
       'password': ''
@@ -27,14 +29,28 @@ export class LoginForm extends React.Component {
 
   render() {
     return (
-      <form onSubmit={(event => this.handleSubmit(event))}>
-        <input type='text' name='login' placeholder='логин'
-               value={this.state.login}
-               onChange={(event => this.handleChange(event))}/>
-        <input type='password' name='password' placeholder='пароль'
-               value={this.state.password}
-               onChange={(event => this.handleChange(event))}/>
-        <input type='submit' value='Login'/>
+      <form onSubmit={(event => this.handleSubmit(event))}
+            className='row g-2'>
+        <div className='col-auto'>
+          <input type='text' name='login' placeholder='Логин'
+                 aria-describedby='loginHelpInline'
+                 value={this.state.login} className='form-control'
+                 onChange={(event => this.handleChange(event))}/>
+          <span id='loginHelpInline' className="form-text">
+            Введите Ваш уникальный логин, указанный при регистрации
+          </span>
+        </div>
+        <div className='col-auto'>
+          <input type='password' name='password' placeholder='Пароль'
+                 aria-describedby='passwordHelpInline'
+                 value={this.state.password} className='form-control'
+                 onChange={(event => this.handleChange(event))}/>
+          <span id='passwordHelpInline' className="form-text">
+            Должно быть 8-20 символов.
+          </span>
+        </div>
+        <input type='submit' value='Отправить'
+               className='auth-btn btn btn-primary col-auto'/>
       </form>
     )
   }
