@@ -20,11 +20,11 @@ export class LoginForm extends React.Component {
   }
 
   /**
-   * Присвивание состояний на основе события изменения поля ввода формы
+    * Присвивание состояний на основе события изменения поля ввода формы
    * @param event - Событие, оттуда извлекаются имена и значения login и password
    */
   handleChange(event) {
-    const {name, value} = event
+    const {name, value} = event.target
     this.setState({
       [name]: value
     });
