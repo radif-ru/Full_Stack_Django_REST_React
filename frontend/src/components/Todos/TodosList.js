@@ -1,8 +1,12 @@
-import {PureComponent} from "react";
-import {TodoItem} from "./TodoItem";
+import {PureComponent} from 'react';
+
+import {TodoItem} from './TodoItem';
+
 
 export class TodosList extends PureComponent {
+
   render() {
+
     const {todos, projects} = this.props
 
     return (

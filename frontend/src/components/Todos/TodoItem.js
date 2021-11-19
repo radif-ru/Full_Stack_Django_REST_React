@@ -1,6 +1,7 @@
-import {PureComponent} from "react";
-import {Link} from "react-router-dom";
-import dateFormat from "dateformat";
+import {PureComponent} from 'react';
+import {Link} from 'react-router-dom';
+import dateFormat from 'dateformat';
+
 
 export class TodoItem extends PureComponent {
 

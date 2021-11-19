@@ -1,11 +1,13 @@
 import './Footer.css'
+import logo from './logo.svg';
 
 import React, {PureComponent} from 'react';
 
-import logo from './logo.svg';
 
 export class Footer extends PureComponent {
+
   render() {
+
     return (
       <footer className='footer'>
         <a

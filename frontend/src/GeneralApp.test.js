@@ -1,6 +1,6 @@
 import {render, screen} from '@testing-library/react';
 
-import {GeneralApp} from "./GeneralApp";
+import {GeneralApp} from './GeneralApp';
 
 
 test('renders learn react link', () => {

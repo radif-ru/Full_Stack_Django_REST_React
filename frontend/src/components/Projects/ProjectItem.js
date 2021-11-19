@@ -1,7 +1,10 @@
-import {Link} from "react-router-dom";
+import {Link} from 'react-router-dom';
+
 
 export const ProjectItem = (props) => {
+
   const {project, users} = props
+
   return (
     <tr>
       <td>

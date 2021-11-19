@@ -1,5 +1,6 @@
-import {useParams} from "react-router-dom";
-import dateFormat from "dateformat";
+import {useParams} from 'react-router-dom';
+
+import dateFormat from 'dateformat';
 
 
 export const UserPage = (props) => {
@@ -25,7 +26,8 @@ export const UserPage = (props) => {
         <p>Электронная почта: <span
           className='user-data'>{data.email}</span></p>
         <p>Дата рождения: <span
-          className='user-data'>{data.birthdate ? dateFormat(data.birthdate, 'fullDate') : noData}
+          className='user-data'>{data.birthdate ?
+          dateFormat(data.birthdate, 'fullDate') : noData}
         </span>
         </p>
       </div>)}

@@ -2,7 +2,9 @@ import './NotFound404.css'
 
 import React, {PureComponent} from 'react';
 
+
 export class NotFound404 extends PureComponent {
+
   render() {
 
     return (

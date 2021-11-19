@@ -1,10 +1,12 @@
-import {PureComponent} from "react";
+import {PureComponent} from 'react';
 
-import {ProjectItem} from "./ProjectItem";
+import {ProjectItem} from './ProjectItem';
 
 
 export class ProjectsList extends PureComponent {
+
   render() {
+
     const {projects, users} = this.props
 
     return (

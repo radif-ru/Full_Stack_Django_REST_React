@@ -1,9 +1,16 @@
+/**
+ * Создание и обработка формы авторизации
+ */
 import './Authorization.css'
 
-import React from "react";
+import React from 'react';
 
 
 export class LoginForm extends React.Component {
+  /**
+   * Прокидывание свойств (props) от родителя, начальные состояния логина/пароля
+   * @param props
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -12,14 +19,27 @@ export class LoginForm extends React.Component {
     }
   }
 
+  /**
+   * Присвивание состояний на основе события изменения поля ввода формы
+   * @param event - Событие, оттуда извлекаются имена и значения login и password
+   */
   handleChange(event) {
+    const {name, value} = event
     this.setState({
-      [event.target.name]: event.target.value
+      [name]: value
     });
   }
 
+  /**
+   * Присваивание состояний на основе события обработки отправки данных в форме.
+   * login, password получен из состояния - куда они попали из this.handleChange
+   * auth получается из свойств, которые передал родитель
+   * @param event используется только для остановки события
+   */
   handleSubmit(event) {
-    this.props.auth(this.state.login, this.state.password)
+    const {login, password} = this.state
+    const {auth} = this.props
+    auth(login, password)
     this.setState({
       'login': '',
       'password': ''
@@ -27,25 +47,34 @@ export class LoginForm extends React.Component {
     event.preventDefault();
   }
 
+  /**
+   * Отображение формы. Получение login, password из состояния
+   * Вызов методов this.handleChange и this.handleSubmit при событиях изменения
+   * поля ввода и отправки данных соответственно
+   * @returns {JSX.Element}
+   */
   render() {
+
+    const {login, password} = this.state
+
     return (
       <form onSubmit={(event => this.handleSubmit(event))}
             className='row g-2'>
         <div className='col-auto'>
           <input type='text' name='login' placeholder='Логин'
                  aria-describedby='loginHelpInline'
-                 value={this.state.login} className='form-control'
+                 value={login} className='form-control'
                  onChange={(event => this.handleChange(event))}/>
-          <span id='loginHelpInline' className="form-text">
+          <span id='loginHelpInline' className='form-text'>
             Введите Ваш уникальный логин, указанный при регистрации
           </span>
         </div>
         <div className='col-auto'>
           <input type='password' name='password' placeholder='Пароль'
                  aria-describedby='passwordHelpInline'
-                 value={this.state.password} className='form-control'
+                 value={password} className='form-control'
                  onChange={(event => this.handleChange(event))}/>
-          <span id='passwordHelpInline' className="form-text">
+          <span id='passwordHelpInline' className='form-text'>
             Должно быть 8-20 символов.
           </span>
         </div>

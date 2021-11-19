@@ -1,11 +1,11 @@
 import './Header.css'
 
 import React, {PureComponent} from 'react';
-
-import {Link} from "react-router-dom";
+import {Link} from 'react-router-dom';
 
 
 const Menu = (props) => {
+
   const {is_authenticated, logout, login} = props
 
   return (
@@ -34,8 +34,11 @@ const Menu = (props) => {
 }
 
 export class Header extends PureComponent {
+
   render() {
+
     const {is_authenticated, logout, login} = this.props
+
     return (
       <header className='header'>
         <Menu is_authenticated={is_authenticated} logout={logout}

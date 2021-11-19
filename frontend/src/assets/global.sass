@@ -1,3 +1,8 @@
+@import 'variables'
+@import 'mixin'
+@import 'extend'
+@import 'animation'
+
 // Глобальные стили
 
 // index.css
@@ -26,16 +31,16 @@ body
   flex-direction: column
   min-height: 100%
   // Выравнивание блока по центру
-  width: 80%
+  width: $width-site
   position: relative
   margin: 0 auto
 
-  background: #ffffff
+  background: $bg-global-color
   .content
     flex: 1 0 auto
 
     .main-content
-      margin: 55px 2% 0 2%
+      margin: $main-content-margin
       // Стилизация таблиц
       .table
         border: 1px solid #69c
@@ -46,7 +51,6 @@ body
         padding: 5px
       .table a
         text-decoration: none
-        color: chocolate
+        color: $table-a-color
       .table a:hover
-        color: red
-
+        color: $table-a-hover-color

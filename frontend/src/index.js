@@ -1,3 +1,6 @@
+/**
+ * Корень. Подключение глобальных стилей и скриптов для всего проекта
+ */
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/global.css';
 
@@ -7,9 +10,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import reportWebVitals from './reportWebVitals';
-import {GeneralApp} from "./GeneralApp";
+import {GeneralApp} from './GeneralApp';
 
-
+/**
+ * Корень развёртывания приложения. Подключение главного компонента
+ * к элементу найденному по id root
+ */
 ReactDOM.render(
   <React.StrictMode>
     <GeneralApp/>

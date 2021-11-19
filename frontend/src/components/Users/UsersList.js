@@ -1,12 +1,14 @@
-import {PureComponent} from "react";
-import {UserItem} from "./UserItem";
+import {PureComponent} from 'react';
+import {UserItem} from './UserItem';
+
 
 export class UsersList extends PureComponent {
+
   render() {
+
     const {users} = this.props
 
     return (
-
       <div>
         <h3>Users</h3>
         <table className='table'>
