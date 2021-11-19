@@ -146,7 +146,10 @@ export class GeneralApp extends React.Component {
     }
     if (this.is_authenticated()) {
       // Для JWT к токену в заголовке нужно добавить префикс Bearer
-      headers['Authorization'] = `Bearer ${this.state.token}`;
+      // headers['Authorization'] = `Bearer ${this.state.token}`;
+      // Для безопасности изменил проверку на сервере значения заголовка на
+      // кастомное
+       headers['Authorization'] = `Bear R@d1f ${this.state.token}`;
     }
     return headers
   }
@@ -156,7 +159,7 @@ export class GeneralApp extends React.Component {
    * @returns {boolean} - возвращает true или false
    */
   is_authenticated() {
-    return this.state.token !== '' && this.state.token !== undefined
+    return !!(this.state.token);
   }
 
   /**
@@ -205,7 +208,7 @@ export class GeneralApp extends React.Component {
    * @returns {JSX.Element}
    */
   render() {
-    const {users, projects, todos, login} = this.state
+    const {users, projects, todos, login} = this.state;
 
     return (
       <BrowserRouter>

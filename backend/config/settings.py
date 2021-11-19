@@ -9,8 +9,8 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-import datetime
 import os
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -224,15 +224,81 @@ REST_FRAMEWORK = {
     ],
 }
 
-# Настройка JWT
-JWT_AUTH = {
+# Настройка JSON Web Token (JWT)
+SIMPLE_JWT = {
     # Срок действия исходного токена
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=22),
-    # Разрешить обновление токенов
-    'JWT_ALLOW_REFRESH': True,
-    # Максимальное время в течении которого можно обновить токен, после выдачи
-    # При истечении срока действия обновление невозможно
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=33),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=22),
+    # Как долго действительны токены обновления
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=33),
+    # Если установлено значение True, при отправке маркера обновления в
+    # TokenRefreshView, новый маркер обновления будет возвращен вместе
+    # с новым маркером доступа.
+    'ROTATE_REFRESH_TOKENS': False,
+    # True, приводит к тому, что маркеры обновления, отправленные
+    # TokenRefreshView в черный список, будут добавлены в черный список
+    'BLACKLIST_AFTER_ROTATION': False,
+    # Обновление последнего входа в БД. Нагружает систему
+    'UPDATE_LAST_LOGIN': False,
+
+    # Алгоритм из библиотеки PyJWT, который будет использоваться для
+    # выполнения операций подписи/проверки токенов. ('HS256', 'HS384', 'HS512')
+    'ALGORITHM': 'HS256',
+    # Ключ подписи сгенерированных токенов
+    'SIGNING_KEY': SECRET_KEY,
+    # Проверочный ключ, который используется для проверки содержимого
+    # сгенерированных токенов
+    'VERIFYING_KEY': None,
+    # Аудитория утверждает, что она включена в сгенерированные токены и/или
+    # проверена в декодированных токенах
+    'AUDIENCE': None,
+    # Эмитент утверждает, что он включен в сгенерированные токены и/или
+    # проверен в декодированных токенах
+    'ISSUER': None,
+    # JWK_URL используется для динамического разрешения открытых ключей,
+    # необходимых для проверки подписи токенов.
+    'JWK_URL': None,
+    # Свобода действий используется для того, чтобы дать некоторый запас
+    # времени истечения срока действия
+    'LEEWAY': 0,
+
+    # Префикс токена, используемый клиентом в заголовке по умолчания
+    # 'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_TYPES': ('Bear R@d1f', 'Hare Wolf'),
+    # Имя заголовка авторизации, по умолчанию - Authorization
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    # Например код ниже будет использовать имя заголовка - X_Access_Token
+    # 'AUTH_HEADER_NAME': 'HTTP_X_ACCESS_TOKEN',
+    # Поле базы данных из модели пользователя, которое будет включено в
+    # сгенерированные маркеры для идентификации пользователей.
+    'USER_ID_FIELD': 'id',
+    # 'user_id' будет означать, что сгенерированные токены включают
+    # утверждение 'user_id', содержащее идентификатор пользователя.
+    'USER_ID_CLAIM': 'user_id',
+    # Вызывается для определения того, разрешено ли пользователю проходить
+    # аутентификацию. Проверяет, что флаг is_active True, иначе 401 ошибка
+    'USER_AUTHENTICATION_RULE':
+        'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    # Список точечных путей к классам, указывающих типы токенов,
+    # которым разрешено подтверждать аутентификацию.
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    # Имя утверждения, используемое для хранения типа токена
+    'TOKEN_TYPE_CLAIM': 'token_type',
+
+    # Имя утверждения, используемое для хранения уникального идентификатора
+    # токена. Используется для идентификации отозванных токенов в приложении
+    # 'Черный список'.
+    'JTI_CLAIM': 'jti',
+
+    # Имя утверждения, используемое для хранения времени истечения периода
+    # обновления скользящего маркера.
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    # Объект, который определяет, как долго скользящие токены действительны
+    # для подтверждения аутентификации.
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    # Объект, который определяет, как долго будут действительны скользящие
+    # маркеры для обновления.
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
 if DEBUG:
