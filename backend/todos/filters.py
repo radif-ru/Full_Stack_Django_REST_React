@@ -1,17 +1,6 @@
 from django_filters import rest_framework as filters
 
-
-# Кастомизация django-filter для Проектов
-from todo.models import Project, Todo
-
-
-class ProjectFilter(filters.FilterSet):
-    # Фильтрация по части названия проекта
-    name = filters.CharFilter(lookup_expr='contains')
-
-    class Meta:
-        model = Project
-        fields = ['name']
+from .models import Todo
 
 
 # Кастомизация django-filter для Заметок

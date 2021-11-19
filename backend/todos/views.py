@@ -5,11 +5,11 @@ from rest_framework import status
 from djangorestframework_camel_case.render import CamelCaseJSONRenderer, \
     CamelCaseBrowsableAPIRenderer
 
-from .filters import TodoFilter, ProjectFilter
-from .models import Todo, Project
-from .paginators import TodoLimitOffsetPagination, ProjectLimitOffsetPagination
-from .permissions import TodoPermission, ProjectPermission
-from .serializers import TodoModelSerializer, ProjectModelSerializer
+from .filters import TodoFilter
+from .models import Todo
+from .paginators import TodoLimitOffsetPagination
+from .permissions import TodoPermission
+from .serializers import TodoModelSerializer
 
 
 class TodoModelViewSet(ModelViewSet):
@@ -36,18 +36,3 @@ class TodoModelViewSet(ModelViewSet):
         instance.active = 0
         instance.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class ProjectModelViewSet(ModelViewSet):
-    """Набор представлений для модели проектов"""
-    permission_classes = [ProjectPermission]
-    renderer_classes = (
-        # Верблюжий стиль JSON и браузерного API
-        CamelCaseJSONRenderer, CamelCaseBrowsableAPIRenderer
-    )
-    queryset = Project.objects.all()
-    serializer_class = ProjectModelSerializer
-    # Подключение кастомного пагинатора
-    pagination_class = ProjectLimitOffsetPagination
-    # Подключение кастомного фильтра django-filter
-    filterset_class = ProjectFilter

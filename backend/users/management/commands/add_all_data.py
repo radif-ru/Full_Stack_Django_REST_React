@@ -5,8 +5,8 @@ from django.core.management.base import BaseCommand
 from users.management.commands.add_users import Command as AddUsers
 from users.management.commands.add_roles import Command as AddRoles
 
-from todo.management.commands.add_projects import Command as AddProjects
-from todo.management.commands.add_todos import Command as AddTodos
+from projects.management.commands.add_projects import Command as AddProjects
+from todos.management.commands.add_todos import Command as AddTodos
 
 
 class Command(BaseCommand):

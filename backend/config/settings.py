@@ -52,9 +52,10 @@ INSTALLED_APPS = [
     'django_filters',
     # Библиотека JSON Web Token
     'rest_framework_simplejwt',
-
+    # Свои приложения
     'users.apps.UsersConfig',
-    'todo.apps.TodoConfig',
+    'projects.apps.ProjectsConfig',
+    'todos.apps.TodosConfig',
 ]
 
 MIDDLEWARE = [

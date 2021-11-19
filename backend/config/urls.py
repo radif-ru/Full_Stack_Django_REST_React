@@ -4,7 +4,8 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView, \
     TokenObtainPairView
 
-from todo.views import ProjectModelViewSet, TodoModelViewSet
+from projects.views import ProjectModelViewSet
+from todos.views import TodoModelViewSet
 from users.views import UserModelViewSet
 
 # Роутер для авто-создания набора url-адресов (связь с id, get, set и т.д.)

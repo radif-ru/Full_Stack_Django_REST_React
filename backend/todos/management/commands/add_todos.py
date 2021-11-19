@@ -5,7 +5,7 @@ from django.db import OperationalError, ProgrammingError, IntegrityError
 from django.db.models import Q
 
 from scripts import load_from_json
-from todo.models import Todo, Project
+from todos.models import Todo, Project
 from users.models import User
 
 

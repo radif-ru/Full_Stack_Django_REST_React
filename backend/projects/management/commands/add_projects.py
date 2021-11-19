@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 from django.db import OperationalError, ProgrammingError
 
 from scripts import load_from_json
-from todo.models import Project
+from projects.models import Project
 from users.models import User
 
 
