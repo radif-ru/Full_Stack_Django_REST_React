@@ -4,14 +4,15 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView, \
     TokenObtainPairView
 
-from projects.views import ProjectModelViewSet
+from projects.views import ProjectModelViewSet, ProjectModelViewSetV2
 from todos.views import TodoModelViewSet
 from users.views import UserModelViewSet
 
 # Роутер для авто-создания набора url-адресов (связь с id, get, set и т.д.)
 router = DefaultRouter()
 router.register('users', UserModelViewSet)
-router.register('projects', ProjectModelViewSet)
+router.register('projects', ProjectModelViewSet, basename='projects')
+router.register('projects_v2', ProjectModelViewSetV2, basename='projects_v2')
 router.register('todos', TodoModelViewSet)
 
 urlpatterns = [
