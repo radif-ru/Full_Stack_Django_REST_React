@@ -1,7 +1,7 @@
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.mixins import ListModelMixin, UpdateModelMixin, \
-    RetrieveModelMixin
+    RetrieveModelMixin, CreateModelMixin, DestroyModelMixin
 from rest_framework.renderers import AdminRenderer
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -11,13 +11,17 @@ from djangorestframework_camel_case.render import CamelCaseJSONRenderer, \
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .filters import UserFilter
+from .mixins import UserDestroyMixin
 from .models import User
 from .paginators import UserLimitOffsetPagination
 from .permissions import UserPermission
 from .serializers import UserModelSerializer
 
 
-class UserModelViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin,
+# Понятное дело, что можно использовать просто ModelViewSet
+# Но я тестировал каждый миксин отдельно, по этому подключены отдельно
+class UserModelViewSet(UserDestroyMixin, ListModelMixin, RetrieveModelMixin,
+                       UpdateModelMixin, CreateModelMixin, DestroyModelMixin,
                        GenericViewSet):
     """Набор представлений для модели Пользователь"""
     permission_classes = [UserPermission]
@@ -26,7 +30,7 @@ class UserModelViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin,
         # В settings есть глобальные настройки, здесь можно корректировать
         CamelCaseJSONRenderer, CamelCaseBrowsableAPIRenderer, AdminRenderer
     )
-    queryset = User.objects.all()
+    queryset = User.objects.filter(is_active=1)
     serializer_class = UserModelSerializer
     # Подключение кастомного limit-offset пагинатора
     pagination_class = UserLimitOffsetPagination
