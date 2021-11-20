@@ -175,6 +175,37 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Пользовательская модель авторизации:
 AUTH_USER_MODEL = 'users.User'
 
+# Endpoints (конечные точки):
+USERS_ENDPOINT = '/api/users/'
+PROJECTS_ENDPOINT = '/api/projects/'
+TODOS_ENDPOINT = '/api/todos/'
+
+LOGIN_REDIRECT_URL = '/'
+
+# Настройки почты для тестирования:
+DOMAIN_NAME = 'http://localhost:3333'
+
+USER_EXPIRES_TIMEDELTA = timedelta(hours=48)
+
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
+EMAIL_PORT = os.environ.get('EMAIL_PORT', '25')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'mail@radif.ru')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'qwertytrewq')
+EMAIL_USE_SSL = int(os.environ.get('EMAIL_USE_SSL', default=0))
+
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# вариант логирования сообщений почты в виде файлов вместо отправки
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = 'tmp/email-messages/'
+
+
+# консольная отправка сообщений
+# python -m smtpd -n -c DebuggingServer localhost:25
+# EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 # Роли пользователей
 class Roles(metaclass=IterAttrValues):
@@ -319,22 +350,22 @@ if DEBUG:
         # 'rest_framework.authentication.TokenAuthentication',
     ])
     # Логирование
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'handlers': {
-            'console': {
-                'class': 'logging.StreamHandler',
-            },
-        },
-        # Вывод запросов к бд в консоль
-        'loggers': {
-            'django.db.backends': {
-                'level': 'DEBUG',
-                'handlers': ['console'],
-            },
-        },
-    }
+    # LOGGING = {
+    #     'version': 1,
+    #     'disable_existing_loggers': False,
+    #     'handlers': {
+    #         'console': {
+    #             'class': 'logging.StreamHandler',
+    #         },
+    #     },
+    #     # Вывод запросов к бд в консоль
+    #     'loggers': {
+    #         'django.db.backends': {
+    #             'level': 'DEBUG',
+    #             'handlers': ['console'],
+    #         },
+    #     },
+    # }
 
 # Затирание переменных локальными настройками (если есть):
 try:
