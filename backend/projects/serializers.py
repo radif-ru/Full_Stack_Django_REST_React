@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from users.serializers import UserModelSerializer
 from .models import Project
 
 
@@ -8,4 +9,4 @@ class ProjectModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = '__all__'
+        exclude = ('is_active', 'created', 'updated')

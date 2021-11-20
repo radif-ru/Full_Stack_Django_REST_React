@@ -12,7 +12,7 @@ class Todo(models.Model):
         User, verbose_name='автор заметки', on_delete=models.CASCADE)
     text = models.TextField(
         verbose_name='текст', max_length=333, blank=False)
-    active = models.BooleanField(verbose_name='активность', default=True)
+    is_active = models.BooleanField(verbose_name='активность', default=True)
     created = models.DateTimeField(verbose_name='дата создания',
                                    auto_now_add=True)
     updated = models.DateTimeField(verbose_name='дата обновления',
@@ -25,5 +25,5 @@ class Todo(models.Model):
     class Meta:
         verbose_name = 'Заметка'
         verbose_name_plural = 'Заметки'
-        ordering = ['active', '-updated', 'project']
+        ordering = ['is_active', '-updated', 'project']
         unique_together = (('user', 'text'),)

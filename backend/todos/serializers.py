@@ -8,4 +8,4 @@ class TodoModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Todo
-        exclude = ('active',)
+        exclude = ('is_active', 'created', 'updated')

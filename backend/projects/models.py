@@ -10,6 +10,11 @@ class Project(models.Model):
     repository = models.URLField(
         verbose_name='репозиторий (url-адрес)', max_length=99)
     users = models.ManyToManyField(User, verbose_name='работают с проектом')
+    is_active = models.BooleanField(verbose_name='активность', default=True)
+    created = models.DateTimeField(verbose_name='дата создания',
+                                   auto_now_add=True)
+    updated = models.DateTimeField(verbose_name='дата обновления',
+                                   auto_now=True, null=True, blank=True)
 
     def __str__(self):
         return f'{self.name}'
@@ -17,4 +22,4 @@ class Project(models.Model):
     class Meta:
         verbose_name = 'Проект'
         verbose_name_plural = 'Проекты'
-        ordering = ['name']
+        ordering = ['is_active', '-updated', 'name']

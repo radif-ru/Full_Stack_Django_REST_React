@@ -24,11 +24,13 @@ class User(AbstractUser):
     middle_name = models.CharField('отчество', max_length=66, blank=True)
     email = models.EmailField(
         verbose_name='электронная почта', blank=True, unique=True)
-
     birthdate = models.DateField(
         max_length=8, verbose_name='дата рождения', blank=True, null=True)
-
     roles = models.ManyToManyField(PermissionGroups, verbose_name='роли')
+    created = models.DateTimeField(verbose_name='дата создания',
+                                   auto_now_add=True)
+    updated = models.DateTimeField(verbose_name='дата обновления',
+                                   auto_now=True, null=True, blank=True)
 
     def __str__(self):
         return f'{self.username}'
@@ -36,5 +38,5 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-        ordering = ['roles__role', 'last_name', 'first_name', 'middle_name',
-                    'birthdate']
+        ordering = ['is_active', '-updated', 'last_name', 'first_name',
+                    'middle_name', 'birthdate']
