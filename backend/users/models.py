@@ -23,7 +23,7 @@ class User(AbstractUser):
         verbose_name='фамилия', max_length=55, blank=True)
     middle_name = models.CharField('отчество', max_length=66, blank=True)
     email = models.EmailField(
-        verbose_name='электронная почта', blank=True, unique=True)
+        verbose_name='электронная почта', blank=False, null=False, unique=True)
     birthdate = models.DateField(
         max_length=8, verbose_name='дата рождения', blank=True, null=True)
     roles = models.ManyToManyField(PermissionGroups, verbose_name='роли')
