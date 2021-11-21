@@ -12,8 +12,11 @@ class ProjectModelSerializer(serializers.ModelSerializer):
         exclude = ('is_active', 'created', 'updated')
 
 
-class ProjectModelSerializerV2(ProjectModelSerializer):
-    """Сериализация модели проектов V2"""
+class ProjectModelSerializerGet(ProjectModelSerializer):
+    """Сериализация модели проектов. Используется для GET - запросов
+    Отличие от основного, в том, что данные пользователей выдаются в виде
+    словарей со всеми данными, по всей иерархии вглубь, а не только id
+    """
 
     # users = serializers.StringRelatedField(many=True)
     users = UserModelSerializer(many=True)

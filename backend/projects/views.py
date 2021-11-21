@@ -8,7 +8,7 @@ from .mixins import ProjectDestroyMixin
 from .models import Project
 from .paginators import ProjectLimitOffsetPagination
 from .permissions import ProjectPermission
-from .serializers import ProjectModelSerializer, ProjectModelSerializerV2
+from .serializers import ProjectModelSerializer, ProjectModelSerializerGet
 
 
 class ProjectModelViewSet(ProjectDestroyMixin, ModelViewSet):
@@ -25,7 +25,9 @@ class ProjectModelViewSet(ProjectDestroyMixin, ModelViewSet):
     # Подключение кастомного фильтра django-filter
     filterset_class = ProjectFilter
 
+    def get_serializer_class(self):
+        """Если запрос Get используется соответственный сериализатор"""
+        if self.request.method in ['GET']:
+            return ProjectModelSerializerGet
+        return ProjectModelSerializer
 
-class ProjectModelViewSetV2(ProjectModelViewSet):
-    """Набор представлений для модели проектов V2"""
-    serializer_class = ProjectModelSerializerV2

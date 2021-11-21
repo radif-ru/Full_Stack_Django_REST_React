@@ -8,7 +8,7 @@ from .mixins import TodoDestroyMixin
 from .models import Todo
 from .paginators import TodoLimitOffsetPagination
 from .permissions import TodoPermission
-from .serializers import TodoModelSerializer
+from .serializers import TodoModelSerializer, TodoModelSerializerGet
 
 
 class TodoModelViewSet(TodoDestroyMixin, ModelViewSet):
@@ -27,3 +27,8 @@ class TodoModelViewSet(TodoDestroyMixin, ModelViewSet):
     # Подключение кастомного фильтра django-filter
     filterset_class = TodoFilter
 
+    def get_serializer_class(self):
+        """Если запрос Get используется соответственный сериализатор"""
+        if self.request.method in ['GET']:
+            return TodoModelSerializerGet
+        return TodoModelSerializer

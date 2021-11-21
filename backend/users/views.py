@@ -15,7 +15,7 @@ from .mixins import UserDestroyMixin
 from .models import User
 from .paginators import UserLimitOffsetPagination
 from .permissions import UserPermission
-from .serializers import UserModelSerializer
+from .serializers import UserModelSerializer, UserModelSerializerGet
 
 
 # Понятное дело, что можно использовать просто ModelViewSet
@@ -40,6 +40,12 @@ class UserModelViewSet(UserDestroyMixin, ListModelMixin, RetrieveModelMixin,
     filter_backends = [DjangoFilterBackend]
     # Подключение кастомного фильтра django-filter
     filterset_class = UserFilter
+
+    def get_serializer_class(self):
+        """Если запрос Get используется соответственный сериализатор"""
+        if self.request.method in ['GET']:
+            return UserModelSerializerGet
+        return UserModelSerializer
 
     # Пример фильтрации стандартным методом
     def get_queryset(self):

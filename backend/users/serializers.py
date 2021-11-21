@@ -3,7 +3,13 @@ from datetime import timedelta
 from django.utils import timezone
 from rest_framework import serializers
 
-from .models import User
+from .models import User, PermissionGroups
+
+
+class PermissionGroupsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PermissionGroups
+        fields = ('__all__')
 
 
 class UserModelSerializer(serializers.ModelSerializer):
@@ -39,4 +45,13 @@ class UserModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'middle_name',
-                  'email', 'birthdate', 'password')
+                  'email', 'birthdate', 'roles', 'password')
+
+
+class UserModelSerializerGet(UserModelSerializer):
+    """Сериализация модели пользователя. Используется для GET - запросов
+    Отличие от основного, в том, что данные групп с ролями выдаются в виде
+    словарей со всеми данными, по всей иерархии вглубь, а не только id
+    """
+
+    roles = PermissionGroupsSerializer(many=True)

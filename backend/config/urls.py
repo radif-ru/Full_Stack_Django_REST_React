@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView, \
     TokenObtainPairView
 
-from projects.views import ProjectModelViewSet, ProjectModelViewSetV2
+from projects.views import ProjectModelViewSet
 from todos.views import TodoModelViewSet
 from users.views import UserModelViewSet
 
@@ -12,7 +12,6 @@ from users.views import UserModelViewSet
 router = DefaultRouter()
 router.register('users', UserModelViewSet)
 router.register('projects', ProjectModelViewSet, basename='projects')
-router.register('projects_v2', ProjectModelViewSetV2, basename='projects_v2')
 router.register('todos', TodoModelViewSet)
 
 urlpatterns = [
