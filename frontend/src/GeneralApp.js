@@ -37,6 +37,9 @@ export class GeneralApp extends React.Component {
       'todos_endpoint': '/api/todos/',
       'token_endpoint': '/api/token/',
 
+      'limit': 100,
+      'offset': 0,
+
       'users': [],
       'projects': [],
       'todos': [],
@@ -100,18 +103,19 @@ export class GeneralApp extends React.Component {
    */
   async load_data_promise() {
     const headers = this.get_headers()
+
     const {
-      domain, users_endpoint, projects_endpoint, todos_endpoint
+      domain, users_endpoint, projects_endpoint, todos_endpoint, limit, offset
     } = this.state
 
     const users = await this.get_promise(
-      domain, users_endpoint, headers, 33
+      domain, users_endpoint, headers, limit, offset
     );
     const projects = await this.get_promise(
-      domain, projects_endpoint, headers, 33
+      domain, projects_endpoint, headers, limit, offset
     );
     const todos = await this.get_promise(
-      domain, todos_endpoint, headers, 33
+      domain, todos_endpoint, headers, limit, offset
     );
 
     this.setState({
@@ -123,11 +127,11 @@ export class GeneralApp extends React.Component {
 
   /**
    * Запрос данных и передача Promise вышестоящему методу для обработки
-   * @param domain Домен
-   * @param endpoint Конечная точка
-   * @param headers Заголовки
-   * @param limit Лимит на количество полученных данных
-   * @param offset Смещение относительно первого объекта
+   * @param domain {string} Домен
+   * @param endpoint {string} Конечная точка
+   * @param headers {object} Заголовки
+   * @param limit {int} Лимит на количество полученных данных
+   * @param offset {int} Смещение относительно первого объекта
    * @returns {Promise<AxiosResponse<any>>}
    */
   get_promise(domain='http://localhost:3333', endpoint, headers, limit = 100, offset = 0) {
@@ -221,12 +225,12 @@ export class GeneralApp extends React.Component {
               <Route exact path='/users/:id'
                      element={<UserPage users={users}/>}/>
               <Route exact path='/projects'
-                     element={<Projects projects={projects} users={users}/>}/>
+                     element={<Projects projects={projects}/>}/>
               <Route exact path='/projects/:id'
-                     element={<ProjectPage projects={projects} users={users}
+                     element={<ProjectPage projects={projects}
                                            todos={todos}/>}/>
               <Route exact path='/todos'
-                     element={<Todos todos={todos} projects={projects}/>}/>
+                     element={<Todos todos={todos}/>}/>
 
               <Route exact path='/login' element={<LoginForm auth={
                 (login, password) => this.auth(login, password)}/>}/>

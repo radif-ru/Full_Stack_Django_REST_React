@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 
 export const ProjectItem = (props) => {
 
-  const {project, users} = props
+  const {project} = props
 
   return (
     <tr>
@@ -17,8 +17,8 @@ export const ProjectItem = (props) => {
       </td>
       <td>
         {project.users.map((user, idx) => <span key={idx}>
-          <Link to={`/users/${user}`}>
-            {users.filter((user_data) => user_data.id === user)[0].username}
+          <Link to={`/users/${user.id}`}>
+            {user.username}
           </Link><br/>
         </span>)}
       </td>
