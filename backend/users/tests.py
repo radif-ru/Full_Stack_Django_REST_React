@@ -2,9 +2,10 @@ from django.test import TestCase
 from mixer.auto import mixer
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, force_authenticate, \
-    APIClient, APITestCase
+    APIClient, APITestCase, APISimpleTestCase
 
 from django.contrib.auth.models import User
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from projects.models import Project
 from todos.models import Todo
@@ -13,14 +14,14 @@ from .models import User
 
 
 class TestAuthorViewSetAPITestCase(APITestCase):
-    """Отличается от класса ниже только встроенным APIClient
-    Можно зажать ctrl и кликнуть APITestCase, в исходниках всё видно
-    """
-
     def setUp(self) -> None:
+        self.token_endpoint = '/api/token/'
+        self.token_prefix = 'Bear R@d1f'
+
         self.users_endpoint = '/api/users/'
         self.projects_endpoint = '/api/projects/'
         self.todos_endpoint = '/api/todos/'
+
         self.password = 'qwertytrewq'
         self.user_data = {
             'last_name': 'Пушкин',
@@ -41,7 +42,6 @@ class TestAuthorViewSetAPITestCase(APITestCase):
 
     def test_get_detail(self):
         """Пример использования миксера
-        Который генерит пользователя со случайными данными
         Миксер генерит связанные объекты, любой иерархии с заполненными данными
         Можно назначить данные по умолчанию, в том числе для вложенных объектов
         """
@@ -79,8 +79,8 @@ class TestAuthorViewSetAPITestCase(APITestCase):
     def test_post_admin(self):
         """Создание админа.
         Затем админом создаётся пользователь.
-        Проверка действительно ли отчество создалось правильно.
-        После разлогинивания так же можно создать аккаунт
+        Проверка действительно ли поле создалось правильно.
+        После разлогинивания так же можно создать аккаунт.
         """
         admin = User.objects.create_superuser(
             'admin', 'admin@admin.ru', self.password)
@@ -95,13 +95,36 @@ class TestAuthorViewSetAPITestCase(APITestCase):
         response = self.client.post(f'{self.users_endpoint}',
                                     self.user_data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.client.logout()
+
+    def test_edit_admin(self):
+        """Тестирование PUT запроса - изменение данных"""
+        user = User.objects.create(**self.user_data)
+        admin = User.objects.create_superuser('admin', 'admin@admin.ru',
+                                              self.password)
+        self.client.login(username=admin.username, password=self.password)
+        response = self.client.put(f'{self.users_endpoint}{user.id}/',
+                                   {**self.user_data,
+                                    'last_name': 'Ковальский',
+                                    'middle_name': 'Фараонович',
+                                    })
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user = User.objects.get(id=user.id)
+        self.assertEqual(user.last_name, 'Ковальский')
+        self.assertEqual(user.middle_name, 'Фараонович')
+        self.client.logout()
 
 
 class TestAuthorViewSetTestCase(TestCase):
     def setUp(self) -> None:
+        self.token_endpoint = '/api/token/'
+        self.token_prefix = 'Bear R@d1f'
+
         self.factory = APIRequestFactory()
         self.api_client = APIClient()
+
         self.users_endpoint = '/api/users/'
+
         self.password = 'qwertytrewq'
         self.user_data = {
             'last_name': 'Пушкин',
@@ -119,6 +142,30 @@ class TestAuthorViewSetTestCase(TestCase):
             'username': 'petro',
             'email': 'petro@local.ru'
         }
+
+    def test_create_admin(self):
+        """Создание и авторизация админа.
+        Получение и передача токена в force_authenticate для авторизации.
+        Создание пользователя админом.
+        """
+        admin = User.objects.create_superuser(
+            'admin', 'admin@admin.ru', self.password)
+        view_token = TokenObtainPairView.as_view()
+        token_request = self.factory.post(f'{self.token_endpoint}', {
+            'username': admin.username,
+            'password': self.password
+        })
+        response_token = view_token(token_request)
+        print(f'{self.token_prefix} {response_token.data["access"]}')
+        force_authenticate(
+            token_request, admin, f'{self.token_prefix} '
+                                  f'{response_token.data["access"]}')
+        self.assertEqual(response_token.status_code, status.HTTP_200_OK)
+
+        request = self.factory.post(f'{self.users_endpoint}', self.user_data_2)
+        view = UserModelViewSet.as_view({'post': 'create'})
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_get_list(self):
         factory = APIRequestFactory()
@@ -152,14 +199,11 @@ class TestAuthorViewSetTestCase(TestCase):
         response = client.get(f'{self.users_endpoint}{user.id}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_admin(self):
-        """Создание и авторизация админа.
-        Нужно получить и передать токен в force_authenticate
-        """
-        request = self.factory.post(f'{self.users_endpoint}', self.user_data_2)
-        view = UserModelViewSet.as_view({'post': 'create'})
-        admin = User.objects.create_superuser(
-            'admin', 'admin@admin.ru', self.password)
-        force_authenticate(request, admin)
-        response = view(request)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+class TestMath(APISimpleTestCase):
+    """Не использует БД, быстро исполняется.
+    Применяется, например для тестов внутренних функций.
+    """
+    def test_sqrt(self):
+        import math
+        self.assertEqual(math.sqrt(144), 12)
