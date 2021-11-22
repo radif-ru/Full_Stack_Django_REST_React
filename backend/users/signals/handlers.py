@@ -33,13 +33,15 @@ def email_sender(instance: User, text: str) -> None:
         birthdate = instance.email
         roles = [role.role for role in instance.roles.all()]
         updated = instance.updated
+        last_login = instance.last_login
 
         user_link = f'{DOMAIN_NAME}{USERS_ENDPOINT}{instance.pk}/'
 
         title = f'{text} аккаунт владельца под логином - "{login}"'
 
         message = f'{text} аккаунт владельца под логином - "{login}"\n\n' \
-                  f'Дата: {updated}\n\n' \
+                  f'Дата изменений данных: {updated}\n\n' \
+                  f'Последний вход в систему: {last_login}\n\n' \
                   f'Фамилия: {last_name}\n\n' \
                   f'Имя: {first_name}\n\n' \
                   f'Отчество: {middle_name}\n\n' \

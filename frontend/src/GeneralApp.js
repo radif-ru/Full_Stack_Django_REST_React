@@ -224,6 +224,7 @@ export class GeneralApp extends React.Component {
               <Route exact path='/users' element={<Users users={users}/>}/>
               <Route exact path='/users/:id'
                      element={<UserPage users={users}/>}/>
+
               <Route exact path='/projects'
                      element={<Projects projects={projects}/>}/>
               <Route exact path='/projects/:id'

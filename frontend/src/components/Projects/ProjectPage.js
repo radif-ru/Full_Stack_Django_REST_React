@@ -6,8 +6,8 @@ export const ProjectPage = (props) => {
 
   const {id} = useParams();
   const {projects, todos} = props
-  console.log(projects.length)
-  const project = projects.length > 0 ? projects.filter((project) => project.id.toString() === id)[0] : {
+  const project = projects.length > 0 ? projects.filter((project) =>
+    project.id.toString() === id)[0] : {
     id: 0,
     users: []
   }
@@ -41,16 +41,18 @@ export const ProjectPage = (props) => {
                 {todo.user.username}
               </Link>
               <span className='comment-datetime'>
-                {dateFormat(todo.created, 'dddd, mmmm dS, yyyy, h:MM:ss TT')}.
+                {dateFormat(
+                  todo.created, 'dddd, mmmm dS, yyyy, h:MM:ss TT'
+                )}.
               </span>
               <span className='comment-datetime'>
                 {todo.created !== todo.updated ? `Обновлено: ${dateFormat(
-                  todo.updated, 'dddd, mmmm dS, yyyy, h:MM:ss TT')}` : ''}
+                  todo.updated, 'dddd, mmmm dS, yyyy, h:MM:ss TT'
+                )}` : ''}
               </span>
             </div>
             <br/>
           </div>)}
-
       </div>
     </div>
   )

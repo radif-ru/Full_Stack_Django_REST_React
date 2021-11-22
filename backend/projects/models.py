@@ -6,9 +6,10 @@ from users.models import User
 class Project(models.Model):
     """Модель проекта, для которого записаны заметки"""
     name = models.CharField(
-        verbose_name='название', max_length=33, blank=False, unique=True)
+        verbose_name='название', max_length=33, blank=False, null=False,
+        unique=True)
     repository = models.URLField(
-        verbose_name='репозиторий (url-адрес)', max_length=99)
+        verbose_name='репозиторий (url-адрес)', max_length=99, default='')
     users = models.ManyToManyField(User, verbose_name='работают с проектом')
     is_active = models.BooleanField(verbose_name='активность', default=True)
     created = models.DateTimeField(verbose_name='дата создания',

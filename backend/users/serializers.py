@@ -9,7 +9,7 @@ from .models import User, PermissionGroups
 class PermissionGroupsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PermissionGroups
-        fields = ('__all__')
+        fields = '__all__'
 
 
 class UserModelSerializer(serializers.ModelSerializer):

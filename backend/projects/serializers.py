@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from users.serializers import UserModelSerializer
+from users.serializers import UserModelSerializerGet
 from .models import Project
 
 
@@ -19,4 +19,4 @@ class ProjectModelSerializerGet(ProjectModelSerializer):
     """
 
     # users = serializers.StringRelatedField(many=True)
-    users = UserModelSerializer(many=True)
+    users = UserModelSerializerGet(many=True)
