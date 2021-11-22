@@ -18,5 +18,10 @@ class ProjectModelSerializerGet(ProjectModelSerializer):
     словарей со всеми данными, по всей иерархии вглубь, а не только id
     """
 
-    # users = serializers.StringRelatedField(many=True)
     users = UserModelSerializerGet(many=True)
+
+
+class ProjectModelSerializerV2(ProjectModelSerializer):
+    """Сериализация модели проектов. Версия 2"""
+
+    users = serializers.StringRelatedField(many=True)

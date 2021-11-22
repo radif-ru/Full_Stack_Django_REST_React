@@ -253,6 +253,41 @@ REST_FRAMEWORK = {
         # Аутентификация с помощью JSON токенов JWT. Наиболее безопасная
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+
+    # Настройка системы версий API
+    # Во views необходимо обрабатывать self.request.version
+
+    # Необходимо в config/urls.py раскомментить строку подстановки версий
+    # Гибкий способ
+    # http://127.0.0.1:3333/api/1.0/projects/
+    # http://127.0.0.1:3333/api/2.0/projects/
+    # 'DEFAULT_VERSIONING_CLASS':
+    # 'rest_framework.versioning.URLPathVersioning',
+
+    # Примерно то же, что и выше, в config/urls.py указано
+    # http://127.0.0.1:3333/api/projects/1.0/
+    # http://127.0.0.1:3333/api/projects/2.0/
+    # 'DEFAULT_VERSIONING_CLASS':
+    #     'rest_framework.versioning.NamespaceVersioning',
+
+    # Система версий по параметрам. Не требует дополнительных манипуляций в
+    # urls.py, работает сразу, запросы так же нужно обрабатывать во views
+    # http://127.0.0.1:3333/api/projects/?version=1.0/
+    # http://127.0.0.1:3333/api/projects/?version=2.0/
+    # 'DEFAULT_VERSIONING_CLASS':
+    #     'rest_framework.versioning.QueryParameterVersioning',
+
+    # Передача версий внутри заголовков. Url-адрес не меняется.
+    # Необходимо в Headers добавить поле Accept и в нём указать, например: \
+    # application/json; version=2.0
+    'DEFAULT_VERSIONING_CLASS':
+        'rest_framework.versioning.AcceptHeaderVersioning',
+
+    # Система версий по имени хоста
+    # https://v1.radif.ru/api/projects/
+    # https://v2.radif.ru/api/projects/
+    # 'DEFAULT_VERSIONING_CLASS':
+    #     'rest_framework.versioning.HostNameVersioning,
 }
 
 # Настройка JSON Web Token (JWT)
