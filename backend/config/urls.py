@@ -1,5 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework.permissions import AllowAny
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView, \
     TokenObtainPairView
@@ -7,6 +10,17 @@ from rest_framework_simplejwt.views import TokenRefreshView, \
 from projects.views import ProjectModelViewSet
 from todos.views import TodoModelViewSet
 from users.views import UserModelViewSet
+
+# Swagger - инструменты для реализации OpenAPI. Авто-генерация документации API
+schema_view = get_schema_view(
+    openapi.Info(
+        title='Todos',
+        default_version='1.0',
+        description='Web-сервис для работы с TODO-заметками',
+    ),
+    public=True,
+    permission_classes=(AllowAny,)
+)
 
 # Роутер для авто-создания набора url-адресов (связь с id, get, set и т.д.)
 router = DefaultRouter()
@@ -16,8 +30,6 @@ router.register('todos', TodoModelViewSet)
 
 urlpatterns = [
     path('administration/', admin.site.urls),
-
-    #######################
 
     # Стандартный метод авторизации rest_framework
     path('api/auth/', include('rest_framework.urls')),
@@ -30,6 +42,16 @@ urlpatterns = [
     # Сброс/обновление токена JWT
     path('api/token/refresh/', TokenRefreshView.as_view(),
          name='token_refresh'),
+
+    # Router - маршрутизация url-адресов
+    path('api/', include(router.urls)),
+
+    # Swagger - инструменты для реализации OpenAPI. Генерация документации API
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0),
+         name='schema-swagger-ui'),
+    #
+    re_path('^swagger(?P<format>\.json|\.yaml)$',
+            schema_view.without_ui(cache_timeout=0), name='schema-json'),
 
     #######################
 
@@ -48,9 +70,4 @@ urlpatterns = [
     # Для этого метода в setting включить NamespaceVersioning
     # path('api/projects/1.0/', include('projects.urls', namespace='1.0')),
     # path('api/projects/2.0/', include('projects.urls', namespace='2.0')),
-
-    #######################
-
-    # Router
-    path('api/', include(router.urls)),
 ]

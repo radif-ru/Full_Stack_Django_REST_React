@@ -27,12 +27,11 @@ class ProjectModelViewSet(ProjectDestroyMixin, ModelViewSet):
     filterset_class = ProjectFilter
 
     def get_serializer_class(self):
-        """ Система контроля версий + обработка типов запросов
-        Если запрос Get используется соответственный сериализатор
-        """
+        """Система контроля версий + обработка типов запросов"""
         if self.request.version == '2.0':
             return ProjectModelSerializerV2
 
+        # Если запрос Get используется соответственный сериализатор
         if self.request.method in ['GET']:
             return ProjectModelSerializerGet
         return ProjectModelSerializer

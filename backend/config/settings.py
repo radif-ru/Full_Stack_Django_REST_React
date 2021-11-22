@@ -52,6 +52,9 @@ INSTALLED_APPS = [
     'django_filters',
     # Библиотека JSON Web Token
     'rest_framework_simplejwt',
+    # Библиотека для документирование API
+    'drf_yasg',
+    
     # Свои приложения
     'users.apps.UsersConfig',
     'projects.apps.ProjectsConfig',
