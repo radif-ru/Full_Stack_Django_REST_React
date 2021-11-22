@@ -26,5 +26,8 @@ class UserPermission(BasePermission):
         if request.method == 'POST':
             if request.user.is_anonymous:
                 return True
+            elif request.user.roles.filter(
+                    role=Roles.ADMINISTRATOR) or request.user.is_superuser:
+                return True
             return False
         return True
