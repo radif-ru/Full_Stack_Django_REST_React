@@ -274,7 +274,7 @@ REST_FRAMEWORK = {
     #     'rest_framework.versioning.NamespaceVersioning',
 
     # Система версий по параметрам. Не требует дополнительных манипуляций в
-    # urls.py, работает сразу, запросы так же нужно обрабатывать во views
+    # urls.py, работает сразу
     # http://127.0.0.1:3333/api/projects/?version=1.0/
     # http://127.0.0.1:3333/api/projects/?version=2.0/
     # 'DEFAULT_VERSIONING_CLASS':
@@ -283,6 +283,8 @@ REST_FRAMEWORK = {
     # Передача версий внутри заголовков. Url-адрес не меняется.
     # Необходимо в Headers добавить поле Accept и в нём указать, например: \
     # application/json; version=2.0
+    # Протестировать можно с помощью гибкого браузера Mozilla Firefox, Postman,
+    # серверной библиотеки requests, клиентской библиотеки axios и т.д.
     'DEFAULT_VERSIONING_CLASS':
         'rest_framework.versioning.AcceptHeaderVersioning',
 

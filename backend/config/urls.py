@@ -17,6 +17,10 @@ schema_view = get_schema_view(
         title='Todos',
         default_version='1.0',
         description='Web-сервис для работы с TODO-заметками',
+        contact=openapi.Contact(name='Radif',
+                                url='radif.ru',
+                                email='mail@radif.ru', ),
+        license=openapi.License(name='MIT License'),
     ),
     public=True,
     permission_classes=(AllowAny,)
@@ -46,10 +50,13 @@ urlpatterns = [
     # Router - маршрутизация url-адресов
     path('api/', include(router.urls)),
 
-    # Swagger - инструменты для реализации OpenAPI. Генерация документации API
+    # Swagger - Генерация документации API в HTML формате, в браузере
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0),
          name='schema-swagger-ui'),
-    #
+    # ReDoc - другое использование и отображение созданной спецификации
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0),
+         name='schema-redoc'),
+    # Выдача документации в JSON или YAML формате
     re_path('^swagger(?P<format>\.json|\.yaml)$',
             schema_view.without_ui(cache_timeout=0), name='schema-json'),
 
@@ -61,7 +68,7 @@ urlpatterns = [
     # Включена система версий по заголовкам. По этому здесь не требуется
     # дополнительных манипуляций. Комменты ниже для примеров
 
-    # Пример ручного, гибкого управления версиями с помощью регулярного
+    # Пример ручного, гибкого управления всеми версиями с помощью 1 регулярного
     # выражения. Для этого метода в setting включить URLPathVersioning
     # re_path(r'^api/(?P<version>\d\.\d)/projects/$',
     #         ProjectModelViewSet.as_view({'get': 'list', 'post': 'create'})),
