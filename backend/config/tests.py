@@ -11,8 +11,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from projects.models import Project
 from todos.models import Todo
-from .views import UserModelViewSet
-from .models import User, PermissionGroups
+from users.views import UserModelViewSet
+from users.models import User, PermissionGroups
 
 
 class TestAuthorViewSetAPITestCase(APITestCase):
