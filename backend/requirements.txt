@@ -1,3 +1,4 @@
+aniso8601==7.0.0
 asgiref==3.4.1
 certifi==2021.10.8
 charset-normalizer==2.0.7
@@ -11,6 +12,10 @@ djangorestframework-camel-case==1.2.0
 djangorestframework-simplejwt==5.0.0
 drf-yasg==1.20.0
 Faker==9.8.2
+graphene==2.1.9
+graphene-django==2.15.0
+graphql-core==2.3.2
+graphql-relay==2.0.1
 idna==3.3
 inflection==0.5.1
 itypes==1.2.0
@@ -19,12 +24,15 @@ Markdown==3.3.4
 MarkupSafe==2.0.1
 mixer==7.2.0
 packaging==21.3
+promise==2.3
 PyJWT==2.3.0
 pyparsing==3.0.6
 python-dateutil==2.8.2
 pytz==2021.3
 requests==2.26.0
 ruamel.yaml==0.17.17
+Rx==1.6.1
+singledispatch==3.7.0
 six==1.16.0
 sqlparse==0.4.2
 text-unidecode==1.3

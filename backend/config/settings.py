@@ -54,7 +54,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     # Библиотека для документирование API
     'drf_yasg',
-    
+    # GraphQL
+    'graphene_django',
+
     # Свои приложения
     'users.apps.UsersConfig',
     'projects.apps.ProjectsConfig',
@@ -370,6 +372,11 @@ SIMPLE_JWT = {
     # Объект, который определяет, как долго будут действительны скользящие
     # маркеры для обновления.
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+# Настройки для GraphQK
+GRAPHENE = {
+    'SCHEMA': 'config.schema.schema',
 }
 
 if DEBUG:

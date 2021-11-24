@@ -1,12 +1,15 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
+from django.views.decorators.csrf import csrf_exempt
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
+from graphene_django.views import GraphQLView
 from rest_framework.permissions import AllowAny
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView, \
     TokenObtainPairView
 
+from config.settings import DEBUG
 from projects.views import ProjectModelViewSet
 from todos.views import TodoModelViewSet
 from users.views import UserModelViewSet
@@ -18,7 +21,7 @@ schema_view = get_schema_view(
         default_version='1.0',
         description='Web-сервис для работы с TODO-заметками',
         contact=openapi.Contact(name='Radif',
-                                url='radif.ru',
+                                url='https://radif.ru',
                                 email='mail@radif.ru', ),
         license=openapi.License(name='MIT License'),
     ),
@@ -59,6 +62,12 @@ urlpatterns = [
     # Выдача документации в JSON или YAML формате
     re_path('^swagger(?P<format>\.json|\.yaml)$',
             schema_view.without_ui(cache_timeout=0), name='schema-json'),
+
+    # GraphQL. При установке graphiql=True, включается интерактивный режим
+    # для отладки, в релизе следует отключить. Настроил соответственно:
+    # csrf_exempt - отключает проверку CSRF-токена для данного адреса
+    path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True))) if DEBUG
+    else path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=False))),
 
     #######################
 
