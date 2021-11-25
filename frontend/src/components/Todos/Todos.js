@@ -9,10 +9,10 @@ export class Todos extends PureComponent {
 
   render() {
 
-    const {todos} = this.props
+    const {users} = this.props
 
     return (
-      <TodosList todos={todos}/>
+      <TodosList users={users}/>
     )
   }
 }

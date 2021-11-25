@@ -46,7 +46,7 @@ class ProjectSetModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        exclude = ('users',)
+        fields = '__all__'
 
 
 class TodoSetModelSerializer(serializers.ModelSerializer):
@@ -54,7 +54,7 @@ class TodoSetModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Todo
-        exclude = ('user',)
+        fields = '__all__'
 
 
 class UserModelSerializerGet(UserModelSerializer):

@@ -6,8 +6,8 @@ import {TodoItem} from './TodoItem';
 export class TodosList extends PureComponent {
 
   render() {
-
-    const {todos} = this.props
+    // Все пользователи у кого есть заметки
+    const users = this.props.users.filter(user => !!user.userTodos.length)
 
     return (
       <div>
@@ -16,21 +16,25 @@ export class TodosList extends PureComponent {
           <thead>
           <tr>
             <th>
-              Text
+              Текст
             </th>
             <th>
-              Project
+              Автор
             </th>
             <th>
-              Created
+              Проект
             </th>
             <th>
-              Updated
+              Добавлена
+            </th>
+            <th>
+              Обновлена
             </th>
           </tr>
           </thead>
           <tbody>
-          {todos.map((todo, idx) =><TodoItem key={idx} todo={todo}/>)}
+          {users.map((user, idx) => <TodoItem key={idx} user={user}
+                                              users={users}/>)}
           </tbody>
         </table>
       </div>

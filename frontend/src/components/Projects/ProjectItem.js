@@ -3,10 +3,11 @@ import {Link} from 'react-router-dom';
 
 export const ProjectItem = (props) => {
 
-  const {project} = props
+  const {user, users} = props
+  const user_projects = user.userProjects
 
   return (
-    <tr>
+    user_projects.map((project, idx) => <tr key={idx}>
       <td>
         <Link to={`/projects/${project.id}`}>{project.name}</Link>
       </td>
@@ -17,11 +18,11 @@ export const ProjectItem = (props) => {
       </td>
       <td>
         {project.users.map((user, idx) => <span key={idx}>
-          <Link to={`/users/${user.id}`}>
-            {user.username}
+          <Link to={`/users/${user}`}>
+            {users.filter(data => data.id === user)[0].username}
           </Link><br/>
         </span>)}
       </td>
-    </tr>
+    </tr>)
   )
 }

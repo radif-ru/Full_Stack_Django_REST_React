@@ -105,23 +105,24 @@ export class GeneralApp extends React.Component {
     const headers = this.get_headers()
 
     const {
-      domain, users_endpoint, projects_endpoint, todos_endpoint, limit, offset
+      domain, users_endpoint, limit, offset
     } = this.state
 
     const users = await this.get_promise(
       domain, users_endpoint, headers, limit, offset
     );
-    const projects = await this.get_promise(
-      domain, projects_endpoint, headers, limit, offset
-    );
-    const todos = await this.get_promise(
-      domain, todos_endpoint, headers, limit, offset
-    );
+    // Теперь все данные привязаны к пользователям
+    // const projects = await this.get_promise(
+    //   domain, projects_endpoint, headers, limit, offset
+    // );
+    // const todos = await this.get_promise(
+    //   domain, todos_endpoint, headers, limit, offset
+    // );
 
     this.setState({
       'users': users.data.results,
-      'projects': projects.data.results,
-      'todos': todos.data.results
+      // 'projects': projects.data.results,
+      // 'todos': todos.data.results
     })
   }
 
@@ -212,7 +213,7 @@ export class GeneralApp extends React.Component {
    * @returns {JSX.Element}
    */
   render() {
-    const {users, projects, todos, login} = this.state;
+    const {users, login} = this.state;
 
     return (
       <BrowserRouter>
@@ -226,12 +227,11 @@ export class GeneralApp extends React.Component {
                      element={<UserPage users={users}/>}/>
 
               <Route exact path='/projects'
-                     element={<Projects projects={projects}/>}/>
+                     element={<Projects users={users}/>}/>
               <Route exact path='/projects/:id'
-                     element={<ProjectPage projects={projects}
-                                           todos={todos}/>}/>
+                     element={<ProjectPage users={users}/>}/>
               <Route exact path='/todos'
-                     element={<Todos todos={todos}/>}/>
+                     element={<Todos users={users}/>}/>
 
               <Route exact path='/login' element={<LoginForm auth={
                 (login, password) => this.auth(login, password)}/>}/>

@@ -6,17 +6,25 @@ import dateFormat from 'dateformat';
 export class TodoItem extends PureComponent {
 
   render() {
-
-    const {todo} = this.props;
+    const {user, users} = this.props
+    const user_todos = user.userTodos
+    const projects_data = users.map(user => user.userProjects)
 
     return (
-      <tr>
+      user_todos.map((todo, idx) => <tr key={idx}>
+
         <td>
           {todo.text}
         </td>
         <td>
-          <Link to={`/projects/${todo.project.id}`}>
-            {todo.project.name}
+          <Link to={`/users/${user.id}`}>{user.username}</Link>
+        </td>
+        <td>
+          <Link to={`/projects/${todo.project}`}>
+            {/*Имя проекта*/}
+            {projects_data.map(projects => projects.filter(
+              project => project.id === todo.project)).filter(
+              el => el.length)[0][0].name}
           </Link>
         </td>
         <td>
@@ -25,7 +33,7 @@ export class TodoItem extends PureComponent {
         <td>
           {dateFormat(todo.updated, 'dddd, mmmm dS, yyyy, h:MM:ss TT')}
         </td>
-      </tr>
+      </tr>)
     )
   }
 }

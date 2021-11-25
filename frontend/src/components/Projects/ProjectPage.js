@@ -4,13 +4,23 @@ import dateFormat from "dateformat";
 
 export const ProjectPage = (props) => {
 
-  const {id} = useParams();
-  const {projects, todos} = props
-  const project = projects.length > 0 ? projects.filter((project) =>
-    project.id.toString() === id)[0] : {
+  let {id} = useParams();
+  id = +id
+  const {users} = props
+
+  // Проекты, отфильтрованные по id
+  const project_data = users.map(user => user.userProjects).map(
+    projects => projects.filter(proj => proj.id === id)[0]).filter(el => el)[0]
+  const project = !!project_data ? project_data : {
     id: 0,
     users: []
   }
+
+  // Заметки проекта
+  const todos = users.map(user => user.userTodos).map(
+    todos => todos.filter(todo => todo.project === id)).map(
+      todo => todo[0]).filter(el => el)
+
   const noData = 'нет данных!'
 
   return (
@@ -26,19 +36,19 @@ export const ProjectPage = (props) => {
 
         <p>Работают с проектом: <span className='project-data'>
           {project.users.map((user, idx) => <span key={idx}>
-            <Link to={`/users/${user.id}`}>
-              {user.username}
+            <Link to={`/users/${user}`}>
+              {users.filter(data => data.id === user)[0].username}
             </Link>, </span>)}</span>
         </p>
 
         <h3>Заметки к проекту: </h3><br/>
-        {todos.filter((todo) => todo.project.id.toString() === id).map((todo, idx) =>
+        {todos.map((todo, idx) =>
           <div key={idx}>
             <span className='comment'>{todo.text}</span>
 
             <div className='comment-info'>
-              <Link className='comment-user' to={`/users/${todo.user.id}`}>
-                {todo.user.username}
+              <Link className='comment-user' to={`/users/${todo.user}`}>
+                {users.filter(user => user.id === todo.user)[0].username}
               </Link>
               <span className='comment-datetime'>
                 {dateFormat(
