@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from projects.serializers import ProjectModelSerializerGet
-from users.serializers import UserModelSerializerGet
+from users.serializers import UserModelSerializer
 from .models import Todo
 
 
@@ -16,8 +16,8 @@ class TodoModelSerializer(serializers.ModelSerializer):
 class TodoModelSerializerGet(TodoModelSerializer):
     """Сериализация модели заметок. Используется для GET - запросов
     Отличие от основного, в том, что данные пользователей и проектов выдаются
-    в виде словарей со всеми данными, по всей иерархии вглубь, а не только id
+    в виде словарей с включёнными данными, по иерархии вглубь, а не только id
     """
 
     project = ProjectModelSerializerGet()
-    user = UserModelSerializerGet()
+    user = UserModelSerializer()

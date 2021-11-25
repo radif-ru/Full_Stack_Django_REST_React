@@ -26,7 +26,8 @@ class User(AbstractUser):
         verbose_name='электронная почта', blank=False, null=False, unique=True)
     birthdate = models.DateField(
         max_length=8, verbose_name='дата рождения', blank=True, null=True)
-    roles = models.ManyToManyField(PermissionGroups, verbose_name='роли')
+    roles = models.ManyToManyField(PermissionGroups, verbose_name='роли',
+                                   related_name='roles_users')
     created = models.DateTimeField(verbose_name='дата создания',
                                    auto_now_add=True)
     updated = models.DateTimeField(verbose_name='дата обновления',

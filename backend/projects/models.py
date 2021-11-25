@@ -10,7 +10,8 @@ class Project(models.Model):
         unique=True)
     repository = models.URLField(
         verbose_name='репозиторий (url-адрес)', max_length=99, default='')
-    users = models.ManyToManyField(User, verbose_name='работают с проектом')
+    users = models.ManyToManyField(User, verbose_name='работают с проектом',
+                                   related_name='user_projects')
     is_active = models.BooleanField(verbose_name='активность', default=True)
     created = models.DateTimeField(verbose_name='дата создания',
                                    auto_now_add=True)

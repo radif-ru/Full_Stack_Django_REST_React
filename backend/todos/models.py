@@ -7,9 +7,11 @@ from users.models import User
 class Todo(models.Model):
     """Модель заметки"""
     project = models.ForeignKey(
-        Project, verbose_name='проект', on_delete=models.CASCADE)
+        Project, verbose_name='проект', on_delete=models.CASCADE,
+        related_name='project_todos')
     user = models.ForeignKey(
-        User, verbose_name='автор заметки', on_delete=models.CASCADE)
+        User, verbose_name='автор заметки', on_delete=models.CASCADE,
+        related_name='user_todos')
     text = models.TextField(
         verbose_name='текст', max_length=333, blank=False)
     is_active = models.BooleanField(verbose_name='активность', default=True)
