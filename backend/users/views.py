@@ -30,7 +30,10 @@ class UserModelViewSet(UserDestroyMixin, ListModelMixin, RetrieveModelMixin,
         # В settings есть глобальные настройки, здесь можно корректировать
         CamelCaseJSONRenderer, CamelCaseBrowsableAPIRenderer, AdminRenderer
     )
-    queryset = User.objects.filter(is_active=1)
+    # prefetch_related() - оптимизация запросов
+    queryset = User.objects.prefetch_related('user_todos',
+                                             'user_projects',
+                                             'roles').filter(is_active=1)
     serializer_class = UserModelSerializer
     # Подключение кастомного limit-offset пагинатора
     pagination_class = UserLimitOffsetPagination

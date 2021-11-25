@@ -19,7 +19,9 @@ class ProjectModelViewSet(ProjectDestroyMixin, ModelViewSet):
         # Верблюжий стиль JSON и браузерного API
         CamelCaseJSONRenderer, CamelCaseBrowsableAPIRenderer
     )
-    queryset = Project.objects.filter(is_active=1)
+    # prefetch_related() - оптимизация запросов
+    queryset = Project.objects.prefetch_related(
+        'users', 'users__roles').filter(is_active=1)
     serializer_class = ProjectModelSerializer
     # Подключение кастомного пагинатора
     pagination_class = ProjectLimitOffsetPagination

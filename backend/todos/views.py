@@ -18,8 +18,9 @@ class TodoModelViewSet(TodoDestroyMixin, ModelViewSet):
         # Верблюжий стиль JSON и браузерного API
         CamelCaseJSONRenderer, CamelCaseBrowsableAPIRenderer
     )
-    # Вывод только активных заметок
-    queryset = Todo.objects.filter(is_active=1)
+    # Вывод только активных заметок. prefetch_related() - оптимизация запросов
+    queryset = Todo.objects.prefetch_related('project__users__roles',
+                                             'user__roles').filter(is_active=1)
     serializer_class = TodoModelSerializer
     # Подключение кастомного пагинатора
     pagination_class = TodoLimitOffsetPagination
