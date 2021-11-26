@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles',  # Требуется для GraphiQL
 
     'rest_framework',
     # Авторизация по Токену
@@ -374,7 +374,7 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-# Настройки для GraphQK
+# Настройки для GraphQL
 GRAPHENE = {
     'SCHEMA': 'config.schema.schema',
 }
@@ -397,22 +397,22 @@ if DEBUG:
         # 'rest_framework.authentication.TokenAuthentication',
     ])
     # Логирование
-    # LOGGING = {
-    #     'version': 1,
-    #     'disable_existing_loggers': False,
-    #     'handlers': {
-    #         'console': {
-    #             'class': 'logging.StreamHandler',
-    #         },
-    #     },
-    #     # Вывод запросов к бд в консоль
-    #     'loggers': {
-    #         'django.db.backends': {
-    #             'level': 'DEBUG',
-    #             'handlers': ['console'],
-    #         },
-    #     },
-    # }
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        # Вывод запросов к бд в консоль
+        'loggers': {
+            'django.db.backends': {
+                'level': 'DEBUG',
+                'handlers': ['console'],
+            },
+        },
+    }
 
 # Затирание переменных локальными настройками (если есть):
 try:

@@ -1,3 +1,4 @@
+"""Схема GraphQL"""
 import graphene
 from graphene_django import DjangoObjectType
 
@@ -6,10 +7,14 @@ from todos.models import Todo
 from users.models import User
 
 
+# Тип GraphQL. Наследование от DjangoObjectType позволяет автоматически
+# создать нужные типы полей для указанной модели и указать нужные поля.
+# При вложенных полях нужно обязательно указать их типы.
 class UserType(DjangoObjectType):
     class Meta:
         model = User
-        fields = '__all__'
+        # Поле password не включено
+        exclude = ('password',)
 
 
 class ProjectType(DjangoObjectType):
@@ -24,6 +29,7 @@ class TodoType(DjangoObjectType):
         fields = '__all__'
 
 
+# Тип Query
 class Query(graphene.ObjectType):
     all_users = graphene.List(UserType)
     all_projects = graphene.List(ProjectType)
@@ -36,14 +42,16 @@ class Query(graphene.ObjectType):
                                        first_name=graphene.String(),
                                        last_name=graphene.String())
 
+    # Поле. Префикс resolve_ - обязателен. all_users - имя поля
     def resolve_all_users(self, info):
-        return User.objects.all()
+        # Возвращение только активных пользователей
+        return User.objects.filter(is_active=1)
 
     def resolve_all_projects(self, info):
-        return Project.objects.all()
+        return Project.objects.filter(is_active=1)
 
     def resolve_all_todos(self, info):
-        return Todo.objects.all()
+        return Todo.objects.filter(is_active=1)
 
     # Обработка фильтрации
     def resolve_user_by_id(self, info, id):
