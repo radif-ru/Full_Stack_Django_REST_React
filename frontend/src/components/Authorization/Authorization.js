@@ -1,9 +1,9 @@
 /**
  * Создание и обработка формы авторизации
  */
-import './Authorization.css'
+import "./Authorization.css"
 
-import React from 'react';
+import React from "react";
 
 
 export class LoginForm extends React.Component {
@@ -14,13 +14,13 @@ export class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      'login': '',
-      'password': ''
+      "login": '',
+      "password": ''
     }
   }
 
   /**
-    * Присвивание состояний на основе события изменения поля ввода формы
+   * Присвивание состояний на основе события изменения поля ввода формы
    * @param event - Событие, оттуда извлекаются имена и значения login и password
    */
   handleChange(event) {
@@ -41,8 +41,8 @@ export class LoginForm extends React.Component {
     const {auth} = this.props
     auth(login, password)
     this.setState({
-      'login': '',
-      'password': ''
+      "login": '',
+      "password": ''
     })
     event.preventDefault();
   }
@@ -58,28 +58,37 @@ export class LoginForm extends React.Component {
     const {login, password} = this.state
 
     return (
-      <form onSubmit={(event => this.handleSubmit(event))}
-            className='row g-2'>
-        <div className='col-auto'>
-          <input type='text' name='login' placeholder='Логин'
-                 aria-describedby='loginHelpInline'
-                 value={login} className='form-control'
-                 onChange={(event => this.handleChange(event))}/>
-          <span id='loginHelpInline' className='form-text'>
+      <form onSubmit={(event => this.handleSubmit(event))} className="row g-2">
+        <div className="col-auto">
+          <input type="text"
+                 name="login"
+                 placeholder="Логин"
+                 aria-describedby="loginHelpInline"
+                 value={login}
+                 className="form-control"
+                 onChange={(event => this.handleChange(event))}
+          />
+          <span id="loginHelpInline" className="form-text">
             Введите Ваш уникальный логин, указанный при регистрации
           </span>
         </div>
-        <div className='col-auto'>
-          <input type='password' name='password' placeholder='Пароль'
-                 aria-describedby='passwordHelpInline'
-                 value={password} className='form-control'
-                 onChange={(event => this.handleChange(event))}/>
-          <span id='passwordHelpInline' className='form-text'>
+        <div className="col-auto">
+          <input type="password"
+                 name="password"
+                 placeholder="Пароль"
+                 aria-describedby="passwordHelpInline"
+                 value={password}
+                 className="form-control"
+                 onChange={(event => this.handleChange(event))}
+          />
+          <span id="passwordHelpInline" className="form-text">
             Должно быть 8-20 символов.
           </span>
         </div>
-        <input type='submit' value='Отправить'
-               className='auth-btn btn btn-primary col-auto'/>
+        <input type="submit"
+               value="Отправить"
+               className="auth-btn btn btn-primary col-auto"
+        />
       </form>
     )
   }

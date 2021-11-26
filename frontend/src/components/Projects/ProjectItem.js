@@ -1,18 +1,18 @@
-import {Link} from 'react-router-dom';
+import {Link} from "react-router-dom";
 
 
 export const ProjectItem = (props) => {
 
   const {user, users} = props
-  const user_projects = user.userProjects
+  const userProjects = user.userProjects
 
   return (
-    user_projects.map((project, idx) => <tr key={idx}>
+    userProjects.map((project, idx) => <tr key={idx}>
       <td>
         <Link to={`/projects/${project.id}`}>{project.name}</Link>
       </td>
       <td>
-        <a target='_blank' rel='noreferrer' href={project.repository}>
+        <a target="_blank" rel="noreferrer" href={project.repository}>
           {project.repository}
         </a>
       </td>

@@ -1,8 +1,8 @@
-import './Projects.css'
+import "./Projects.css"
 
-import React, {PureComponent} from 'react';
+import React, {PureComponent} from "react";
 
-import {ProjectsList} from './ProjectsList';
+import {ProjectsList} from "./ProjectsList";
 
 
 export class Projects extends PureComponent {

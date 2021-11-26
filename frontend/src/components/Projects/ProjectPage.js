@@ -9,60 +9,69 @@ export const ProjectPage = (props) => {
   const {users} = props
 
   // Проекты, отфильтрованные по id
-  const project_data = users.map(user => user.userProjects).map(
-    projects => projects.filter(proj => proj.id === id)[0]).filter(el => el)[0]
-  const project = !!project_data ? project_data : {
-    id: 0,
-    users: []
-  }
+  const projectData = users.map(user => user.userProjects)
+    .map(projects => projects.filter(project => project.id === id)[0])
+    .filter(el => el)[0]
+  const project = !!projectData ? projectData : {id: 0, users: []}
 
   // Заметки проекта
   const todos = users.map(user => user.userTodos).map(
     todos => todos.filter(todo => todo.project === id)).map(
-      todo => todo[0]).filter(el => el)
+    todo => todo[0]).filter(el => el)
 
-  const noData = 'нет данных!'
+  const noData = "нет данных!"
 
   return (
-    <div className='project-page'>
+    <div className="project-page">
       <div>
-        <p>Id: <span className='project-data'>{project.id}</span></p>
-        <p>Имя: <span className='project-data'>{project.name || noData}</span>
+        <p>Id: <span className="project-data">{project.id}</span></p>
+        <p>Имя: <span className="project-data">{project.name || noData}</span>
         </p>
-        <p>Репозиторий: <span className='project-data'>
-          <a href={project.repository} target='_blank' rel='noreferrer'>
+        <p>Репозиторий: <span className="project-data">
+          <a href={project.repository} target="_blank" rel="noreferrer">
             {project.repository || noData}</a></span>
         </p>
 
-        <p>Работают с проектом: <span className='project-data'>
-          {project.users.map((user, idx) => <span key={idx}>
-            <Link to={`/users/${user}`}>
-              {users.filter(data => data.id === user)[0].username}
-            </Link>, </span>)}</span>
+        <p>
+          <span>Работают с проектом: </span>
+          <span className="project-data">
+            {project.users.map((user, idx) =>
+              <span key={idx}>
+                <Link to={`/users/${user}`}>
+                  {users.filter(data => data.id === user)[0].username}
+                </Link>
+                <span>, </span>
+              </span>
+            )}
+          </span>
         </p>
 
         <h3>Заметки к проекту: </h3><br/>
         {todos.map((todo, idx) =>
           <div key={idx}>
-            <span className='comment'>{todo.text}</span>
+            <span className="comment">{todo.text}</span>
 
-            <div className='comment-info'>
-              <Link className='comment-user' to={`/users/${todo.user}`}>
+            <div className="comment-info">
+              <Link className="comment-user" to={`/users/${todo.user}`}>
                 {users.filter(user => user.id === todo.user)[0].username}
               </Link>
-              <span className='comment-datetime'>
+              <span className="comment-datetime">
                 {dateFormat(
-                  todo.created, 'dddd, mmmm dS, yyyy, h:MM:ss TT'
-                )}.
+                  todo.created, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+                )}
+                <span>.</span>
               </span>
-              <span className='comment-datetime'>
-                {todo.created !== todo.updated ? `Обновлено: ${dateFormat(
-                  todo.updated, 'dddd, mmmm dS, yyyy, h:MM:ss TT'
-                )}` : ''}
+              <span className="comment-datetime">
+                {todo.created !== todo.updated
+                  ? `Обновлено: ${dateFormat(
+                    todo.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}`
+                  : ''
+                }
               </span>
             </div>
             <br/>
-          </div>)}
+          </div>
+        )}
       </div>
     </div>
   )

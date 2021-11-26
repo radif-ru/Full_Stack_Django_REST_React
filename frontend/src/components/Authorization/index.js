@@ -1,1 +1,1 @@
-export * from './Authorization'
+export * from "./Authorization"

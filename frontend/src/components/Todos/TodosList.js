@@ -1,6 +1,6 @@
-import {PureComponent} from 'react';
+import {PureComponent} from "react";
 
-import {TodoItem} from './TodoItem';
+import {TodoItem} from "./TodoItem";
 
 
 export class TodosList extends PureComponent {
@@ -12,7 +12,7 @@ export class TodosList extends PureComponent {
     return (
       <div>
         <h3>Todos</h3>
-        <table className='table'>
+        <table className="table">
           <thead>
           <tr>
             <th>
@@ -33,8 +33,9 @@ export class TodosList extends PureComponent {
           </tr>
           </thead>
           <tbody>
-          {users.map((user, idx) => <TodoItem key={idx} user={user}
-                                              users={users}/>)}
+          {users.map((user, idx) =>
+            <TodoItem key={idx} user={user} users={users}/>)
+          }
           </tbody>
         </table>
       </div>

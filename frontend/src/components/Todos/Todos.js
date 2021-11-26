@@ -1,8 +1,8 @@
-import './Todos.css'
+import "./Todos.css"
 
-import React, {PureComponent} from 'react';
+import React, {PureComponent} from "react";
 
-import {TodosList} from './TodosList';
+import {TodosList} from "./TodosList";
 
 
 export class Todos extends PureComponent {

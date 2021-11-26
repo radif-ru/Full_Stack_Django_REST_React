@@ -1,6 +1,6 @@
-import {PureComponent} from 'react';
-import {Link} from 'react-router-dom';
-import dateFormat from 'dateformat';
+import {PureComponent} from "react";
+import {Link} from "react-router-dom";
+import dateFormat from "dateformat";
 
 
 export class UserItem extends PureComponent {
@@ -25,7 +25,7 @@ export class UserItem extends PureComponent {
           {user.email}
         </td>
         <td>
-          {user.birthdate ? dateFormat(user.birthdate, 'fullDate') : ''}
+          {user.birthdate ? dateFormat(user.birthdate, "fullDate") : ''}
         </td>
       </tr>
     )

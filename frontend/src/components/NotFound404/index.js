@@ -1,1 +1,1 @@
-export * from './NotFound404'
+export * from "./NotFound404"

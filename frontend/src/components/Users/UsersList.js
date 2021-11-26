@@ -1,5 +1,5 @@
-import {PureComponent} from 'react';
-import {UserItem} from './UserItem';
+import {PureComponent} from "react";
+import {UserItem} from "./UserItem";
 
 
 export class UsersList extends PureComponent {
@@ -10,27 +10,27 @@ export class UsersList extends PureComponent {
 
     return (
       <div>
-        <h3>Users</h3>
-        <table className='table'>
+        <h3>Пользователи</h3>
+        <table className="table">
           <thead>
           <tr>
             <th>
               Login
             </th>
             <th>
-              First name
+              Имя
             </th>
             <th>
-              Last name
+              Фамилия
             </th>
             <th>
-              Middle name
+              Отчество
             </th>
             <th>
               Email
             </th>
             <th>
-              Birthdate
+              Дата рождения
             </th>
           </tr>
           </thead>

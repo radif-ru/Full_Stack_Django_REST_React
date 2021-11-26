@@ -1,34 +1,36 @@
-import {PureComponent} from 'react';
+import {PureComponent} from "react";
 
-import {ProjectItem} from './ProjectItem';
+import {ProjectItem} from "./ProjectItem";
 
 
 export class ProjectsList extends PureComponent {
 
   render() {
 
+    // Только те пользователи, у которых есть проекты
     const users = this.props.users.filter(user => !!user.userProjects.length)
 
     return (
       <div>
         <h3>Projects</h3>
-        <table className='table'>
+        <table className="table">
           <thead>
           <tr>
             <th>
-              Name
+              Имя
             </th>
             <th>
-              Repository
+              Репозиторий
             </th>
             <th>
-              Users
+              Авторы
             </th>
           </tr>
           </thead>
           <tbody>
           {users.map((user, idx) =>
-            <ProjectItem key={idx} user={user} users={users}/>)}
+            <ProjectItem key={idx} user={user} users={users}/>
+          )}
           </tbody>
         </table>
       </div>

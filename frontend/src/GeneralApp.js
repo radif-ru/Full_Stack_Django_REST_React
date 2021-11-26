@@ -1,26 +1,26 @@
 /**
  * Главный родитель компонентов
  */
-import React from 'react';
+import React from "react";
 import {
   BrowserRouter,
   Navigate,
   Route,
   Routes,
-} from 'react-router-dom';
+} from "react-router-dom";
 
-import axios from 'axios';
-import Cookies from 'universal-cookie/es6';
+import axios from "axios";
+import Cookies from "universal-cookie/es6";
 
-import {Header} from './components/Header';
-import {Users} from './components/Users';
-import {Projects} from './components/Projects';
-import {Todos} from './components/Todos';
-import {Footer} from './components/Footer';
-import {NotFound404} from './components/NotFound404';
-import {UserPage} from './components/Users/UserPage';
-import {ProjectPage} from './components/Projects/ProjectPage';
-import {LoginForm} from './components/Authorization';
+import {Header} from "./components/Header";
+import {Users} from "./components/Users";
+import {Projects} from "./components/Projects";
+import {Todos} from "./components/Todos";
+import {Footer} from "./components/Footer";
+import {NotFound404} from "./components/NotFound404";
+import {UserPage} from "./components/Users/UserPage";
+import {ProjectPage} from "./components/Projects/ProjectPage";
+import {LoginForm} from "./components/Authorization";
 
 export class GeneralApp extends React.Component {
   /**
@@ -30,22 +30,22 @@ export class GeneralApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      'domain': 'http://localhost:3333',
+      "domain": "http://localhost:3333",
 
-      'users_endpoint': '/api/users/',
-      'projects_endpoint': '/api/projects/',
-      'todos_endpoint': '/api/todos/',
-      'token_endpoint': '/api/token/',
+      "usersEndpoint": "/api/users/",
+      "projectsEndpoint": "/api/projects/",
+      "todosEndpoint": "/api/todos/",
+      "tokenEndpoint": "/api/token/",
 
-      'limit': 100,
-      'offset': 0,
+      "limit": 100,
+      "offset": 0,
 
-      'users': [],
-      'projects': [],
-      'todos': [],
+      "users": [],
+      "projects": [],
+      "todos": [],
 
-      'token': '',
-      'login': '',
+      "token": '',
+      "login": '',
     }
   }
 
@@ -55,18 +55,18 @@ export class GeneralApp extends React.Component {
    * DOM-узлов. Это хорошее место для создания сетевых запросов.
    */
   componentDidMount() {
-    this.get_token()
+    this.getToken()
   }
 
   /**
    * Получение токена и логина из хранилища - Cookies и присвоение состояниям
    */
-  get_token() {
+  getToken() {
     const cookies = new Cookies()
-    const token = cookies.get('token')
-    const login = cookies.get('login');
+    const token = cookies.get("token")
+    const login = cookies.get("login");
     this.setState(
-      {'token': token, 'login': login}, () => this.get_data())
+      {"token": token, "login": login}, () => this.getData())
   }
 
   /**
@@ -74,24 +74,24 @@ export class GeneralApp extends React.Component {
    * Обработка ошибок связанных с токеном, извлечённом из Cookies браузера,
    * недоступностью сервера и т.д.
    */
-  get_data() {
-    this.load_data_promise().catch((error) => {
-      console.log(`get_data_load_data_promise_err: ${error}`);
-      if (error.name === 'TypeError') {
+  getData() {
+    this.loadDataPromise().catch((error) => {
+      console.log(`getData loadDataPromiseErr: ${error}`);
+      if (error.name === "TypeError") {
         alert(`Токен испорчен - неправильный формат! Кто-то изменил Cookies!
           \nПовторите вход в свой личный кабинет! И проверьтесь на вирусы!`);
         this.logout();
-        this.get_data();
+        this.getData();
       } else if (error.request.status === 401) {
         alert(`Токен просрочен. \nПовторите вход в свой личный кабинет!`);
         this.logout();
-        this.get_data();
+        this.getData();
       } else if (error.request.status === 0) {
         alert(`Сервер недоступен! \nПопробуйте зайти позже`);
       } else {
         alert(`Ошибка - ${error} \nПовторите вход в свой личный кабинет!`);
         this.logout();
-        this.get_data();
+        this.getData();
       }
     })
   }
@@ -101,28 +101,28 @@ export class GeneralApp extends React.Component {
    * удачного исхода, иначе ошибки обработает вышестоящий метод
    * @returns {Promise<void>}
    */
-  async load_data_promise() {
-    const headers = this.get_headers()
+  async loadDataPromise() {
+    const headers = this.getHeaders()
 
     const {
-      domain, users_endpoint, limit, offset
+      domain, usersEndpoint, limit, offset
     } = this.state
 
-    const users = await this.get_promise(
-      domain, users_endpoint, headers, limit, offset
+    const users = await this.getPromise(
+      domain, usersEndpoint, headers, limit, offset
     );
     // Теперь все данные привязаны к пользователям
-    // const projects = await this.get_promise(
-    //   domain, projects_endpoint, headers, limit, offset
+    // const projects = await this.getPromise(
+    //   domain, projectsEndpoint, headers, limit, offset
     // );
-    // const todos = await this.get_promise(
-    //   domain, todos_endpoint, headers, limit, offset
+    // const todos = await this.getPromise(
+    //   domain, todosEndpoint, headers, limit, offset
     // );
 
     this.setState({
-      'users': users.data.results,
-      // 'projects': projects.data.results,
-      // 'todos': todos.data.results
+      "users": users.data.results,
+      // "projects": projects.data.results,
+      // "todos": todos.data.results
     })
   }
 
@@ -135,7 +135,7 @@ export class GeneralApp extends React.Component {
    * @param offset {int} Смещение относительно первого объекта
    * @returns {Promise<AxiosResponse<any>>}
    */
-  get_promise(domain='http://localhost:3333', endpoint, headers, limit = 100, offset = 0) {
+  getPromise(domain = "http://localhost:3333", endpoint, headers, limit = 100, offset = 0) {
     return axios.get(
       `${domain}${endpoint}?limit=${limit}&offset=${offset}/`,
       {headers})
@@ -145,16 +145,16 @@ export class GeneralApp extends React.Component {
    * Создание и возврат заголовков для запросов
    * @returns {{"Content-Type": string}}
    */
-  get_headers() {
+  getHeaders() {
     let headers = {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json"
     }
-    if (this.is_authenticated()) {
+    if (this.isAuthenticated()) {
       // Для JWT к токену в заголовке нужно добавить префикс Bearer
-      // headers['Authorization'] = `Bearer ${this.state.token}`;
+      // headers["Authorization"] = `Bearer ${this.state.token}`;
       // Для безопасности изменил проверку на сервере значения заголовка на
       // кастомное
-       headers['Authorization'] = `Bear R@d1f ${this.state.token}`;
+      headers["Authorization"] = `Bear R@d1f ${this.state.token}`;
     }
     return headers
   }
@@ -163,7 +163,7 @@ export class GeneralApp extends React.Component {
    * Проверка - авторизован ли пользователь
    * @returns {boolean} - возвращает true или false
    */
-  is_authenticated() {
+  isAuthenticated() {
     return !!(this.state.token);
   }
 
@@ -173,15 +173,15 @@ export class GeneralApp extends React.Component {
    * @param password - Пароль
    */
   auth(login, password) {
-    const {domain, token_endpoint} = this.state
-    axios.post(`${domain}${token_endpoint}`, {
-      'username': login,
-      'password': password
+    const {domain, tokenEndpoint} = this.state
+    axios.post(`${domain}${tokenEndpoint}`, {
+      "username": login,
+      "password": password
     }).then(response => {
-      this.set_token(response.data['access'], login);
+      this.setToken(response.data["access"], login);
     }).catch(error => {
-        console.log(`get_token err: ${error}`);
-        alert('Неверный логин или пароль');
+        console.log(`getToken err: ${error}`);
+        alert("Неверный логин или пароль");
       }
     )
   }
@@ -191,13 +191,13 @@ export class GeneralApp extends React.Component {
    * @param token - Токен
    * @param login - Логин
    */
-  set_token(token, login) {
+  setToken(token, login) {
     const cookies = new Cookies();
-    cookies.set('token', token);
-    cookies.set('login', login);
+    cookies.set("token", token);
+    cookies.set("login", login);
 
-    this.setState({'token': token, 'login': login}, () => {
-      this.get_data();
+    this.setState({"token": token, "login": login}, () => {
+      this.getData();
     });
   }
 
@@ -205,7 +205,7 @@ export class GeneralApp extends React.Component {
    * Деавторизация
    */
   logout() {
-    this.set_token('', '');
+    this.setToken('', '');
   }
 
   /**
@@ -217,27 +217,45 @@ export class GeneralApp extends React.Component {
 
     return (
       <BrowserRouter>
-        <div className='content'>
-          <Header is_authenticated={() => this.is_authenticated()}
-                  logout={() => this.logout()} login={login}/>
-          <div className='main-content'>
+        <div className="content">
+          <Header
+            isAuthenticated={() => this.isAuthenticated()}
+            logout={() => this.logout()}
+            login={login}
+          />
+          <div className="main-content">
             <Routes>
-              <Route exact path='/users' element={<Users users={users}/>}/>
-              <Route exact path='/users/:id'
-                     element={<UserPage users={users}/>}/>
-
-              <Route exact path='/projects'
-                     element={<Projects users={users}/>}/>
-              <Route exact path='/projects/:id'
-                     element={<ProjectPage users={users}/>}/>
-              <Route exact path='/todos'
-                     element={<Todos users={users}/>}/>
-
-              <Route exact path='/login' element={<LoginForm auth={
-                (login, password) => this.auth(login, password)}/>}/>
-
-              <Route exact path='/' element={<Navigate to='/todos'/>}/>
-              <Route path='*' element={<NotFound404/>}/>
+              <Route exact path="/users" element={<Users users={users}/>}/>
+              <Route
+                exact
+                path="/users/:id"
+                element={<UserPage users={users}/>}
+              />
+              <Route
+                exact
+                path="/projects"
+                element={<Projects users={users}/>}
+              />
+              <Route
+                exact
+                path="/projects/:id"
+                element={<ProjectPage users={users}/>}
+              />
+              <Route
+                exact path="/todos"
+                element={<Todos users={users}/>}
+              />
+              <Route
+                exact
+                path="/login"
+                element={
+                  <LoginForm
+                    auth={(login, password) => this.auth(login, password)}
+                  />
+                }
+              />
+              <Route exact path="/" element={<Navigate to="/todos"/>}/>
+              <Route path="*" element={<NotFound404/>}/>
             </Routes>
           </div>
         </div>
