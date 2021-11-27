@@ -18,6 +18,7 @@ class UserModelSerializer(serializers.ModelSerializer):
         max_length=128, write_only=True, allow_blank=False)
 
     def create(self, *args, **kwargs):
+        """Создание пользователя. Вытаскиваю переданный пароль и хэширую"""
         user = super().create(*args, **kwargs)
         password = user.password
         user.set_password(password)
@@ -25,7 +26,9 @@ class UserModelSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, *args, **kwargs):
+        """Обновление пользователя. Вытаскиваю переданный пароль и хэширую"""
         user = super().update(*args, **kwargs)
+        # Вытаскиваю переданный пароль и хэширую
         password = user.password
         user.set_password(password)
         user.save()
@@ -33,6 +36,7 @@ class UserModelSerializer(serializers.ModelSerializer):
 
     @is_young_serializer_validate_decorator
     def validate(self, attrs):
+        """Валидация данных. Подробнее в декораторе"""
         return attrs
 
     class Meta:

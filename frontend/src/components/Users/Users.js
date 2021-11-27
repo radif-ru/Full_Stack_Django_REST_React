@@ -9,7 +9,7 @@ export class Users extends PureComponent {
 
   render() {
 
-    const users = this.props.users
+    const users = this.props.users;
 
     return (
       <div>

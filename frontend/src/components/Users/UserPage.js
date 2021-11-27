@@ -4,11 +4,10 @@ import dateFormat from "dateformat";
 
 
 export const UserPage = (props) => {
-
   const {id} = useParams();
-  const {users} = props
-  const user = users.filter((user) => user.id.toString() === id)
-  const noData = "нет данных!"
+  const {users} = props;
+  const user = users.filter((user) => user.id.toString() === id);
+  const noData = "нет данных!";
 
   return (
     <div className="user">

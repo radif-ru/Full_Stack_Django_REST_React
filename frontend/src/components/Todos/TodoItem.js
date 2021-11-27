@@ -6,13 +6,12 @@ import dateFormat from "dateformat";
 export class TodoItem extends PureComponent {
 
   render() {
-    const {user, users} = this.props
-    const userTodos = user.userTodos
-    const projectsData = users.map(user => user.userProjects)
+    const {user, users} = this.props;
+    const userTodos = user.userTodos;
+    const projectsData = users.map(user => user.userProjects);
 
     return (
       userTodos.map((todo, idx) => <tr key={idx}>
-
         <td>
           {todo.text}
         </td>

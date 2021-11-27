@@ -3,8 +3,8 @@ import {Link} from "react-router-dom";
 
 export const ProjectItem = (props) => {
 
-  const {user, users} = props
-  const userProjects = user.userProjects
+  const {user, users} = props;
+  const userProjects = user.userProjects;
 
   return (
     userProjects.map((project, idx) => <tr key={idx}>

@@ -5,7 +5,7 @@ import dateFormat from "dateformat";
 
 export class UserItem extends PureComponent {
   render() {
-    const {user} = this.props
+    const {user} = this.props;
 
     return (
       <tr>

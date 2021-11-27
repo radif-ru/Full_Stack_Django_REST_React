@@ -5,21 +5,21 @@ import dateFormat from "dateformat";
 export const ProjectPage = (props) => {
 
   let {id} = useParams();
-  id = +id
-  const {users} = props
+  id = +id;
+  const {users} = props;
 
   // Проекты, отфильтрованные по id
   const projectData = users.map(user => user.userProjects)
     .map(projects => projects.filter(project => project.id === id)[0])
-    .filter(el => el)[0]
-  const project = !!projectData ? projectData : {id: 0, users: []}
+    .filter(el => el)[0];
+  const project = !!projectData ? projectData : {id: 0, users: []};
 
   // Заметки проекта
-  const todos = users.map(user => user.userTodos).map(
-    todos => todos.filter(todo => todo.project === id)).map(
-    todo => todo[0]).filter(el => el)
+  const todos = users.map(user => user.userTodos)
+    .map(todos => todos.filter(todo => todo.project === id))
+    .map(todo => todo[0]).filter(el => el);
 
-  const noData = "нет данных!"
+  const noData = "нет данных!";
 
   return (
     <div className="project-page">
@@ -27,9 +27,13 @@ export const ProjectPage = (props) => {
         <p>Id: <span className="project-data">{project.id}</span></p>
         <p>Имя: <span className="project-data">{project.name || noData}</span>
         </p>
-        <p>Репозиторий: <span className="project-data">
+        <p>
+          <span>Репозиторий: </span>
+          <span className="project-data">
           <a href={project.repository} target="_blank" rel="noreferrer">
-            {project.repository || noData}</a></span>
+            {project.repository || noData}
+          </a>
+          </span>
         </p>
 
         <p>

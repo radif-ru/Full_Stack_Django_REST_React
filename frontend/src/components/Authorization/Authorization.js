@@ -16,7 +16,7 @@ export class LoginForm extends React.Component {
     this.state = {
       "login": '',
       "password": ''
-    }
+    };
   }
 
   /**
@@ -24,7 +24,7 @@ export class LoginForm extends React.Component {
    * @param event - Событие, оттуда извлекаются имена и значения login и password
    */
   handleChange(event) {
-    const {name, value} = event.target
+    const {name, value} = event.target;
     this.setState({
       [name]: value
     });
@@ -37,13 +37,13 @@ export class LoginForm extends React.Component {
    * @param event используется только для остановки события
    */
   handleSubmit(event) {
-    const {login, password} = this.state
-    const {auth} = this.props
-    auth(login, password)
+    const {login, password} = this.state;
+    const {auth} = this.props;
+    auth(login, password);
     this.setState({
       "login": '',
       "password": ''
-    })
+    });
     event.preventDefault();
   }
 
@@ -55,39 +55,42 @@ export class LoginForm extends React.Component {
    */
   render() {
 
-    const {login, password} = this.state
+    const {login, password} = this.state;
 
     return (
       <form onSubmit={(event => this.handleSubmit(event))} className="row g-2">
         <div className="col-auto">
-          <input type="text"
-                 name="login"
-                 placeholder="Логин"
-                 aria-describedby="loginHelpInline"
-                 value={login}
-                 className="form-control"
-                 onChange={(event => this.handleChange(event))}
+          <input
+            type="text"
+            name="login"
+            placeholder="Логин"
+            aria-describedby="loginHelpInline"
+            value={login}
+            className="form-control"
+            onChange={(event => this.handleChange(event))}
           />
           <span id="loginHelpInline" className="form-text">
             Введите Ваш уникальный логин, указанный при регистрации
           </span>
         </div>
         <div className="col-auto">
-          <input type="password"
-                 name="password"
-                 placeholder="Пароль"
-                 aria-describedby="passwordHelpInline"
-                 value={password}
-                 className="form-control"
-                 onChange={(event => this.handleChange(event))}
+          <input
+            type="password"
+            name="password"
+            placeholder="Пароль"
+            aria-describedby="passwordHelpInline"
+            value={password}
+            className="form-control"
+            onChange={(event => this.handleChange(event))}
           />
           <span id="passwordHelpInline" className="form-text">
             Должно быть 8-20 символов.
           </span>
         </div>
-        <input type="submit"
-               value="Отправить"
-               className="auth-btn btn btn-primary col-auto"
+        <input
+          type="submit"
+          value="Отправить"
+          className="auth-btn btn btn-primary col-auto"
         />
       </form>
     )

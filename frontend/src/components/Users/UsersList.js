@@ -5,8 +5,7 @@ import {UserItem} from "./UserItem";
 export class UsersList extends PureComponent {
 
   render() {
-
-    const {users} = this.props
+    const {users} = this.props;
 
     return (
       <div>

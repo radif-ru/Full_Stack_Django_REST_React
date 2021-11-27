@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 
 const Menu = (props) => {
 
-  const {isAuthenticated, logout, login} = props
+  const {isAuthenticated, logout, login} = props;
 
   return (
     <nav className="menu">
@@ -21,11 +21,11 @@ const Menu = (props) => {
         <li>
           <Link className="menu-link" to="/todos">Заметки</Link>
         </li>
-        <li> {!isAuthenticated() ?
-          <Link className="menu-link menu-login" to="/login">Войти</Link> :
-          <span className="menu-link menu-logout" onClick={() => logout()}>
-            {login} | Выйти
-          </span>
+        <li> {!isAuthenticated()
+          ? <Link className="menu-link menu-login" to="/login">Войти</Link>
+          : <span className="menu-link menu-logout" onClick={() => logout()}>
+              {login} | Выйти
+            </span>
         }
         </li>
       </ul>
@@ -37,7 +37,7 @@ export class Header extends PureComponent {
 
   render() {
 
-    const {isAuthenticated, logout, login} = this.props
+    const {isAuthenticated, logout, login} = this.props;
 
     return (
       <header className="header">

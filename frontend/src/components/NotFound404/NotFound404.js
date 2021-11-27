@@ -7,10 +7,12 @@ export class NotFound404 extends PureComponent {
 
   render() {
 
+    const currentPage = window.location.href;
+
     return (
       <div>
         <h2>Данная страница недоступна! </h2>
-        <p>Неправильный путь: <b>{window.location.href}</b></p>
+        <p>Неправильный путь: <b>{currentPage}</b></p>
       </div>
     )
   }

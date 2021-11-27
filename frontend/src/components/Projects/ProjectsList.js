@@ -6,7 +6,6 @@ import {ProjectItem} from "./ProjectItem";
 export class ProjectsList extends PureComponent {
 
   render() {
-
     // Только те пользователи, у которых есть проекты
     const users = this.props.users.filter(user => !!user.userProjects.length)
 
