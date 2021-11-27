@@ -4,17 +4,25 @@ from graphene_django import DjangoObjectType
 
 from projects.models import Project
 from todos.models import Todo
-from users.models import User
+from users.models import User, PermissionGroups
 
 
-# Тип GraphQL. Наследование от DjangoObjectType позволяет автоматически
-# создать нужные типы полей для указанной модели и указать нужные поля.
-# При вложенных полях нужно обязательно указать их типы.
 class UserType(DjangoObjectType):
+    """Тип GraphQL.
+    Наследование от DjangoObjectType позволяет автоматически создать нужные
+    типы полей для указанной модели и указать нужные поля.
+    """
+
     class Meta:
+        """Поле password не включено"""
         model = User
-        # Поле password не включено
         exclude = ('password',)
+
+
+class PermissionGroupsType(DjangoObjectType):
+    class Meta:
+        model = PermissionGroups
+        fields = '__all__'
 
 
 class ProjectType(DjangoObjectType):
@@ -29,8 +37,11 @@ class TodoType(DjangoObjectType):
         fields = '__all__'
 
 
-# Тип Query
 class Query(graphene.ObjectType):
+    """Тип Query. При вложенных полях нужно обязательно указать их типы -
+    как например это пришлось сделать для ролей
+    """
+    all_roles = graphene.List(PermissionGroupsType)
     all_users = graphene.List(UserType)
     all_projects = graphene.List(ProjectType)
     all_todos = graphene.List(TodoType)
@@ -42,23 +53,33 @@ class Query(graphene.ObjectType):
                                        first_name=graphene.String(),
                                        last_name=graphene.String())
 
-    # Поле. Префикс resolve_ - обязателен. all_users - имя поля
     def resolve_all_users(self, info):
+        """Поле. Префикс resolve_ - обязателен. all_users - имя поля"""
         # Возвращение только активных пользователей
-        return User.objects.filter(is_active=1)
+        return User.objects.prefetch_related(
+            'user_todos', 'user_projects', 'roles').filter(is_active=1)
 
     def resolve_all_projects(self, info):
-        return Project.objects.filter(is_active=1)
+        return Project.objects.prefetch_related(
+            'users', 'users__roles').filter(is_active=1)
 
     def resolve_all_todos(self, info):
-        return Todo.objects.filter(is_active=1)
+        return Todo.objects.prefetch_related(
+            'project__users__roles', 'user__roles').filter(is_active=1)
 
-    # Обработка фильтрации
     def resolve_user_by_id(self, info, id):
-        return User.objects.get(id=id)
+        """ Обработка переданного параметра - id
+        Параметры передаются в скобках, через запятую, например:
+        {userById (id: 22) {id username email}}
+        """
+        try:
+            return User.objects.get(id=id)
+        except User.DoesNotExist as exception:
+            raise User.DoesNotExist('Пользователь не найден')
 
     def resolve_todo_by_user_login(self, info, login=None, first_name=None,
                                    last_name=None):
+        """Обработка переданных параметров - фильтрация на их основе"""
         todos = Todo.objects.all()
         if login:
             todos = todos.filter(user__username=login)
@@ -69,38 +90,61 @@ class Query(graphene.ObjectType):
         return todos
 
 
-# Изменение данных
 class UserUpdateMutation(graphene.Mutation):
+    """Изменение данных. Для примера, включено только 1 поле, кроме id"""
+
     class Arguments:
-        birthdate = graphene.Date(required=True)
+        birthdate = graphene.Date(required=False)
         id = graphene.ID()
 
     user = graphene.Field(UserType)
 
     @classmethod
     def mutate(cls, root, info, birthdate, id):
-        user = User.objects.get(id=id)
-        user.birthdate = birthdate
-        user.save()
-        return UserUpdateMutation(user)
+        try:
+            user = User.objects.get(id=id)
+            user.birthdate = birthdate
+            user.save()
+            return UserUpdateMutation(user)
+        except User.DoesNotExist as exception:
+            raise User.DoesNotExist('Пользователь не найден')
 
 
-# Создание данных
 class UserCreateMutation(graphene.Mutation):
+    """Создание данных. Пример запроса (для других мутаций так же):
+    mutation {
+      createUser(login: "murrrrAt", email: "murrrr@inbox.com",
+        password: "qwertytrewq", firstName: "Мурат"){
+        user {
+          id
+          username
+          email
+          firstName
+        }
+      }
+    }
+    """
+
     class Arguments:
         email = graphene.String(required=True)
-        birthdate = graphene.Date(required=True)
-        first_name = graphene.String(required=True)
-        last_name = graphene.String(required=True)
+        birthdate = graphene.Date(required=False)
+        first_name = graphene.String(required=False)
+        last_name = graphene.String(required=False)
         login = graphene.String(required=True)
+        password = graphene.String(required=True)
 
     user = graphene.Field(UserType)
 
     @classmethod
-    def mutate(cls, root, info, birthdate, first_name, last_name, email,
-               login):
-        user = User(first_name=first_name, last_name=last_name,
-                    birthdate=birthdate, email=email, username=login)
+    def mutate(cls, root, info, *args, **kwargs):
+        """ Поля добавляю сразу, как вытащу login, так как в модели это
+        username. Далее хэширую пароль в объекте и сохраняю данные в БД.
+        """
+        username = kwargs.pop('login')
+        user = User(*args, **kwargs)
+        user.username = username
+        password = user.password
+        user.set_password(password)
         user.save()
         return UserCreateMutation(user)
 
