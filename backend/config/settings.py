@@ -336,7 +336,8 @@ SIMPLE_JWT = {
 
     # Префикс токена, используемый клиентом в заголовке по умолчания
     # 'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_HEADER_TYPES': ('Bear R@d1f', 'Hare Wolf'),
+    # В префиксе не должно быть пробелов!
+    'AUTH_HEADER_TYPES': ('Bear_R@d1f', 'Hare_Wolf'),
     # Имя заголовка авторизации, по умолчанию - Authorization
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     # Например код ниже будет использовать имя заголовка - X_Access_Token
