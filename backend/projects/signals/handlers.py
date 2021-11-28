@@ -34,6 +34,9 @@ def email_sender(instance: Project, text: str) -> None:
         repository_link = instance.repository
         project_link = f'{DOMAIN_NAME}{PROJECTS_ENDPOINT}{instance.pk}/'
 
+        if not instance.is_active:
+            text = 'Удалён'
+
         title = f'{text} проект "{project_name}"'
 
         message = f'{text} проект "{project_name}"\n\n' \

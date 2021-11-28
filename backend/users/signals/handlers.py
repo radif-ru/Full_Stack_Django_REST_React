@@ -37,6 +37,9 @@ def email_sender(instance: User, text: str) -> None:
 
         user_link = f'{DOMAIN_NAME}{USERS_ENDPOINT}{instance.pk}/'
 
+        if not instance.is_active:
+            text = 'Удалён'
+
         title = f'{text} аккаунт владельца под логином - "{login}"'
 
         message = f'{text} аккаунт владельца под логином - "{login}"\n\n' \

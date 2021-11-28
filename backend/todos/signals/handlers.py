@@ -31,6 +31,9 @@ def email_sender(instance: Todo, text: str) -> None:
         updated = instance.updated
         todo_link = f'{DOMAIN_NAME}{TODOS_ENDPOINT}{instance.pk}/'
 
+        if not instance.is_active:
+            text = 'Удалена'
+
         title = f'{text} заметка для проекта "{project_name}"'
 
         message = f'{text} заметка для проекта "{project_name}"\n\n' \
