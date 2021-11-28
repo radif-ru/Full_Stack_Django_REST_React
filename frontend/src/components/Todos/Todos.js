@@ -8,10 +8,16 @@ import {TodosList} from "./TodosList";
 export class Todos extends PureComponent {
 
   render() {
-    const {users} = this.props;
+    const {users, projects, deleteTodo, isAuthenticated, login} = this.props;
 
     return (
-      <TodosList users={users}/>
+      <TodosList
+        users={users}
+        projects={projects}
+        deleteTodo={deleteTodo}
+        isAuthenticated={isAuthenticated}
+        login={login}
+      />
     )
   }
 }

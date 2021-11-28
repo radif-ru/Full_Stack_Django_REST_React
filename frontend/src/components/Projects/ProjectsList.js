@@ -4,10 +4,14 @@ import {ProjectItem} from "./ProjectItem";
 
 
 export class ProjectsList extends PureComponent {
+  constructor(props) {
+    super(props);
+  }
 
   render() {
+    const {projects} = this.props
     // Только те пользователи, у которых есть проекты
-    const users = this.props.users.filter(user => !!user.userProjects.length)
+    const users = this.props.users.filter(user => !!user.userProjects.length);
 
     return (
       <div>
@@ -27,8 +31,8 @@ export class ProjectsList extends PureComponent {
           </tr>
           </thead>
           <tbody>
-          {users.map((user, idx) =>
-            <ProjectItem key={idx} user={user} users={users}/>
+          {projects.map((project, idx) =>
+            <ProjectItem key={idx} project={project} users={users}/>
           )}
           </tbody>
         </table>

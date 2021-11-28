@@ -1,12 +1,13 @@
 import {Link, useParams} from "react-router-dom";
 import dateFormat from "dateformat";
+import {TodoForm} from "../Todos/TodoForm";
 
 
 export const ProjectPage = (props) => {
 
   let {id} = useParams();
   id = +id;
-  const {users} = props;
+  const {users, isAuthenticated, login, createTodo} = props;
 
   // Проекты, отфильтрованные по id
   const projectData = users.map(user => user.userProjects)
@@ -14,10 +15,16 @@ export const ProjectPage = (props) => {
     .filter(el => el)[0];
   const project = !!projectData ? projectData : {id: 0, users: []};
 
-  // Заметки проекта
-  const todos = users.map(user => user.userTodos)
+  // Заметки проекта всех пользователей
+  let todos = users.map(user => user.userTodos)
     .map(todos => todos.filter(todo => todo.project === id))
-    .map(todo => todo[0]).filter(el => el);
+    .filter(el => el[0]);
+
+  // Разворот массивов внутри массива
+  if (todos.length) {
+    todos = todos.reduce((arr1, arr2) => [...arr1, ...arr2], ...[]);
+  }
+
 
   const noData = "нет данных!";
 
@@ -49,6 +56,18 @@ export const ProjectPage = (props) => {
             )}
           </span>
         </p>
+
+        {/*У авторизованных пользователей есть возможность создавать заметки
+        к проектам*/}
+        {isAuthenticated()
+          ? <TodoForm
+            project_id={id}
+            users={users}
+            login={login}
+            createTodo={createTodo}
+          />
+          : null
+        }
 
         <h3>Заметки к проекту: </h3><br/>
         {todos.map((todo, idx) =>

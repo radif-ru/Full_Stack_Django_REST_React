@@ -9,10 +9,10 @@ export class Projects extends PureComponent {
 
   render() {
 
-    const {users} = this.props
+    const {users, projects} = this.props
 
     return (
-      <ProjectsList users={users}/>
+      <ProjectsList users={users} projects={projects}/>
     )
   }
 }

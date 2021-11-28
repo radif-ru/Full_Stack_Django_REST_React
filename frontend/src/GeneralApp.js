@@ -1,4 +1,5 @@
 /**
+ * На клиенте используется архитектура One Way Data Flow
  * Главный родитель компонентов
  */
 import React from "react";
@@ -40,15 +41,15 @@ export class GeneralApp extends React.Component {
 
       "tokenEndpoint": "/api/token/",
 
-      "limit": 100,
+      "limit": 1000,
       "offset": 0,
 
       "users": [],
       "projects": [],
       "todos": [],
 
-      "token": '',
-      "login": '',
+      "token": "",
+      "login": "",
     }
   }
 
@@ -69,129 +70,209 @@ export class GeneralApp extends React.Component {
     const token = cookies.get("token");
     const login = cookies.get("login");
     this.setState(
-      {"token": token, "login": login}, () => this.getData());
+      {"token": token, "login": login}, () => this.getAllData());
   }
 
   /**
-   * Конечный этап получения данных, обработки Promises.
-   * Обработка ошибок связанных с токеном, извлечённом из Cookies браузера,
-   * недоступностью сервера и т.д.
+   * Создание и возврат заголовков для запросов
+   * @returns {{"Content-Type": string}}
    */
-  getData() {
-    this.loadDataPromise().catch((error) => {
-      console.log(`getData loadDataPromise err: ${error}`);
-      if (error.message.indexOf( "ISO-8859-1") !== -1) {
-        alert(`Токен испорчен - неправильный формат! Кто-то изменил Cookies!
-          \nПовторите вход в свой личный кабинет! И проверьтесь на вирусы!`);
-        this.setToken('', '');
-      } else if (error.request.status === 401) {
-        alert(`Токен просрочен. \nПовторите вход в свой личный кабинет!`);
-        this.setToken('', '');
-      } else if (error.request.status === 0) {
-        alert(`Сервер недоступен! \nПопробуйте зайти позже`);
-      } else {
-        alert(`Ошибка - ${error} \nПовторите вход в свой личный кабинет!`);
+  getHeaders() {
+    let headers = {
+      "Content-Type": "application/json"
+    }
+    if (this.isAuthenticated()) {
+      // Для JWT к токену в заголовке нужно добавить префикс Bearer
+      // headers["Authorization"] = `Bearer ${this.state.token}`;
+      // Для безопасности изменил проверку на сервере значения заголовка на
+      // кастомное
+      headers["Authorization"] = `Bear_R@d1f ${this.state.token}`;
+    }
+    return headers
+  }
+
+  /**
+   * Проверка - авторизован ли пользователь
+   * @returns {boolean} - возвращает true или false
+   */
+  isAuthenticated() {
+    return !!(this.state.token);
+  }
+
+  /**
+   * Авторизация пользователя. Получение токена на основе логина и пароля
+   * @param login {string} - Логин
+   * @param password {string}  - Пароль
+   */
+  auth(login, password) {
+    const {domain, tokenEndpoint} = this.state
+    axios.post(`${domain}${tokenEndpoint}`, {
+      "username": login,
+      "password": password
+    }).then(response => {
+      this.setToken(response.data["access"], login);
+    }).catch(error => {
+        console.log(`getToken err: ${error}`);
+        alert("Неверный логин или пароль");
       }
-    })
+    )
   }
 
   /**
-   * Асинхронное извлечение Promises и присвоение состояниям - в случае
-   * удачного исхода, иначе ошибки обработает вышестоящий метод
-   * @returns {Promise<void>}
+   * Присвоение токена и логина в Cookies и состояния приложения
+   * @param token {string}  - Токен
+   * @param login {string}  - Логин
    */
-  async loadDataPromise() {
-    const {
-      domain, graphQLEndpoint, usersEndpoint, limit, offset
-    } = this.state;
-    const headers = this.getHeaders();
+  setToken(token, login) {
+    const cookies = new Cookies();
+    cookies.set("token", token);
+    cookies.set("login", login);
 
+    this.setState({"token": token, "login": login},
+      () => {
+        this.getAllData();
+      }
+    );
+  }
+
+  /**
+   * Деавторизация
+   */
+  logout() {
+    this.setToken('', '');
+  }
+
+  /**
+   * Получить все данные
+   */
+  getAllData() {
     // Если пользователь не авторизован для получения данных использую GraphQL.
     // Сделано просто для примера. Никакого преимущества это не даёт и даже
     // наоборот размер данных в 2 раза выше из-за того, что id дополнительно
     // вкладываются в объекты (словари) с 1 полем id. Ещё и клиент больше
     // нагружается из-за затрат на извлечение id и преобразование их к числу...
     if (!this.isAuthenticated()) {
-      const promiseObj = await this.getPromiseGraphQL(
-        domain, graphQLEndpoint, headers
-      );
-
-      const users = promiseObj.data.data.allUsers;
-
-      // Во избежание конфликтов пересобираю данные так же, как если бы запрос
-      // делался на Django REST, а не на GraphQL. ID перевожу в цифровой формат
-      users.map(user => {
-        user.id = +user.id;
-        // Преобразую поля заметок
-        user.userTodos.map(todo => {
-          // В поле user и project помещаю соответствующие id, вместо объектов
-          todo.id = +todo.id;
-          todo.user = +todo.user.id;
-          todo.project = +todo.project.id;
-          return todo
-        });
-        // Преобразую поля проектов
-        user.userProjects.map(project => {
-          project.id = +project.id;
-          // Вместо массива объектов, делаю массив из id
-          const usersArr = [];
-          project.users.map(user => {
-            usersArr.push(+user.id);
-            return user
-          })
-          project.users = usersArr;
-          return project
-        })
-        return user
-      })
-      this.setState({
-        "users": users,
-      })
+      this.getUsersDataGraphQL();
     } else {
-      const promiseObj = await this.getPromise(
-        domain, usersEndpoint, headers, limit, offset
-      );
-      const users = promiseObj.data.results
-      // Теперь все данные привязаны к пользователям
-      // const projects = await this.getPromise(
-      //   domain, projectsEndpoint, headers, limit, offset
-      // );
-      // const todos = await this.getPromise(
-      //   domain, todosEndpoint, headers, limit, offset
-      // );
-
-      this.setState({
-        "users": users,
-        // "projects": projects.data.results,
-        // "todos": todos.data.results
-      })
+      this.getUsersDataREST();
     }
   }
 
   /**
-   * Запрос данных и передача Promise вышестоящему методу для обработки
+   * Получить данные пользователей из Django REST
+   */
+  getUsersDataREST() {
+    const {
+      domain, usersEndpoint, limit, offset
+    } = this.state;
+    const headers = this.getHeaders();
+
+    this.getDataREST(domain, usersEndpoint, headers, limit, offset)
+  }
+
+  /**
+   * Получить данные заметок из Django REST
+   */
+  getTodosDataREST() {
+    const {
+      domain, todosEndpoint, limit, offset
+    } = this.state;
+    const headers = this.getHeaders();
+
+    this.getDataREST(domain, todosEndpoint, headers, limit, offset);
+  }
+
+  /**
+   * Получить данные проектов из Django REST
+   */
+  getProjectsDataREST() {
+    const {
+      domain, projectsEndpoint, limit, offset
+    } = this.state;
+    const headers = this.getHeaders();
+
+    this.getDataREST(domain, projectsEndpoint, headers, limit, offset);
+  }
+
+  /**
+   * Получить данные пользователей из GraphQL
+   */
+  getUsersDataGraphQL() {
+    const {domain, graphQLEndpoint} = this.state;
+    const headers = this.getHeaders();
+    this.getDataGraphQL(domain, graphQLEndpoint, headers);
+  }
+
+
+  /**
+   * Удаление заметки с помощью Django REST
+   * @param id {int} Идентификатор заметки
+   * @returns {Promise<void>}
+   */
+  async deleteTodo(id) {
+    const {domain, todosEndpoint} = this.state;
+    const headers = this.getHeaders();
+    await this.deleteDataREST(domain, todosEndpoint, id, headers);
+  }
+
+
+  /**
+   * Создание заметки с помощью Django REST
+   * @param project {int} Идентификатор проекта
+   * @param user {int} Идентификатор пользователя
+   * @param text {string} Текст заметки
+   * @returns {Promise<void>}
+   */
+  async createTodo(project, user, text) {
+    const {domain, todosEndpoint} = this.state;
+    const headers = this.getHeaders();
+    const data = {
+      "project": project,
+      "user": user,
+      "text": text
+    }
+    await this.createDataREST(data, domain, todosEndpoint, headers);
+  }
+
+  /**
+   * Асинхронный запрос данных из Django REST, извлечение и обработка
    * @param domain {string} Домен
    * @param endpoint {string} Конечная точка
    * @param headers {object} Заголовки
    * @param limit {int} Лимит на количество полученных данных
    * @param offset {int} Смещение относительно первого объекта
-   * @returns {Promise<AxiosResponse<any>>}
+   * @returns {Promise<void>}
    */
-  getPromise(domain = "http://localhost:3333", endpoint, headers, limit = 100, offset = 0) {
-    return axios.get(
+  async getDataREST(
+    domain = "http://localhost:3333",
+    endpoint, headers, limit = 100, offset = 0) {
+
+    await axios.get(
       `${domain}${endpoint}?limit=${limit}&offset=${offset}/`,
-      {headers})
+      {headers}).then(response => {
+      // В случае удачного удаления перезагружаю данные с сервера.
+      // Можно конечно просто удалить элемент из состояния, но это может
+      // привести к артефактам, рассинхрону с актуальными данными...
+      const users = response.data.results;
+
+      this.setAllData(users);
+
+    })
+      .catch((error) => {
+        this.handleErrors(error, "getDataREST");
+      })
   }
 
   /**
-   * Запрос данных и передача Promise вышестоящему методу для обработки
+   * Асинхронный запрос данных из GraphQL, извлечение и обработка
+   * Так же происходит пересборка данных, комментарии ниже
    * @param domain {string} Домен
    * @param graphQLEndpoint {string} Конечная точка
    * @param headers {object} Заголовки
-   * @returns {Promise<AxiosResponse<any>>}
+   * @returns {Promise<void>}
    */
-  getPromiseGraphQL(domain, graphQLEndpoint, headers) {
-    return axios.post(
+  async getDataGraphQL(domain, graphQLEndpoint, headers) {
+    await axios.post(
       `${domain}${graphQLEndpoint}`,
       {
         query: `{
@@ -234,76 +315,145 @@ export class GeneralApp extends React.Component {
           }
         }`,
         headers: headers,
+      }).then(response => {
+
+      const users = response.data.data.allUsers;
+
+      // Во избежание конфликтов пересобираю данные так же, как если бы запрос
+      // делался на Django REST, а не на GraphQL. ID перевожу в цифровой формат
+
+      users.map(user => {
+        user.id = +user.id;
+        // Преобразую поля заметок
+        user.userTodos.map(todo => {
+          // В поле user и project помещаю соответствующие id, вместо объектов
+          todo.id = +todo.id;
+          todo.user = +todo.user.id;
+          todo.project = +todo.project.id;
+          return todo
+        });
+        // Преобразую поля проектов
+        user.userProjects.map(project => {
+          project.id = +project.id;
+          // Вместо массива объектов, делаю массив из id
+          const usersArr = [];
+          project.users.map(user => {
+            usersArr.push(+user.id);
+            return user
+          })
+          project.users = usersArr;
+          return project
+        })
+        return user
+      })
+
+      this.setAllData(users);
+
+    })
+      .catch((error) => {
+        this.handleErrors(error, "getDataGraphQL");
       })
   }
 
   /**
-   * Создание и возврат заголовков для запросов
-   * @returns {{"Content-Type": string}}
+   * Сохраняю полученные данные из Django REST и GraphQL в состояния
+   * @param data {object} Полученные данные
    */
-  getHeaders() {
-    let headers = {
-      "Content-Type": "application/json"
+  setAllData(data) {
+    // Проекты всех пользователей
+    let projects = data.map(user => user.userProjects)
+      .filter(project => project.length);
+    // Уникальные проекты
+    projects = [...new Set(...projects)];
+
+    // Заметки всех пользователей
+    let todos = data.map(user => user.userTodos)
+      .filter(todo => todo.length)
+    if (todos.length) {
+      todos.reduce((arr1, arr2) => [...arr1, ...arr2], ...[]);
     }
-    if (this.isAuthenticated()) {
-      // Для JWT к токену в заголовке нужно добавить префикс Bearer
-      // headers["Authorization"] = `Bearer ${this.state.token}`;
-      // Для безопасности изменил проверку на сервере значения заголовка на
-      // кастомное
-      headers["Authorization"] = `Bear_R@d1f ${this.state.token}`;
+
+    this.setState({
+      "users": data,
+      "projects": projects,
+      "todos": todos
+    })
+  }
+
+
+  /**
+   * POST запрос в Django REST на создание данных
+   * @param data {object} Отправляемые данные
+   * @param domain {string} Домен
+   * @param endpoint {string} Конечная точка
+   * @param headers {object} Заголовки
+   */
+  createDataREST(data, domain, endpoint, headers) {
+    axios.post(`${domain}${endpoint}`, data, {headers})
+      .then(response => {
+        // В случае удачной операции перезагружаю данные с сервера.
+        // Можно конечно просто удалить элемент из состояния, но это может
+        // привести к артефактам, рассинхрону с актуальными данными...
+        this.getAllData();
+      })
+      .catch(error => {
+          this.handleErrors(error, 'createDataREST');
+        }
+      )
+  }
+
+  /**
+   * Удаление данных с помощью Django REST
+   * @param domain {string} Домен
+   * @param endpoint {string} Конечная точка заметок
+   * @param id {int} Идентификатор
+   * @param headers {object} Заголовки
+   */
+  deleteDataREST(domain, endpoint, id, headers) {
+    axios.delete(`${domain}${endpoint}${id}`, {headers})
+      .then(response => {
+        // В случае удачного удаления перезагружаю данные с сервера.
+        // Можно конечно просто удалить элемент из состояния, но это может
+        // привести к артефактам, рассинхрону с актуальными данными...
+        this.getAllData();
+      })
+      .catch(error => {
+          this.handleErrors(error, "deleteDataREST");
+        }
+      )
+  }
+
+  /**
+   * Обработка ошибок связанных с токеном, извлечённом из
+   * Cookies браузера, недоступностью сервера и т.д.
+   * @param error {object} Объект ошибки
+   * @param text {string} Пояснение к ошибке, или откуда вызвана
+   */
+  handleErrors(error, text = "") {
+    console.log(`${text} err: ${error}`);
+    if (error.message.indexOf("ISO-8859-1") !== -1) {
+      alert(`Токен испорчен - неправильный формат! Кто-то изменил Cookies!
+          \nПовторите вход в свой личный кабинет! И проверьтесь на вирусы!`);
+      this.setToken('', '');
     }
-    return headers
-  }
-
-  /**
-   * Проверка - авторизован ли пользователь
-   * @returns {boolean} - возвращает true или false
-   */
-  isAuthenticated() {
-    return !!(this.state.token);
-  }
-
-  /**
-   * Авторизация пользователя. Получение токена на основе логина и пароля
-   * @param login - Логин
-   * @param password - Пароль
-   */
-  auth(login, password) {
-    const {domain, tokenEndpoint} = this.state
-    axios.post(`${domain}${tokenEndpoint}`, {
-      "username": login,
-      "password": password
-    }).then(response => {
-      this.setToken(response.data["access"], login);
-    }).catch(error => {
-        console.log(`getToken err: ${error}`);
-        alert("Неверный логин или пароль");
+    if (!!error.request) {
+      if (error.request.status === 401) {
+        alert(`Токен просрочен. \nПовторите вход в свой личный кабинет!`);
+        this.setToken('', '');
+      } else if (error.request.status === 0) {
+        alert(`Сервер недоступен! \nПопробуйте зайти позже`);
+      } else if (error.request.status === 500) {
+        alert(`Внутренняя ошибка сервера! \nСервер не может обработать Ваш 
+        запрос`);
+      } else if (error.request.status === 403) {
+        alert(`Для Вас это действие запрещено!`)
+      } else if (error.request.status === 404) {
+        alert(`Данные не найдены. Подождите или перезагрузитесь. 
+        \nВозможно сервер обрабатывает запрос`)
       }
-    )
-  }
-
-  /**
-   * Присвоение токена и логина в Cookies и состояния приложения
-   * @param token - Токен
-   * @param login - Логин
-   */
-  setToken(token, login) {
-    const cookies = new Cookies();
-    cookies.set("token", token);
-    cookies.set("login", login);
-
-    this.setState({"token": token, "login": login},
-      () => {
-        this.getData();
-      }
-    );
-  }
-
-  /**
-   * Деавторизация
-   */
-  logout() {
-    this.setToken('', '');
+    } else {
+      alert(`Ошибка - ${error}`);
+    }
   }
 
   /**
@@ -311,7 +461,7 @@ export class GeneralApp extends React.Component {
    * @returns {JSX.Element}
    */
   render() {
-    const {users, login} = this.state;
+    const {users, projects, todos, login} = this.state;
 
     return (
       <BrowserRouter>
@@ -332,16 +482,34 @@ export class GeneralApp extends React.Component {
               <Route
                 exact
                 path="/projects"
-                element={<Projects users={users}/>}
+                element={<Projects users={users} projects={projects}/>}
               />
               <Route
                 exact
                 path="/projects/:id"
-                element={<ProjectPage users={users}/>}
+                element={
+                  <ProjectPage
+                    users={users}
+                    isAuthenticated={() => this.isAuthenticated()}
+                    login={login}
+                    createTodo={(project, user, text) =>
+                      this.createTodo(project, user, text)
+                    }
+                  />
+                }
               />
               <Route
                 exact path="/todos"
-                element={<Todos users={users}/>}
+                element={
+                  <Todos
+                    users={users}
+                    projects={projects}
+                    todos={todos}
+                    isAuthenticated={() => this.isAuthenticated()}
+                    deleteTodo={(id) => this.deleteTodo(id)}
+                    login={login}
+                  />
+                }
               />
               <Route
                 exact

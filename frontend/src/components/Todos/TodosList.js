@@ -4,8 +4,8 @@ import {TodoItem} from "./TodoItem";
 
 
 export class TodosList extends PureComponent {
-
   render() {
+    const {deleteTodo, isAuthenticated, login, projects} = this.props;
     // Все пользователи у кого есть заметки
     const users = this.props.users.filter(user => !!user.userTodos.length);
 
@@ -30,11 +30,21 @@ export class TodosList extends PureComponent {
             <th>
               Обновлена
             </th>
+            {/*Поле для авторизованных*/}
+            {isAuthenticated() ? <th> </th> : null}
           </tr>
           </thead>
           <tbody>
           {users.map((user, idx) =>
-            <TodoItem key={idx} user={user} users={users}/>
+            <TodoItem
+              key={idx}
+              user={user}
+              projects={projects}
+              users={users}
+              deleteTodo={deleteTodo}
+              isAuthenticated={isAuthenticated}
+              login={login}
+            />
           )}
           </tbody>
         </table>

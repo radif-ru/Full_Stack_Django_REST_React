@@ -6,9 +6,10 @@ import dateFormat from "dateformat";
 export class TodoItem extends PureComponent {
 
   render() {
-    const {user, users} = this.props;
+    const {
+      user, projects, deleteTodo, isAuthenticated, login
+    } = this.props;
     const userTodos = user.userTodos;
-    const projectsData = users.map(user => user.userProjects);
 
     return (
       userTodos.map((todo, idx) => <tr key={idx}>
@@ -21,10 +22,9 @@ export class TodoItem extends PureComponent {
         <td>
           <Link to={`/projects/${todo.project}`}>
             {/*Имя проекта*/}
-            {projectsData.map(projects => projects
-              .filter(project => project.id === todo.project))
-              .filter(el => el.length)[0][0]
-              .name
+            {projects.filter(project => project.id === todo.project).length
+              ? projects.filter(project => project.id === todo.project)[0].name
+              : null
             }
           </Link>
         </td>
@@ -34,6 +34,14 @@ export class TodoItem extends PureComponent {
         <td>
           {dateFormat(todo.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}
         </td>
+        {/*У авторизованных пользователей есть возможность удалять заметки,
+        но только свои*/}
+        {isAuthenticated() && user.username === login
+          ? <td className="btn btn-outline-danger">
+              <div onClick={() => deleteTodo(todo.id)}>Del</div>
+          </td>
+          : null
+        }
       </tr>)
     )
   }

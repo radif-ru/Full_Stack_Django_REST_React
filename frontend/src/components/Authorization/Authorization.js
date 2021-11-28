@@ -14,13 +14,13 @@ export class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      "login": '',
-      "password": ''
+      "login": "",
+      "password": ""
     };
   }
 
   /**
-   * Присвивание состояний на основе события изменения поля ввода формы
+   * Присваивание состояний на основе события изменения поля ввода формы
    * @param event - Событие, оттуда извлекаются имена и значения login и password
    */
   handleChange(event) {
@@ -31,7 +31,7 @@ export class LoginForm extends React.Component {
   }
 
   /**
-   * Присваивание состояний на основе события обработки отправки данных в форме.
+   * Присваивание состояний на основе события обработки отправки данных в форме
    * login, password получен из состояния - куда они попали из this.handleChange
    * auth получается из свойств, которые передал родитель
    * @param event используется только для остановки события
@@ -41,8 +41,8 @@ export class LoginForm extends React.Component {
     const {auth} = this.props;
     auth(login, password);
     this.setState({
-      "login": '',
-      "password": ''
+      "login": "",
+      "password": ""
     });
     event.preventDefault();
   }
