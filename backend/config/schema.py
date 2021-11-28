@@ -1,5 +1,6 @@
 """Схема GraphQL"""
 import graphene
+from django.db.models import Prefetch
 from graphene_django import DjangoObjectType
 
 from projects.models import Project
@@ -54,10 +55,21 @@ class Query(graphene.ObjectType):
                                        last_name=graphene.String())
 
     def resolve_all_users(self, info):
-        """Поле. Префикс resolve_ - обязателен. all_users - имя поля"""
-        # Возвращение только активных пользователей
-        return User.objects.prefetch_related(
-            'user_todos', 'user_projects', 'roles').filter(is_active=1)
+        """Поле. Префикс resolve_ - обязателен. all_users - имя поля
+        Возвращение только активных пользователей
+        При вызове связанных полей так же только активные проекты и заметки
+        """
+        return User.objects.filter(is_active=1).prefetch_related(
+            Prefetch(
+                'user_todos',
+                queryset=Todo.objects.filter(is_active=1)
+            ),
+            Prefetch(
+                'user_projects',
+                queryset=Project.objects.filter(is_active=1)
+            ),
+            'roles'
+        )
 
     def resolve_all_projects(self, info):
         return Project.objects.prefetch_related(
