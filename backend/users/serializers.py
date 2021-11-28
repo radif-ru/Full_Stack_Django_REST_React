@@ -45,10 +45,22 @@ class UserModelSerializer(serializers.ModelSerializer):
                   'email', 'birthdate', 'roles', 'password')
 
 
+# Ниже происходит работа со связанными полями пользователей и выдача в GET
+
+class FilteredListSerializer(serializers.ListSerializer):
+    """Отфильтровываются и показываются только активные заметки и проекты"""
+
+    def to_representation(self, data):
+        data = data.filter(is_active=1)
+        return super(FilteredListSerializer, self).to_representation(data)
+
+
 class ProjectSetModelSerializer(serializers.ModelSerializer):
     """Сериализация связанной модели проектов для пользователей"""
 
     class Meta:
+        """Фильтрация связанного поля проектов"""
+        list_serializer_class = FilteredListSerializer
         model = Project
         fields = '__all__'
 
@@ -57,6 +69,8 @@ class TodoSetModelSerializer(serializers.ModelSerializer):
     """Сериализация связанной модели заметок для пользователей"""
 
     class Meta:
+        """Фильтрация связанного поля заметок"""
+        list_serializer_class = FilteredListSerializer
         model = Todo
         fields = '__all__'
 
