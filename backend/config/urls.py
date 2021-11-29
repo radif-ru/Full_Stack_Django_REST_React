@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from graphene_django.views import GraphQLView
@@ -36,6 +37,10 @@ router.register('projects', ProjectModelViewSet, basename='projects')
 router.register('todos', TodoModelViewSet)
 
 urlpatterns = [
+    # Пути для запуска фронтенда на Django
+    re_path('^(''|todos|users|users?/\d|projects|projects?/\d)$',
+            TemplateView.as_view(template_name='index.html')),
+
     path('administration/', admin.site.urls),
 
     # Стандартный метод авторизации rest_framework

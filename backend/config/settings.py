@@ -84,8 +84,13 @@ ROOT_URLCONF = 'config.urls'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
-    # 'http://0.0.0.0:3000',
-    'http://192.168.56.1:3000'
+    'http://0.0.0.0:3000',
+    'http://192.168.56.1:3000',
+
+    # Для запуска фронтенда на Django
+    'http://localhost:3333',
+    'http://127.0.0.1:3333',
+    'http://0.0.0.0:3333',
 ]
 
 TEMPLATES = [
@@ -93,7 +98,9 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             # Добавление шаблонов из корневой директории templates
-            os.path.join(BASE_DIR, 'templates')
+            os.path.join(BASE_DIR, 'templates'),
+            # Путь к фронтенду для запуска на Django
+            os.path.join(BASE_DIR, '../frontend/build/'),
         ],
         # Поиск шаблонов будет вестись по установленным приложениям (APP_DIRS):
         'APP_DIRS': True,
@@ -162,10 +169,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/staticfiles/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = (
+    # Путь к статике фронтенда для запуска на Django
+    os.path.join(BASE_DIR, '../frontend/build/static'),
+
     os.path.join(BASE_DIR, 'static'),
 )
 
