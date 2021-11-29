@@ -28,8 +28,6 @@ class User(AbstractUser):
         max_length=8, verbose_name='дата рождения', blank=True, null=True)
     roles = models.ManyToManyField(PermissionGroups, verbose_name='роли',
                                    related_name='roles_users')
-    created = models.DateTimeField(verbose_name='дата создания',
-                                   auto_now_add=True)
     updated = models.DateTimeField(verbose_name='дата обновления',
                                    auto_now=True, null=True, blank=True)
 
