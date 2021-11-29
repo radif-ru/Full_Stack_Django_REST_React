@@ -5,6 +5,9 @@ import React, {PureComponent} from "react";
 import {UsersList} from "./UsersList";
 
 
+/**
+ * Работа с пользователями
+ */
 export class Users extends PureComponent {
 
   render() {

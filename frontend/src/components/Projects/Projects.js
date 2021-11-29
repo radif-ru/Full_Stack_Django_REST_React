@@ -5,6 +5,9 @@ import React, {PureComponent} from "react";
 import {ProjectsList} from "./ProjectsList";
 
 
+/**
+ * Работа с проектами
+ */
 export class Projects extends PureComponent {
 
   render() {

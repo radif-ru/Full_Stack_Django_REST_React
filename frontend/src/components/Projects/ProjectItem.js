@@ -1,6 +1,12 @@
 import {Link} from "react-router-dom";
 
 
+/**
+ * Заполнение ячеек проектов, формирование авторов для каждого проекта
+ * @param props {object} - Данные, переданные родителем
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export const ProjectItem = (props) => {
 
   const {project, users} = props;
@@ -16,9 +22,9 @@ export const ProjectItem = (props) => {
         </a>
       </td>
       <td>
-        {project.users.map((user, idx) => <span key={idx}>
-          <Link to={`/users/${user}`}>
-            {users.filter(data => data.id === user)[0].username}
+        {project.users.map((user_id, idx) => <span key={idx}>
+          <Link to={`/users/${user_id}`}>
+            {users.filter(user => user.id === user_id)[0].username}
           </Link><br/>
         </span>)}
       </td>

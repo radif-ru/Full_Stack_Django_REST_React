@@ -139,7 +139,7 @@ export class GeneralApp extends React.Component {
    * Деавторизация
    */
   logout() {
-    this.setToken('', '');
+    this.setToken("", "");
   }
 
   /**
@@ -357,24 +357,43 @@ export class GeneralApp extends React.Component {
 
   /**
    * Сохраняю полученные данные из Django REST и GraphQL в состояния
-   * @param data {object} Полученные данные
+   * @param data {array} Полученные данные
    */
   setAllData(data) {
+    // Данные пользователей. Сначала делаю копию массива, чтобы изменения не
+    // коснулись других ссылок на данные массива, затем удаляю лишние данные
+    let users = JSON.parse(JSON.stringify(data));
+    users.map(user => {
+      delete user.userProjects;
+      delete user.userTodos;
+      return user;
+    })
+
     // Проекты всех пользователей
     let projects = data.map(user => user.userProjects)
-      .filter(project => project.length);
+      .filter(project => project.length)
+      .reduce((arr1, arr2) => [...arr1, ...arr2], ...[]);
+    // Уникальные id проектов
+    const unique_ids = [...new Set(projects.map(project => project.id))];
     // Уникальные проекты
-    projects = [...new Set(...projects)];
+    projects = unique_ids
+      .map(id => projects.filter(project => project.id === id)[0]);
+    // Сортировка проектов по дате обновления
+    projects.sort((a, b) =>
+      new Date(b.updated) - new Date(a.updated)
+    )
 
     // Заметки всех пользователей
-    let todos = data.map(user => user.userTodos)
-      .filter(todo => todo.length)
-    if (todos.length) {
-      todos.reduce((arr1, arr2) => [...arr1, ...arr2], ...[]);
-    }
+    let todos = data.map(user => user.userTodos).filter(todo => todo.length)
+    // Разворот массивов внутри массива
+    todos = todos.reduce((arr1, arr2) => [...arr1, ...arr2], ...[]);
+    // Сортировка заметок по дате обновления
+    todos.sort((a, b) =>
+      new Date(b.updated) - new Date(a.updated)
+    )
 
     this.setState({
-      "users": data,
+      "users": users,
       "projects": projects,
       "todos": todos
     })
@@ -397,7 +416,7 @@ export class GeneralApp extends React.Component {
         this.getAllData();
       })
       .catch(error => {
-          this.handleErrors(error, 'createDataREST');
+          this.handleErrors(error, "createDataREST");
         }
       )
   }
@@ -434,12 +453,12 @@ export class GeneralApp extends React.Component {
     if (error.message.indexOf("ISO-8859-1") !== -1) {
       alert(`Токен испорчен - неправильный формат! Кто-то изменил Cookies!
           \nПовторите вход в свой личный кабинет! И проверьтесь на вирусы!`);
-      this.setToken('', '');
+      this.setToken("", "");
     }
     if (!!error.request) {
       if (error.request.status === 401) {
         alert(`Токен просрочен. \nПовторите вход в свой личный кабинет!`);
-        this.setToken('', '');
+        this.setToken("", "");
       } else if (error.request.status === 0) {
         alert(`Сервер недоступен! \nПопробуйте зайти позже`);
       } else if (error.request.status === 500) {
@@ -448,8 +467,8 @@ export class GeneralApp extends React.Component {
       } else if (error.request.status === 403) {
         alert(`Для Вас это действие запрещено!`)
       } else if (error.request.status === 404) {
-        alert(`Данные не найдены. Подождите или перезагрузитесь. 
-        \nВозможно сервер обрабатывает запрос`)
+        alert(`Данные не найдены. Подождите. Не кликайте много раз подряд. 
+        \nВозможно мы ещё не обработали запрос`)
       }
     } else {
       alert(`Ошибка - ${error}`);
@@ -492,6 +511,8 @@ export class GeneralApp extends React.Component {
                     users={users}
                     isAuthenticated={() => this.isAuthenticated()}
                     login={login}
+                    projects={projects}
+                    todos={todos}
                     createTodo={(project, user, text) =>
                       this.createTodo(project, user, text)
                     }

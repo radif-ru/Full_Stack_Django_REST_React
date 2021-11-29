@@ -1,11 +1,10 @@
-/**
- * Создание и обработка формы авторизации
- */
 import "./Authorization.css"
 
 import React from "react";
 
-
+/**
+ * Создание и обработка формы авторизации
+ */
 export class LoginForm extends React.Component {
   /**
    * Прокидывание свойств (props) от родителя, начальные состояния логина/пароля

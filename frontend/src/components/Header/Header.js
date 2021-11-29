@@ -4,6 +4,12 @@ import React, {PureComponent} from "react";
 import {Link} from "react-router-dom";
 
 
+/**
+ * Отображение меню, кнопки для пользователей в зависимости от авторизации
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const Menu = (props) => {
 
   const {isAuthenticated, logout, login} = props;
@@ -33,6 +39,9 @@ const Menu = (props) => {
   )
 }
 
+/**
+ * Работа с заголовком страницы
+ */
 export class Header extends PureComponent {
 
   render() {

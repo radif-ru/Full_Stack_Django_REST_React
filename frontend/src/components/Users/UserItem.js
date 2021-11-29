@@ -3,8 +3,13 @@ import {Link} from "react-router-dom";
 import dateFormat from "dateformat";
 
 
+/**
+ * Заполнение ячеек пользователей
+ */
 export class UserItem extends PureComponent {
+
   render() {
+
     const {user} = this.props;
 
     return (
@@ -25,7 +30,7 @@ export class UserItem extends PureComponent {
           {user.email}
         </td>
         <td>
-          {user.birthdate ? dateFormat(user.birthdate, "fullDate") : ''}
+          {user.birthdate ? dateFormat(user.birthdate, "fullDate") : ""}
         </td>
       </tr>
     )

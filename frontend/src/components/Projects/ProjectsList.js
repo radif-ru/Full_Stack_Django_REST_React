@@ -2,16 +2,13 @@ import {PureComponent} from "react";
 
 import {ProjectItem} from "./ProjectItem";
 
-
+/**
+ * Формирование заголовков таблицы и данных для заполнения ячеек
+ */
 export class ProjectsList extends PureComponent {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
-    const {projects} = this.props
-    // Только те пользователи, у которых есть проекты
-    const users = this.props.users.filter(user => !!user.userProjects.length);
+    const {projects, users} = this.props
 
     return (
       <div>

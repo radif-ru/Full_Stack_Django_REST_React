@@ -3,6 +3,9 @@ import "./NotFound404.css"
 import React, {PureComponent} from "react";
 
 
+/**
+ * Обработка переходов на несуществующие страницы
+ */
 export class NotFound404 extends PureComponent {
 
   render() {

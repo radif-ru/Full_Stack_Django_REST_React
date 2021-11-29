@@ -2,6 +2,9 @@ import {PureComponent} from "react";
 import {UserItem} from "./UserItem";
 
 
+/**
+ * Формирование заголовков таблицы и данных для заполнения ячеек
+ */
 export class UsersList extends PureComponent {
 
   render() {

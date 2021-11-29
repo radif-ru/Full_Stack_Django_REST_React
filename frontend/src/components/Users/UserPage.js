@@ -46,6 +46,36 @@ export const UserPage = (props) => {
               }
             </span>
           </p>
+          <p>
+            <span>Роли пользователя: </span>
+            {data.roles.map((role, idx) =>
+            <span key={idx} className="user-data"> | {role.role} |</span>
+          )}
+          </p>
+          <p>
+            <span>Зарегистрировался(-ась): </span>
+            <span className="user-data">
+              {dateFormat(
+                data.dateJoined, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+              )}
+            </span>
+          </p>
+          <p>
+            <span>Последний раз заходил(-а): </span>
+            <span className="user-data">
+              {dateFormat(
+                data.lastLogin, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+              )}
+            </span>
+          </p>
+          <p>
+            <span>Данные обновлены: </span>
+            <span className="user-data">
+              {dateFormat(
+                data.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+              )}
+            </span>
+          </p>
         </div>
       )}
     </div>

@@ -2,12 +2,17 @@ import {PureComponent} from "react";
 
 import {TodoItem} from "./TodoItem";
 
-
+/**
+ * Формирование заголовков таблицы и данных для заполнения ячеек
+ * Для авторизованных появляется поле удаления заметки, но кнопка удаления
+ * отображается только у владельцев заметок
+ */
 export class TodosList extends PureComponent {
+
   render() {
-    const {deleteTodo, isAuthenticated, login, projects} = this.props;
-    // Все пользователи у кого есть заметки
-    const users = this.props.users.filter(user => !!user.userTodos.length);
+    const {
+      users, projects, todos, deleteTodo, isAuthenticated, login
+    } = this.props;
 
     return (
       <div>
@@ -30,17 +35,16 @@ export class TodosList extends PureComponent {
             <th>
               Обновлена
             </th>
-            {/*Поле для авторизованных*/}
             {isAuthenticated() ? <th> </th> : null}
           </tr>
           </thead>
           <tbody>
-          {users.map((user, idx) =>
+          {todos.map((todo, idx) =>
             <TodoItem
               key={idx}
-              user={user}
-              projects={projects}
+              todo={todo}
               users={users}
+              projects={projects}
               deleteTodo={deleteTodo}
               isAuthenticated={isAuthenticated}
               login={login}

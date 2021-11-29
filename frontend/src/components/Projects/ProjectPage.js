@@ -3,28 +3,25 @@ import dateFormat from "dateformat";
 import {TodoForm} from "../Todos/TodoForm";
 
 
+/**
+ * Страница проекта. Формирование данных проекта и заполнение
+ * У авторизованных пользователей есть возможность создавать заметки к проектам
+ * @param props {object} Данные, переданные родителем
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export const ProjectPage = (props) => {
 
   let {id} = useParams();
   id = +id;
-  const {users, isAuthenticated, login, createTodo} = props;
+  const {users, projects, todos, isAuthenticated, login, createTodo} = props;
 
   // Проекты, отфильтрованные по id
-  const projectData = users.map(user => user.userProjects)
-    .map(projects => projects.filter(project => project.id === id)[0])
-    .filter(el => el)[0];
-  const project = !!projectData ? projectData : {id: 0, users: []};
+  let project = projects.filter(project => project.id === id)[0];
+  project = !!project ? project : {id: 0, users: []};
 
-  // Заметки проекта всех пользователей
-  let todos = users.map(user => user.userTodos)
-    .map(todos => todos.filter(todo => todo.project === id))
-    .filter(el => el[0]);
-
-  // Разворот массивов внутри массива
-  if (todos.length) {
-    todos = todos.reduce((arr1, arr2) => [...arr1, ...arr2], ...[]);
-  }
-
+  // Заметки к этому проекту
+  const project_todos = todos.filter(todo => todo.project === id)
 
   const noData = "нет данных!";
 
@@ -57,8 +54,27 @@ export const ProjectPage = (props) => {
           </span>
         </p>
 
-        {/*У авторизованных пользователей есть возможность создавать заметки
-        к проектам*/}
+        <p>
+          <span>Проект создан: </span>
+          <span className="project-data">
+              {dateFormat(
+                project.created, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+              )}
+          </span>
+        </p>
+
+        <p>
+          <span>Проект обновлён: </span>
+          <span className="project-data">
+              {project.created !== project.updated
+                ? `${dateFormat(
+                  project.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}`
+                : "---"
+              }
+          </span>
+        </p>
+
+
         {isAuthenticated()
           ? <TodoForm
             project_id={id}
@@ -70,7 +86,7 @@ export const ProjectPage = (props) => {
         }
 
         <h3>Заметки к проекту: </h3><br/>
-        {todos.map((todo, idx) =>
+        {project_todos.map((todo, idx) =>
           <div key={idx}>
             <span className="comment">{todo.text}</span>
 
@@ -88,7 +104,7 @@ export const ProjectPage = (props) => {
                 {todo.created !== todo.updated
                   ? `Обновлено: ${dateFormat(
                     todo.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}`
-                  : ''
+                  : ""
                 }
               </span>
             </div>

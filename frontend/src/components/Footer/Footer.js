@@ -4,6 +4,9 @@ import logo from "./logo.svg";
 import React, {PureComponent} from "react";
 
 
+/**
+ * Формирование нижней части страницы
+ */
 export class Footer extends PureComponent {
 
   render() {
