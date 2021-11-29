@@ -93,6 +93,4 @@ class UserModelSerializerGet(UserModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'middle_name',
-                  'email', 'birthdate', 'roles', 'password', 'user_todos',
-                  'user_projects')
+        fields = '__all__'
