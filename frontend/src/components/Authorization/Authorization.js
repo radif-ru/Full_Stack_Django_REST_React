@@ -60,6 +60,7 @@ export class LoginForm extends React.Component {
       <form onSubmit={(event => this.handleSubmit(event))} className="row g-2">
         <div className="col-auto">
           <input
+            required
             type="text"
             name="login"
             placeholder="Логин"
@@ -74,6 +75,7 @@ export class LoginForm extends React.Component {
         </div>
         <div className="col-auto">
           <input
+            required
             type="password"
             name="password"
             placeholder="Пароль"

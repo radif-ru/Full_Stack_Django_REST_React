@@ -377,7 +377,7 @@ export class GeneralApp extends React.Component {
     const unique_ids = [...new Set(projects.map(project => project.id))];
     // Уникальные проекты
     projects = unique_ids
-      .map(id => projects.filter(project => project.id === id)[0]);
+      .map(id => projects.find(project => project.id === id));
     // Сортировка проектов по дате обновления
     projects.sort((a, b) =>
       new Date(b.updated) - new Date(a.updated)
@@ -469,6 +469,9 @@ export class GeneralApp extends React.Component {
       } else if (error.request.status === 404) {
         alert(`Данные не найдены. Подождите. Не кликайте много раз подряд. 
         \nВозможно мы ещё не обработали запрос`)
+      } else if (error.request.status === 400) {
+        alert(`Сервер не принял Ваши данные. Возможно они не уникальны. 
+        \nПопробуйте ввести что-то другое`)
       }
     } else {
       alert(`Ошибка - ${error}`);
@@ -489,6 +492,7 @@ export class GeneralApp extends React.Component {
             isAuthenticated={() => this.isAuthenticated()}
             logout={() => this.logout()}
             login={login}
+            users={users}
           />
           <div className="main-content">
             <Routes>
@@ -496,7 +500,18 @@ export class GeneralApp extends React.Component {
               <Route
                 exact
                 path="/users/:id"
-                element={<UserPage users={users}/>}
+                element={
+                  <UserPage
+                    users={users}
+                    projects={projects}
+                    todos={todos}
+                    login={login}
+                    isAuthenticated={() => this.isAuthenticated()}
+                    createTodo={(project, user, text) =>
+                      this.createTodo(project, user, text)
+                    }
+                  />
+                }
               />
               <Route
                 exact

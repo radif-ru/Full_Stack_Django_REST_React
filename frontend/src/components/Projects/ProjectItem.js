@@ -24,7 +24,7 @@ export const ProjectItem = (props) => {
       <td>
         {project.users.map((user_id, idx) => <span key={idx}>
           <Link to={`/users/${user_id}`}>
-            {users.filter(user => user.id === user_id)[0].username}
+            {users.find(user => user.id === user_id).username}
           </Link><br/>
         </span>)}
       </td>

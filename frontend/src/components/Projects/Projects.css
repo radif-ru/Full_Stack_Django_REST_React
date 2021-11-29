@@ -10,21 +10,5 @@
   font-weight: bold;
   color: #761c19;
 }
-.project-page .comment {
-  font-size: 1.2em;
-  color: #1d5a08;
-}
-.project-page .comment-info {
-  font-size: 0.9em;
-}
-.project-page .comment-info .comment-user {
-  font-size: 1.3em;
-  padding-right: 0.5em;
-}
-.project-page .comment-info .comment-datetime {
-  color: #5a626c;
-  font-weight: bold;
-  padding-right: 0.5em;
-}
 
 /*# sourceMappingURL=Projects.css.map */

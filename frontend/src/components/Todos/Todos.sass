@@ -1,1 +1,30 @@
+@import "variables"
+
 // Стилизация заметок
+
+.todos
+  .comment
+    font-size: 1.2em
+    color: $comment-color
+  .comment-info
+    font-size: 0.9em
+    .comment-user
+      font-size: 1.3em
+      padding-right: 0.5em
+      text-decoration: none
+      color: $comment-page-a-color
+      font-weight: bold
+      &:hover
+        color: $comment-page-a-color-hover
+    .comment-datetime
+      color: #5a626c
+      font-weight: bold
+      padding-right: 0.5em
+
+  &__form-text-area
+    //resize: both
+    //max-width: 58vh
+    //min-width: 40vh
+
+  &__form-select
+    //width: inherit

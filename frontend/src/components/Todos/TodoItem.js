@@ -15,8 +15,8 @@ export class TodoItem extends PureComponent {
     const {
       todo, users, projects, deleteTodo, isAuthenticated, login
     } = this.props;
-    const user = users.filter(user => user.id === todo.user)[0];
-    const project = projects.filter(project => project.id === todo.project)[0];
+    const user = users.find(user => user.id === todo.user);
+    const project = projects.find(project => project.id === todo.project);
 
     return (
       <tr>

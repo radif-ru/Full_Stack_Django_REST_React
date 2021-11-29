@@ -1,83 +1,118 @@
 import {useParams} from "react-router-dom";
 
 import dateFormat from "dateformat";
+import {TodosPage} from "../Todos/TodosPage";
+import {TodoForm} from "../Todos/TodoForm";
 
 
+/**
+ * Личный кабинет пользователя
+ * @param props {object} Свойства переданные родителем
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export const UserPage = (props) => {
-  const {id} = useParams();
-  const {users} = props;
-  const user = users.filter((user) => user.id.toString() === id);
+  let {id} = useParams();
+  id = +id;
+  const {users, projects, todos, isAuthenticated, login, createTodo} = props;
+  const user = users.find((user) => user.id === id);
+
+  const user_todos = todos.filter(todo => todo.user === id)
+
+  // const user_projects = projects.filter(
+  //   project => project.users.find(proj_user => proj_user === id)
+  // )
+
   const noData = "нет данных!";
 
   return (
-    <div className="user">
-      {user.map((data, idx) =>
-        <div key={idx}>
-          <p>
-            <span>Id: </span>
-            <span className="user-data">{data.id}</span>
-          </p>
-          <p>
-            <span>Login: </span>
-            <span className="user-data">{data.username}</span>
-          </p>
-          <p>
-            <span>Имя: </span>
-            <span className="user-data">{data.firstName || noData}</span>
-          </p>
-          <p>
-            <span>Фамилия: </span>
-            <span className="user-data">{data.lastName || noData}</span>
-          </p>
-          <p>
-            <span>Отчество: </span>
-            <span className="user-data">{data.middleName || noData}</span>
-          </p>
-          <p>
-            <span>Электронная почта: </span>
-            <span className="user-data">{data.email}</span>
-          </p>
-          <p>
-            <span>Дата рождения: </span>
-            <span className="user-data">
-              {data.birthdate
-                ? dateFormat(data.birthdate, "fullDate")
+    <div>
+      {user
+        ? <div className="user">
+          <div>
+            <p>
+              <span>Id: </span>
+              <span className="user-data">{user.id}</span>
+            </p>
+            <p>
+              <span>Login: </span>
+              <span className="user-data">{user.username}</span>
+            </p>
+            <p>
+              <span>Имя: </span>
+              <span className="user-data">{user.firstName || noData}</span>
+            </p>
+            <p>
+              <span>Фамилия: </span>
+              <span className="user-data">{user.lastName || noData}</span>
+            </p>
+            <p>
+              <span>Отчество: </span>
+              <span className="user-data">{user.middleName || noData}</span>
+            </p>
+            <p>
+              <span>Электронная почта: </span>
+              <span className="user-data">{user.email}</span>
+            </p>
+            <p>
+              <span>Дата рождения: </span>
+              <span className="user-data">
+              {user.birthdate
+                ? dateFormat(user.birthdate, "fullDate")
                 : noData
               }
             </span>
-          </p>
-          <p>
-            <span>Роли пользователя: </span>
-            {data.roles.map((role, idx) =>
-            <span key={idx} className="user-data"> | {role.role} |</span>
-          )}
-          </p>
-          <p>
-            <span>Зарегистрировался(-ась): </span>
-            <span className="user-data">
+            </p>
+            <p>
+              <span>Роли пользователя: </span>
+              {user.roles.map((role, idx) =>
+                <span key={idx} className="user-data"> | {role.role} |</span>
+              )}
+            </p>
+            <p>
+              <span>Зарегистрировался(-ась): </span>
+              <span className="user-data">
               {dateFormat(
-                data.dateJoined, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+                user.dateJoined, "dddd, mmmm dS, yyyy, h:MM:ss TT"
               )}
             </span>
-          </p>
-          <p>
-            <span>Последний раз заходил(-а): </span>
-            <span className="user-data">
+            </p>
+            <p>
+              <span>Последний раз заходил(-а): </span>
+              <span className="user-data">
               {dateFormat(
-                data.lastLogin, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+                user.lastLogin, "dddd, mmmm dS, yyyy, h:MM:ss TT"
               )}
             </span>
-          </p>
-          <p>
-            <span>Данные обновлены: </span>
-            <span className="user-data">
+            </p>
+            <p>
+              <span>Данные обновлены: </span>
+              <span className="user-data">
               {dateFormat(
-                data.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+                user.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT"
               )}
             </span>
-          </p>
+            </p>
+          </div>
+
+          <h3>Заметки пользователя: </h3><br/>
+
+          {isAuthenticated() && user.username === login
+            ? <TodoForm
+              users={users}
+              projects={projects}
+              login={login}
+              createTodo={createTodo}
+            />
+            : null
+          }
+
+          <TodosPage todos={user_todos} users={users}/>
+
         </div>
-      )}
+
+        : null
+      }
     </div>
   )
 }

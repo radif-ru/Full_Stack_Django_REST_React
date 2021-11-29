@@ -5,14 +5,17 @@ import {Link} from "react-router-dom";
 
 
 /**
- * Отображение меню, кнопки для пользователей в зависимости от авторизации
+ * Отображение меню, кнопок для пользователей - личный кабинет, войти, выйти -
+ * в зависимости от авторизации
  * @param props
  * @returns {JSX.Element}
  * @constructor
  */
 const Menu = (props) => {
 
-  const {isAuthenticated, logout, login} = props;
+  const {isAuthenticated, logout, login, users} = props;
+  // Авторизованный пользователь
+  const user = users.find(user => user.username === login)
 
   return (
     <nav className="menu">
@@ -27,13 +30,27 @@ const Menu = (props) => {
         <li>
           <Link className="menu-link" to="/todos">Заметки</Link>
         </li>
-        <li> {!isAuthenticated()
-          ? <Link className="menu-link menu-login" to="/login">Войти</Link>
-          : <span className="menu-link menu-logout" onClick={() => logout()}>
-              {login} | Выйти
-            </span>
+        {isAuthenticated() && user
+          ? <li>
+            <Link
+              className="menu-link"
+              to={`/users/${user.id}`}
+            >
+              ЛК | {login}
+            </Link>
+          </li>
+          : null
         }
-        </li>
+        {isAuthenticated()
+          ? <li>
+            <span className="menu-link menu-logout" onClick={() => logout()}>
+              Выйти
+            </span>
+          </li>
+          : <li>
+            <Link className="menu-link menu-login" to="/login">Войти</Link>
+          </li>
+        }
       </ul>
     </nav>
   )
@@ -46,11 +63,16 @@ export class Header extends PureComponent {
 
   render() {
 
-    const {isAuthenticated, logout, login} = this.props;
+    const {isAuthenticated, logout, login, users} = this.props;
 
     return (
       <header className="header">
-        <Menu isAuthenticated={isAuthenticated} logout={logout} login={login}/>
+        <Menu
+          isAuthenticated={isAuthenticated}
+          logout={logout}
+          login={login}
+          users={users}
+        />
       </header>
     )
   }
