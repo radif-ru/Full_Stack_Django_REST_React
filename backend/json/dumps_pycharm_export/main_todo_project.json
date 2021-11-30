@@ -1,17 +1,17 @@
 [
   {
     "id": 1,
-    "name": "Крутой",
-    "repository": "https://github.com/radif-ru/Django_REST"
+    "name": "Очевидцы сообщают",
+    "repository": "https://github.com/radif-ru/Full_Stack_Django_REST_React"
   },
   {
     "id": 2,
-    "name": "Другой",
+    "name": "Глубокий уровень погружения",
     "repository": "https://github.com/radif-ru/Desktop_Apps_Messenger_PyQt"
   },
   {
     "id": 3,
-    "name": "Стопятый",
+    "name": "Сложившаяся структура",
     "repository": "https://github.com/radif-ru/Python_Architecture_and_Design_patterns"
   },
   {

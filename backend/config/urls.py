@@ -37,10 +37,6 @@ router.register('projects', ProjectModelViewSet, basename='projects')
 router.register('todos', TodoModelViewSet)
 
 urlpatterns = [
-    # Пути для запуска фронтенда на Django
-    re_path('^(''|todos|users|users?/\d|projects|projects?/\d)$',
-            TemplateView.as_view(template_name='index.html')),
-
     path('administration/', admin.site.urls),
 
     # Стандартный метод авторизации rest_framework
@@ -73,6 +69,10 @@ urlpatterns = [
     # csrf_exempt - отключает проверку CSRF-токена для данного адреса
     path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True))) if DEBUG
     else path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=False))),
+
+    # Пути для запуска фронтенда на Django
+    re_path('^(''|todos|users|users?/\d|projects|projects?/\d)$',
+            TemplateView.as_view(template_name='index.html')),
 
     #######################
 
