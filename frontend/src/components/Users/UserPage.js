@@ -1,8 +1,12 @@
+import "./Users.css"
+
 import {useParams} from "react-router-dom";
 
-import dateFormat from "dateformat";
-import {TodosPage} from "../Todos/TodosPage";
+import {TodosData} from "../Todos/TodosData";
 import {TodoForm} from "../Todos/TodoForm";
+import {ProjectData} from "../Projects/ProjectData";
+import {ProjectForm} from "../Projects/ProjectForm";
+import {UserData} from "./UserData";
 
 
 /**
@@ -14,88 +18,65 @@ import {TodoForm} from "../Todos/TodoForm";
 export const UserPage = (props) => {
   let {id} = useParams();
   id = +id;
-  const {users, projects, todos, isAuthenticated, login, createTodo} = props;
+  const {
+    users, projects, todos, isAuthenticated, login, createTodo, createProject,
+    deleteTodo, deleteProject
+  } = props;
   const user = users.find((user) => user.id === id);
 
-  const user_todos = todos.filter(todo => todo.user === id)
+  const user_todos = todos.filter(todo => todo.user === id);
 
-  // const user_projects = projects.filter(
-  //   project => project.users.find(proj_user => proj_user === id)
-  // )
-
-  const noData = "нет данных!";
+  const user_projects = projects.filter(
+    project => project.users.find(proj_user => proj_user === id)
+  );
 
   return (
     <div>
       {user
         ? <div className="user">
-          <div>
-            <p>
-              <span>Id: </span>
-              <span className="user-data">{user.id}</span>
-            </p>
-            <p>
-              <span>Login: </span>
-              <span className="user-data">{user.username}</span>
-            </p>
-            <p>
-              <span>Имя: </span>
-              <span className="user-data">{user.firstName || noData}</span>
-            </p>
-            <p>
-              <span>Фамилия: </span>
-              <span className="user-data">{user.lastName || noData}</span>
-            </p>
-            <p>
-              <span>Отчество: </span>
-              <span className="user-data">{user.middleName || noData}</span>
-            </p>
-            <p>
-              <span>Электронная почта: </span>
-              <span className="user-data">{user.email}</span>
-            </p>
-            <p>
-              <span>Дата рождения: </span>
-              <span className="user-data">
-              {user.birthdate
-                ? dateFormat(user.birthdate, "fullDate")
-                : noData
-              }
-            </span>
-            </p>
-            <p>
-              <span>Роли пользователя: </span>
-              {user.roles.map((role, idx) =>
-                <span key={idx} className="user-data"> | {role.role} |</span>
-              )}
-            </p>
-            <p>
-              <span>Зарегистрировался(-ась): </span>
-              <span className="user-data">
-              {dateFormat(
-                user.dateJoined, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-              )}
-            </span>
-            </p>
-            <p>
-              <span>Последний раз заходил(-а): </span>
-              <span className="user-data">
-              {dateFormat(
-                user.lastLogin, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-              )}
-            </span>
-            </p>
-            <p>
-              <span>Данные обновлены: </span>
-              <span className="user-data">
-              {dateFormat(
-                user.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-              )}
-            </span>
-            </p>
+
+          <UserData user={user}/>
+
+          {isAuthenticated() && user.username === login
+            ? <h4 className="user-create-title">Создать:
+              <span> </span>
+              <a href="#project">Проект</a>
+              <span> </span>
+              <a href="#todo">Заметку</a>
+            </h4>
+            : null
+          }
+
+          <div id="project">
+            <br/>
           </div>
 
-          <h3>Заметки пользователя: </h3><br/>
+          {isAuthenticated() && user.username === login
+            ? <ProjectForm
+              users={users}
+              projects={projects}
+              login={login}
+              createProject={createProject}
+            />
+            : null
+          }
+
+          <h3 className="user-title">Проекты пользователя: </h3>
+
+          {user_projects.map((project, idx) =>
+            <ProjectData
+              key={idx}
+              project={project}
+              users={users}
+              isAuthenticated={isAuthenticated}
+              login={login}
+              deleteProject={deleteProject}
+            />
+          )}
+
+          <div id="todo">
+            <br/>
+          </div>
 
           {isAuthenticated() && user.username === login
             ? <TodoForm
@@ -107,7 +88,16 @@ export const UserPage = (props) => {
             : null
           }
 
-          <TodosPage todos={user_todos} users={users}/>
+          <h3 className="user-title">Заметки пользователя: </h3><br/>
+
+          <TodosData
+            todos={user_todos}
+            users={users}
+            projects={projects}
+            login={login}
+            isAuthenticated={isAuthenticated}
+            deleteTodo={deleteTodo}
+          />
 
         </div>
 
