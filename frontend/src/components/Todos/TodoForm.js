@@ -1,8 +1,10 @@
+import "./Todos.css"
+
+import {PureComponent} from "react";
+
 /**
  * Создание и обработка формы создания заметки
  */
-import {PureComponent} from "react";
-
 export class TodoForm extends PureComponent {
   /**
    * Прокидывание свойств (props) от родителя, начальное состояние текста
@@ -41,7 +43,6 @@ export class TodoForm extends PureComponent {
       ? this.props.projectId
       : this.state.projectId
     const user = users.find(user => user.username === login).id;
-    console.log(+projectId, +user, text)
     createTodo(+projectId, +user, text);
     this.setState({
       "text": "",
@@ -61,11 +62,13 @@ export class TodoForm extends PureComponent {
     const {projects} = this.props
 
     return (
-      <form
-        onSubmit={(event => this.handleSubmit(event))}
-        className="row"
-      >
-        <div className="col-5">
+      <div>
+        <form
+          onSubmit={(event => this.handleSubmit(event))}
+          className="row todo-form"
+        >
+          <legend>Создать заметку:</legend>
+          <div className="col-5">
           <textarea
             required
             name="text"
@@ -75,40 +78,42 @@ export class TodoForm extends PureComponent {
             className="form-control todos__form-text-area"
             onChange={(event => this.handleChange(event))}
           />
-          <span id="textHelpInline" className="form-text">
+            <span id="textHelpInline" className="form-text">
             Введите текст вашей заметки к проекту
           </span>
-        </div>
-        {projects
-          ? <div className="col-3">
-            <select
-              required
-              name="projectId"
-              className="form-control form-select todos__form-select"
-              aria-describedby="textHelpSelect"
-              placeholder="Проекты"
-              onChange={(event) =>
-                this.handleChange(event)
-              }
-            >
-              {projects.map((item) =>
-                <option value={item.id}>
-                  {item.name}
-                </option>)
-              }
-            </select>
-            <span id="textHelpSelect" className="form-text">
+          </div>
+          {projects
+            ? <div className="col-3">
+              <select
+                required
+                name="projectId"
+                className="form-control form-select todos__form-select"
+                aria-describedby="textHelpSelect"
+                placeholder="Проекты"
+                onChange={(event) =>
+                  this.handleChange(event)
+                }
+              >
+                {projects.map((item, idx) =>
+                  <option value={item.id} key={idx}>
+                    {item.name}
+                  </option>)
+                }
+              </select>
+              <span id="textHelpSelect" className="form-text">
                 Выберете проект, к которому хотите оставить заметку
               </span>
-          </div>
-          : null
-        }
-        <input
-          type="submit"
-          value="Сохранить"
-          className="auth-btn btn btn-primary col-2"
-        />
-      </form>
+            </div>
+            : null
+          }
+          <input
+            type="submit"
+            value="Сохранить"
+            className="auth-btn btn btn-primary col-2"
+          />
+        </form>
+      </div>
+
     )
   }
 }
