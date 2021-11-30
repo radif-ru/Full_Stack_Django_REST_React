@@ -1,12 +1,12 @@
-.project-page a {
+.project-data-set a {
   text-decoration: none;
   color: #003366;
   font-weight: bold;
 }
-.project-page a:hover {
+.project-data-set a:hover {
   color: #009926;
 }
-.project-page .project-data {
+.project-data-set .project-data {
   font-weight: bold;
   color: #761c19;
 }

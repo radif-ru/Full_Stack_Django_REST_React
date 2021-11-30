@@ -1,7 +1,27 @@
 .user {
   color: #1d5a08;
 }
-.user .user-data {
+.user a {
+  color: #6e8f43;
+  text-decoration: none;
+}
+.user a:hover {
+  color: #e735bd;
+}
+.user-title {
+  color: salmon;
+}
+.user-create-title {
+  color: #cb1919;
+}
+
+.user-data {
+  font-weight: bold;
+  color: #479aa9;
+}
+
+.sure {
+  color: red;
   font-weight: bold;
 }
 
