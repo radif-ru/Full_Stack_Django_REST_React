@@ -1,7 +1,3 @@
-/**
- * На клиенте используется архитектура One Way Data Flow
- * Главный родитель компонентов
- */
 import React from "react";
 import {
   BrowserRouter,
@@ -22,7 +18,13 @@ import {NotFound404} from "./components/NotFound404";
 import {UserPage} from "./components/Users/UserPage";
 import {ProjectPage} from "./components/Projects/ProjectPage";
 import {LoginForm} from "./components/Authorization";
+import {UserForm} from "./components/Users/UserForm";
 
+
+/**
+ * На клиенте используется архитектура One Way Data Flow
+ * Главный родитель компонентов
+ */
 export class GeneralApp extends React.Component {
   /**
    * Конструктор главного родителя компонентов. Назначение начальных состояний
@@ -165,9 +167,8 @@ export class GeneralApp extends React.Component {
     const {
       domain, usersEndpoint, limit, offset
     } = this.state;
-    const headers = this.getHeaders();
 
-    this.getDataREST(domain, usersEndpoint, headers, limit, offset)
+    this.getDataREST(domain, usersEndpoint, limit, offset)
   }
 
   /**
@@ -177,9 +178,8 @@ export class GeneralApp extends React.Component {
     const {
       domain, todosEndpoint, limit, offset
     } = this.state;
-    const headers = this.getHeaders();
 
-    this.getDataREST(domain, todosEndpoint, headers, limit, offset);
+    this.getDataREST(domain, todosEndpoint, limit, offset);
   }
 
   /**
@@ -189,9 +189,8 @@ export class GeneralApp extends React.Component {
     const {
       domain, projectsEndpoint, limit, offset
     } = this.state;
-    const headers = this.getHeaders();
 
-    this.getDataREST(domain, projectsEndpoint, headers, limit, offset);
+    this.getDataREST(domain, projectsEndpoint, limit, offset);
   }
 
   /**
@@ -199,22 +198,62 @@ export class GeneralApp extends React.Component {
    */
   getUsersDataGraphQL() {
     const {domain, graphQLEndpoint} = this.state;
-    const headers = this.getHeaders();
-    this.getDataGraphQL(domain, graphQLEndpoint, headers);
+    this.getDataGraphQL(domain, graphQLEndpoint);
   }
 
+  /**
+   * Удаление проекта с помощью Django REST.
+   * Перерисовка без перезагрузки данных из БД.
+   * Вместе с проектом удаляются все связанные заметки.
+   * @param id {int} Идентификатор проекта
+   * @returns {Promise<void>}
+   */
+  async deleteProject(id) {
+    const {domain, projectsEndpoint, projects, todos} = this.state;
+    await this.setState(
+      {
+        'projects': projects.filter(projects => projects.id !== id),
+        'todos': todos.filter(todo => todo.project !== id)
+      },
+      () => this.deleteDataREST(domain, projectsEndpoint, id)
+    )
+  }
 
   /**
-   * Удаление заметки с помощью Django REST
+   * Удаление заметки с помощью Django REST.
+   * Перерисовка без перезагрузки данных из БД.
    * @param id {int} Идентификатор заметки
    * @returns {Promise<void>}
    */
   async deleteTodo(id) {
-    const {domain, todosEndpoint} = this.state;
-    const headers = this.getHeaders();
-    await this.deleteDataREST(domain, todosEndpoint, id, headers);
+    const {domain, todosEndpoint, todos} = this.state;
+    await this.setState(
+      {'todos': todos.filter(todo => todo.id !== id)},
+      () => this.deleteDataREST(domain, todosEndpoint, id)
+    )
   }
 
+  async createUser(data) {
+    const {domain, usersEndpoint} = this.state;
+    await this.createDataREST(data, domain, usersEndpoint);
+  }
+
+  /**
+   * Создание проекта с помощью Django REST
+   * @param name {string} Имя проекта
+   * @param repository {url, string} Ссылка на репозиторий проекта
+   * @param users {array} Массив id пользователей
+   * @returns {Promise<void>}
+   */
+  async createProject(name, repository, users) {
+    const {domain, projectsEndpoint} = this.state;
+    const data = {
+      "name": name,
+      "repository": repository,
+      "users": users
+    }
+    await this.createDataREST(data, domain, projectsEndpoint);
+  }
 
   /**
    * Создание заметки с помощью Django REST
@@ -225,28 +264,28 @@ export class GeneralApp extends React.Component {
    */
   async createTodo(project, user, text) {
     const {domain, todosEndpoint} = this.state;
-    const headers = this.getHeaders();
     const data = {
       "project": project,
       "user": user,
       "text": text
     }
-    await this.createDataREST(data, domain, todosEndpoint, headers);
+    await this.createDataREST(data, domain, todosEndpoint);
   }
 
   /**
    * Асинхронный запрос данных из Django REST, извлечение и обработка
    * @param domain {string} Домен
    * @param endpoint {string} Конечная точка
-   * @param headers {object} Заголовки
+   * @const headers {object} Заголовки
    * @param limit {int} Лимит на количество полученных данных
    * @param offset {int} Смещение относительно первого объекта
    * @returns {Promise<void>}
    */
   async getDataREST(
     domain = "http://localhost:3333",
-    endpoint, headers, limit = 100, offset = 0) {
+    endpoint, limit = 100, offset = 0) {
 
+    const headers = this.getHeaders();
     await axios.get(
       `${domain}${endpoint}?limit=${limit}&offset=${offset}/`,
       {headers}).then(response => {
@@ -268,10 +307,11 @@ export class GeneralApp extends React.Component {
    * Так же происходит пересборка данных, комментарии ниже
    * @param domain {string} Домен
    * @param graphQLEndpoint {string} Конечная точка
-   * @param headers {object} Заголовки
+   * @const headers {object} Заголовки
    * @returns {Promise<void>}
    */
-  async getDataGraphQL(domain, graphQLEndpoint, headers) {
+  async getDataGraphQL(domain, graphQLEndpoint) {
+    const headers = this.getHeaders();
     await axios.post(
       `${domain}${graphQLEndpoint}`,
       {
@@ -405,14 +445,16 @@ export class GeneralApp extends React.Component {
    * @param data {object} Отправляемые данные
    * @param domain {string} Домен
    * @param endpoint {string} Конечная точка
-   * @param headers {object} Заголовки
+   * @const headers {object} Заголовки
    */
-  createDataREST(data, domain, endpoint, headers) {
+  createDataREST(data, domain, endpoint) {
+    const headers = this.getHeaders();
     axios.post(`${domain}${endpoint}`, data, {headers})
       .then(response => {
         // В случае удачной операции перезагружаю данные с сервера.
-        // Можно конечно просто удалить элемент из состояния, но это может
-        // привести к артефактам, рассинхрону с актуальными данными...
+        // Для избежания артефактов, рассинхрона с актуальными данными...
+        // В методах удаления, для примера, происходит перерисовка данных,
+        // без повторной загрузки из БД
         this.getAllData();
       })
       .catch(error => {
@@ -426,15 +468,15 @@ export class GeneralApp extends React.Component {
    * @param domain {string} Домен
    * @param endpoint {string} Конечная точка заметок
    * @param id {int} Идентификатор
-   * @param headers {object} Заголовки
+   * @const headers {object} Заголовки
    */
-  deleteDataREST(domain, endpoint, id, headers) {
+  deleteDataREST(domain, endpoint, id) {
+    const headers = this.getHeaders()
     axios.delete(`${domain}${endpoint}${id}`, {headers})
       .then(response => {
-        // В случае удачного удаления перезагружаю данные с сервера.
-        // Можно конечно просто удалить элемент из состояния, но это может
-        // привести к артефактам, рассинхрону с актуальными данными...
-        this.getAllData();
+        // Отключил повторную загрузку данных, теперь при удалении происходит
+        // перерисовка через метод, вызвавший этот метод
+        // this.getAllData();
       })
       .catch(error => {
           this.handleErrors(error, "deleteDataREST");
@@ -470,8 +512,9 @@ export class GeneralApp extends React.Component {
         alert(`Данные не найдены. Подождите. Не кликайте много раз подряд. 
         \nВозможно мы ещё не обработали запрос`)
       } else if (error.request.status === 400) {
-        alert(`Сервер не принял Ваши данные. Возможно они не уникальны. 
-        \nПопробуйте ввести что-то другое`)
+        alert(`Сервер не принял Ваши данные. Данные должны быть уникальны. 
+        \nПоля должны быть заполнены правильно. Попробуйте ввести что-то другое
+        `)
       }
     } else {
       alert(`Ошибка - ${error}`);
@@ -510,13 +553,26 @@ export class GeneralApp extends React.Component {
                     createTodo={(project, user, text) =>
                       this.createTodo(project, user, text)
                     }
+                    deleteTodo={id => this.deleteTodo(id)}
+                    createProject={(name, repository, users) =>
+                      this.createProject(name, repository, users)
+                    }
+                    deleteProject={(id => this.deleteProject(id))}
                   />
                 }
               />
               <Route
                 exact
                 path="/projects"
-                element={<Projects users={users} projects={projects}/>}
+                element={
+                  <Projects
+                    users={users}
+                    projects={projects}
+                    isAuthenticated={() => this.isAuthenticated()}
+                    login={login}
+                    deleteProject={(id => this.deleteProject(id))}
+                  />
+                }
               />
               <Route
                 exact
@@ -531,6 +587,8 @@ export class GeneralApp extends React.Component {
                     createTodo={(project, user, text) =>
                       this.createTodo(project, user, text)
                     }
+                    deleteTodo={(id) => this.deleteTodo(id)}
+                    deleteProject={(id => this.deleteProject(id))}
                   />
                 }
               />
@@ -542,7 +600,7 @@ export class GeneralApp extends React.Component {
                     projects={projects}
                     todos={todos}
                     isAuthenticated={() => this.isAuthenticated()}
-                    deleteTodo={(id) => this.deleteTodo(id)}
+                    deleteTodo={id => this.deleteTodo(id)}
                     login={login}
                   />
                 }
@@ -554,6 +612,13 @@ export class GeneralApp extends React.Component {
                   <LoginForm
                     auth={(login, password) => this.auth(login, password)}
                   />
+                }
+              />
+              <Route
+                exact
+                path="/registration"
+                element={
+                  <UserForm createUser={data => this.createUser(data)}/>
                 }
               />
               <Route exact path="/" element={<Navigate to="/todos"/>}/>
