@@ -13,7 +13,7 @@ def is_young_serializer_validate_decorator(method):
 
     @functools.wraps(method)
     def wrapper(self, attrs):
-        if 'birthdate' in attrs:
+        if 'birthdate' in attrs and attrs['birthdate']:
             # Разница дней между текущей датой и ДР
             days = timezone.now().date() - attrs['birthdate']
             # 365.2425 - в среднем дней в году по Григорианскому календарю
