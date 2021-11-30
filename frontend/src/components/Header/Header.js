@@ -20,7 +20,6 @@ const Menu = (props) => {
   return (
     <nav className="menu">
       <ul>
-        {/*Якоря (были раньше):*/}
         <li>
           <Link className="menu-link" to="/users">Пользователи</Link>
         </li>
@@ -49,6 +48,15 @@ const Menu = (props) => {
           </li>
           : <li>
             <Link className="menu-link menu-login" to="/login">Войти</Link>
+          </li>
+        }
+
+        {isAuthenticated()
+          ? null
+          : <li>
+            <Link className="menu-link menu-login" to="/registration">
+              Регистрация
+            </Link>
           </li>
         }
       </ul>
