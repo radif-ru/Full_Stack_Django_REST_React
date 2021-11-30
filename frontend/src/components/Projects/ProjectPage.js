@@ -1,7 +1,9 @@
-import {Link, useParams} from "react-router-dom";
-import dateFormat from "dateformat";
+import "./Projects.css"
+
+import {useParams} from "react-router-dom";
 import {TodoForm} from "../Todos/TodoForm";
-import {TodosPage} from "../Todos/TodosPage";
+import {TodosData} from "../Todos/TodosData";
+import {ProjectData} from "./ProjectData";
 
 
 /**
@@ -15,7 +17,10 @@ export const ProjectPage = (props) => {
 
   let {id} = useParams();
   id = +id;
-  const {users, projects, todos, isAuthenticated, login, createTodo} = props;
+  const {
+    users, projects, todos, isAuthenticated, login, createTodo, deleteTodo,
+    deleteProject
+  } = props;
 
   // Проект, найденный по id
   const project = projects.find(project => project.id === id);
@@ -23,64 +28,18 @@ export const ProjectPage = (props) => {
   // Заметки к этому проекту
   const project_todos = todos.filter(todo => todo.project === id)
 
-  const noData = "нет данных!";
-
   return (
     <div className="project-page">
       {project
         ? <div>
-          <p>
-            <span>Id: </span>
-            <span className="project-data">{project.id}</span>
-          </p>
-          <p>
-            <span>Имя: </span>
-            <span
-              className="project-data">{project.name || noData}
-            </span>
-          </p>
-          <p>
-            <span>Репозиторий: </span>
-            <span className="project-data">
-          <a href={project.repository} target="_blank" rel="noreferrer">
-            {project.repository || noData}
-          </a>
-          </span>
-          </p>
 
-          <p>
-            <span>Работают с проектом: </span>
-            <span className="project-data">
-            {project.users.map((user, idx) =>
-              <span key={idx}>
-                <Link to={`/users/${user}`}>
-                  {users.find(data => data.id === user).username}
-                </Link>
-                <span>, </span>
-              </span>
-            )}
-          </span>
-          </p>
-
-          <p>
-            <span>Проект создан: </span>
-            <span className="project-data">
-              {dateFormat(
-                project.created, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-              )}
-          </span>
-          </p>
-
-          <p>
-            <span>Проект обновлён: </span>
-            <span className="project-data">
-              {project.created !== project.updated
-                ? `${dateFormat(
-                  project.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}`
-                : "---"
-              }
-          </span>
-          </p>
+          <ProjectData
+            project={project}
+            users={users}
+            isAuthenticated={isAuthenticated}
+            login={login}
+            deleteProject={deleteProject}
+          />
 
           {isAuthenticated()
             ? <TodoForm
@@ -93,7 +52,14 @@ export const ProjectPage = (props) => {
           }
 
           <h3>Заметки к проекту: </h3><br/>
-          <TodosPage todos={project_todos} users={users}/>
+          <TodosData
+            todos={project_todos}
+            users={users}
+            projects={projects}
+            login={login}
+            isAuthenticated={isAuthenticated}
+            deleteTodo={deleteTodo}
+          />
 
         </div>
 
