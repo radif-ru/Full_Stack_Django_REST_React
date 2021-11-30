@@ -9,7 +9,8 @@ import {Link} from "react-router-dom";
  */
 export const ProjectItem = (props) => {
 
-  const {project, users} = props;
+  const {project, users, deleteProject, isAuthenticated, login} = props;
+  const user = users.find(user => user.username === login);
 
   return (
     <tr>
@@ -28,6 +29,12 @@ export const ProjectItem = (props) => {
           </Link><br/>
         </span>)}
       </td>
+      {isAuthenticated() && project.users.find(el => el === user.id)
+        ? <td className="btn btn-outline-danger">
+          <div onClick={() => deleteProject(project.id)}>Del</div>
+        </td>
+        : null
+      }
     </tr>
   )
 }
