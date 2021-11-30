@@ -8,7 +8,7 @@ import {ProjectItem} from "./ProjectItem";
 export class ProjectsList extends PureComponent {
 
   render() {
-    const {projects, users} = this.props
+    const {projects, users, deleteProject, login, isAuthenticated} = this.props
 
     return (
       <div>
@@ -25,11 +25,22 @@ export class ProjectsList extends PureComponent {
             <th>
               Авторы
             </th>
+            {isAuthenticated()
+              ? <th> </th>
+              : null
+            }
           </tr>
           </thead>
           <tbody>
           {projects.map((project, idx) =>
-            <ProjectItem key={idx} project={project} users={users}/>
+            <ProjectItem
+              key={idx}
+              project={project}
+              users={users}
+              login={login}
+              isAuthenticated={isAuthenticated}
+              deleteProject={deleteProject}
+            />
           )}
           </tbody>
         </table>
