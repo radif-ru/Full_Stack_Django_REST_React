@@ -55,7 +55,12 @@ export class ProjectForm extends PureComponent {
     const {users, login, createProject} = this.props;
     const user = users.find(user => user.username === login);
     const allUsersId = [...usersId, user.id]
-    createProject(name, repository, allUsersId);
+    const data = {
+      "name": name,
+      "repository": repository,
+      "users": allUsersId
+    }
+    createProject(data);
     this.setState({
       "name": "",
       "repository": "",

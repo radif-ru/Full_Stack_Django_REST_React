@@ -242,35 +242,25 @@ export class GeneralApp extends React.Component {
 
   /**
    * Создание проекта с помощью Django REST
-   * @param name {string} Имя проекта
-   * @param repository {url, string} Ссылка на репозиторий проекта
-   * @param users {array} Массив id пользователей
+   * @param data.name {string} Имя проекта
+   * @param data.repository {url, string} Ссылка на репозиторий проекта
+   * @param data.users {array} Массив id пользователей
    * @returns {Promise<void>}
    */
-  async createProject(name, repository, users) {
+  async createProject(data) {
     const {domain, projectsEndpoint} = this.state;
-    const data = {
-      "name": name,
-      "repository": repository,
-      "users": users
-    }
     await this.createDataREST(data, domain, projectsEndpoint);
   }
 
   /**
    * Создание заметки с помощью Django REST
-   * @param project {int} Идентификатор проекта
-   * @param user {int} Идентификатор пользователя
-   * @param text {string} Текст заметки
+   * @param data.project {int} Идентификатор проекта
+   * @param data.user {int} Идентификатор пользователя
+   * @param data.text {string} Текст заметки
    * @returns {Promise<void>}
    */
-  async createTodo(project, user, text) {
+  async createTodo(data) {
     const {domain, todosEndpoint} = this.state;
-    const data = {
-      "project": project,
-      "user": user,
-      "text": text
-    }
     await this.createDataREST(data, domain, todosEndpoint);
   }
 

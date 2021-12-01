@@ -43,7 +43,12 @@ export class TodoForm extends PureComponent {
       ? this.props.projectId
       : this.state.projectId
     const user = users.find(user => user.username === login).id;
-    createTodo(+projectId, +user, text);
+    const data = {
+      "project": +projectId,
+      "user": +user,
+      "text": text
+    }
+    createTodo(data);
     this.setState({
       "text": "",
     });
@@ -70,6 +75,7 @@ export class TodoForm extends PureComponent {
           <div className="col-5">
           <textarea
             required
+            maxLength="333"
             name="text"
             placeholder="Текст"
             aria-describedby="textHelpInline"
