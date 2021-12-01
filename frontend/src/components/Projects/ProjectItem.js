@@ -29,11 +29,10 @@ export const ProjectItem = (props) => {
           </Link><br/>
         </span>)}
       </td>
-      {isAuthenticated() && project.users.find(el => el === user.id)
-        ? <td className="btn btn-outline-danger">
-          <div onClick={() => deleteProject(project.id)}>Del</div>
-        </td>
-        : null
+      {isAuthenticated() && project.users.find(el => el === user.id) &&
+      <td className="btn btn-outline-danger">
+        <div onClick={() => deleteProject(project.id)}>Del</div>
+      </td>
       }
     </tr>
   )

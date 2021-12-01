@@ -39,11 +39,10 @@ export class TodoItem extends PureComponent {
             : "---"
           }
         </td>
-        {isAuthenticated() && user.username === login
-          ? <td className="btn btn-outline-danger">
-            <div onClick={() => deleteTodo(todo.id)}>Del</div>
-          </td>
-          : null
+        {isAuthenticated() && user.username === login &&
+        <td className="btn btn-outline-danger">
+          <div onClick={() => deleteTodo(todo.id)}>Del</div>
+        </td>
         }
       </tr>
     )

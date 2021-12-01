@@ -35,7 +35,7 @@ export class TodosList extends PureComponent {
             <th>
               Обновлена
             </th>
-            {isAuthenticated() ? <th> </th> : null}
+            {isAuthenticated() && <th> </th>}
           </tr>
           </thead>
           <tbody>

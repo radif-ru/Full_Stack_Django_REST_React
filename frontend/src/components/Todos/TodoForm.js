@@ -87,30 +87,29 @@ export class TodoForm extends PureComponent {
             Введите текст вашей заметки к проекту
           </span>
           </div>
-          {projects
-            ? <div className="col-3">
-              <select
-                required
-                name="projectId"
-                className="form-control form-select todos__form-select"
-                aria-describedby="textHelpSelect"
-                placeholder="Проекты"
-                onChange={(event) =>
-                  this.handleChange(event)
-                }
-              >
-                <option value="" defaultValue="" hidden>Список проектов</option>
-                {projects.map((item, idx) =>
-                  <option value={item.id} key={idx}>
-                    {item.name}
-                  </option>)
-                }
-              </select>
-              <span id="textHelpSelect" className="form-text">
+          {projects &&
+          <div className="col-3">
+            <select
+              required
+              name="projectId"
+              className="form-control form-select todos__form-select"
+              aria-describedby="textHelpSelect"
+              placeholder="Проекты"
+              onChange={(event) =>
+                this.handleChange(event)
+              }
+            >
+              <option value="" defaultValue="" hidden>Список проектов</option>
+              {projects.map((item, idx) =>
+                <option value={item.id} key={idx}>
+                  {item.name}
+                </option>)
+              }
+            </select>
+            <span id="textHelpSelect" className="form-text">
                 Выберете проект, к которому хотите оставить заметку
               </span>
-            </div>
-            : null
+          </div>
           }
           <input
             type="submit"
@@ -119,7 +118,6 @@ export class TodoForm extends PureComponent {
           />
         </form>
       </div>
-
     )
   }
 }

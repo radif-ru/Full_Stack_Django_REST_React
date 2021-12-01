@@ -30,40 +30,37 @@ export const ProjectPage = (props) => {
 
   return (
     <div className="project-page">
-      {project
-        ? <div>
+      {project &&
+      <div>
 
-          <ProjectData
-            project={project}
-            users={users}
-            isAuthenticated={isAuthenticated}
-            login={login}
-            deleteProject={deleteProject}
-          />
+        <ProjectData
+          project={project}
+          users={users}
+          isAuthenticated={isAuthenticated}
+          login={login}
+          deleteProject={deleteProject}
+        />
 
-          {isAuthenticated()
-            ? <TodoForm
-              projectId={id}
-              users={users}
-              login={login}
-              createTodo={createTodo}
-            />
-            : null
-          }
+        {isAuthenticated() &&
+        <TodoForm
+          projectId={id}
+          users={users}
+          login={login}
+          createTodo={createTodo}
+        />
+        }
 
-          <h3>Заметки к проекту: </h3><br/>
-          <TodosData
-            todos={project_todos}
-            users={users}
-            projects={projects}
-            login={login}
-            isAuthenticated={isAuthenticated}
-            deleteTodo={deleteTodo}
-          />
+        <h3>Заметки к проекту: </h3><br/>
+        <TodosData
+          todos={project_todos}
+          users={users}
+          projects={projects}
+          login={login}
+          isAuthenticated={isAuthenticated}
+          deleteTodo={deleteTodo}
+        />
 
-        </div>
-
-        : null
+      </div>
       }
     </div>
   )

@@ -29,16 +29,15 @@ const Menu = (props) => {
         <li>
           <Link className="menu-link" to="/todos">Заметки</Link>
         </li>
-        {isAuthenticated() && user
-          ? <li>
-            <Link
-              className="menu-link"
-              to={`/users/${user.id}`}
-            >
-              ЛК | {login}
-            </Link>
-          </li>
-          : null
+        {isAuthenticated() && user &&
+        <li>
+          <Link
+            className="menu-link"
+            to={`/users/${user.id}`}
+          >
+            ЛК | {login}
+          </Link>
+        </li>
         }
         {isAuthenticated()
           ? <li>
@@ -51,13 +50,12 @@ const Menu = (props) => {
           </li>
         }
 
-        {isAuthenticated()
-          ? null
-          : <li>
-            <Link className="menu-link menu-login" to="/registration">
-              Регистрация
-            </Link>
-          </li>
+        {!isAuthenticated() &&
+        <li>
+          <Link className="menu-link menu-login" to="/registration">
+            Регистрация
+          </Link>
+        </li>
         }
       </ul>
     </nav>

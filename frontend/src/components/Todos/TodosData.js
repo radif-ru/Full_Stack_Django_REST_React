@@ -3,6 +3,7 @@ import "./Todos.css"
 import {PureComponent} from "react";
 import {Link} from "react-router-dom";
 import dateFormat from "dateformat";
+import {TodoForm} from "./TodoForm";
 
 export class TodosData extends PureComponent {
 
@@ -43,20 +44,18 @@ export class TodosData extends PureComponent {
               </span>
 
               <span className="comment-datetime">
-                {todo.created !== todo.updated
-                  ? `Обновлено: ${dateFormat(
-                    todo.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}`
-                  : null
+                {todo.created !== todo.updated &&
+                `Обновлено: ${dateFormat(
+                  todo.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}`
                 }
               </span>
-              {isAuthenticated() && todo.user === user.id
-                ? <span className="btn btn-outline-danger">
-                  <span onClick={() => deleteTodo(todo.id)}>Удалить!</span>
-                </span>
-                : null
+              {isAuthenticated() && todo.user === user.id &&
+              <span className="btn btn-outline-danger">
+                <span onClick={() => deleteTodo(todo.id)}>Удалить!</span>
+              </span>
               }
             </div>
-            <br/>
+            <hr/>
           </div>
         )}
       </div>

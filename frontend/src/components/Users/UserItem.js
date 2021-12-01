@@ -30,7 +30,7 @@ export class UserItem extends PureComponent {
           {user.email}
         </td>
         <td>
-          {user.birthdate ? dateFormat(user.birthdate, "fullDate") : ""}
+          {user.birthdate && dateFormat(user.birthdate, "fullDate")}
         </td>
       </tr>
     )

@@ -25,10 +25,7 @@ export class ProjectsList extends PureComponent {
             <th>
               Авторы
             </th>
-            {isAuthenticated()
-              ? <th> </th>
-              : null
-            }
+            {isAuthenticated() && <th> </th>}
           </tr>
           </thead>
           <tbody>

@@ -22,7 +22,7 @@ import {UserForm} from "./components/Users/UserForm";
 
 
 /**
- * На клиенте используется архитектура One Way Data Flow
+ * На клиенте используется принцип One-Way Data Flow
  * Главный родитель компонентов
  */
 export class GeneralApp extends React.Component {

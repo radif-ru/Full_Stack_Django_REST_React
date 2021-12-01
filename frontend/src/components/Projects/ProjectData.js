@@ -72,11 +72,10 @@ export class ProjectData extends PureComponent {
           </span>
         </p>
         {isAuthenticated() && project.users
-          .find(el => el === user.id)
-          ? <div className="btn btn-outline-danger">
-            <div onClick={() => deleteProject(project.id)}>Удалить!</div>
-          </div>
-          : null
+          .find(el => el === user.id) &&
+        <div className="btn btn-outline-danger">
+          <div onClick={() => deleteProject(project.id)}>Удалить!</div>
+        </div>
         }
         <hr/>
       </div>
