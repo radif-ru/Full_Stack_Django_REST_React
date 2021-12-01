@@ -13,7 +13,7 @@ export class TodoForm extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      "text": "",
+      "text": this.props.text,
       "projectId": ""
     }
   }
@@ -31,14 +31,33 @@ export class TodoForm extends PureComponent {
 
   /**
    * Присваивание состояний на основе события обработки отправки данных в форме
-   * text получен из состояния - куда он попал из this.handleChange
-   * projectId, users, login, createTodo получаются из свойств,
-   * которые передал родитель, text из состояния. createTodo - отправка данных
+   * Создание или редактирование данных в зависимости от переданных свойств.
+   * Валидация данных.
    * @param event {object} Используется только для остановки события
    */
   handleSubmit(event) {
     const {text} = this.state;
-    const {users, login, createTodo} = this.props;
+    const {
+      users, login, createTodo, editTodo, todoId, toggleDetails, todos
+    } = this.props;
+
+    if (todos.find(todo => todo.text === text)) {
+      alert(`Запрещено к одному проекту оставлять 2 одинаковые заметки!
+      \nОтредактируйте текст`);
+      event.preventDefault();
+      return
+    }
+
+    if (editTodo && todoId) {
+      const data = {
+        "text": text
+      }
+      editTodo(data, todoId);
+      toggleDetails();
+      event.preventDefault();
+      return
+    }
+
     const projectId = this.props.projectId
       ? this.props.projectId
       : this.state.projectId
@@ -56,7 +75,8 @@ export class TodoForm extends PureComponent {
   }
 
   /**
-   * Отображение формы. Получение text из состояния
+   * При передаче свойства projects, формируется список проектов, появляется
+   * возможность выбора проекта, к которому оставляется заметка.
    * Вызов методов this.handleChange и this.handleSubmit при событиях изменения
    * поля ввода и отправки данных соответственно
    * @returns {JSX.Element}
@@ -71,7 +91,6 @@ export class TodoForm extends PureComponent {
           onSubmit={(event => this.handleSubmit(event))}
           className="row todo-form"
         >
-          <legend>Создать заметку:</legend>
           <div className="col-5">
           <textarea
             required

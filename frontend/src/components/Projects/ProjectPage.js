@@ -8,7 +8,8 @@ import {ProjectData} from "./ProjectData";
 
 /**
  * Страница проекта. Формирование данных проекта и заполнение
- * У авторизованных пользователей есть возможность создавать заметки к проектам
+ * У авторизованных пользователей есть возможность создавать заметки к
+ * проектам, редактировать, удалить проект со всеми заметками, если он автор
  * @param props {object} Данные, переданные родителем
  * @returns {JSX.Element}
  * @constructor
@@ -19,13 +20,11 @@ export const ProjectPage = (props) => {
   id = +id;
   const {
     users, projects, todos, isAuthenticated, login, createTodo, deleteTodo,
-    deleteProject
+    deleteProject, editTodo
   } = props;
 
-  // Проект, найденный по id
   const project = projects.find(project => project.id === id);
 
-  // Заметки к этому проекту
   const project_todos = todos.filter(todo => todo.project === id)
 
   return (
@@ -42,12 +41,17 @@ export const ProjectPage = (props) => {
         />
 
         {isAuthenticated() &&
-        <TodoForm
-          projectId={id}
-          users={users}
-          login={login}
-          createTodo={createTodo}
-        />
+          <div>
+            <h3>Создать заметку</h3>
+            <TodoForm
+              projectId={id}
+              users={users}
+              login={login}
+              createTodo={createTodo}
+              todos={todos}
+            />
+          </div>
+
         }
 
         <h3>Заметки к проекту: </h3><br/>
@@ -58,6 +62,7 @@ export const ProjectPage = (props) => {
           login={login}
           isAuthenticated={isAuthenticated}
           deleteTodo={deleteTodo}
+          editTodo={editTodo}
         />
 
       </div>

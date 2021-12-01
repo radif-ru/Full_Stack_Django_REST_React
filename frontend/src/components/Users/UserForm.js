@@ -7,7 +7,7 @@ import {PureComponent} from "react";
  */
 export class UserForm extends PureComponent {
   /**
-   * Прокидывание свойств (props) от родителя, начальное состояние текста
+   * Прокидывание свойств (props) от родителя, начальные состояния
    * @param props {object} Данные, переданные родителем
    */
   constructor(props) {
@@ -61,7 +61,6 @@ export class UserForm extends PureComponent {
 
   /**
    * Присваивание состояний на основе события изменения поля ввода формы
-   *
    * @param event {object} Событие, оттуда извлекаются данные пользователя
    */
   handleChange(event) {
@@ -74,6 +73,7 @@ export class UserForm extends PureComponent {
 
   /**
    * Присваивание состояний на основе события обработки отправки данных в форме
+   * Валидация данных. Присвоение роли по умолчанию
    * @param event {object} Используется только для остановки события
    */
   async handleSubmit(event) {
@@ -102,7 +102,6 @@ export class UserForm extends PureComponent {
   }
 
   /**
-   * Отображение формы. Получение text из состояния
    * Вызов методов this.handleChange и this.handleSubmit при событиях изменения
    * поля ввода и отправки данных соответственно
    * @returns {JSX.Element}

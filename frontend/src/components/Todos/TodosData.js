@@ -5,59 +5,135 @@ import {Link} from "react-router-dom";
 import dateFormat from "dateformat";
 import {TodoForm} from "./TodoForm";
 
+
+/**
+ * Данные заметок. Проброс свойств к каждой заметке отдельно
+ */
 export class TodosData extends PureComponent {
 
   render() {
 
     const {
-      todos, users, projects, login, isAuthenticated, deleteTodo
+      todos, users, projects, login, isAuthenticated, deleteTodo, editTodo
     } = this.props
-    const user = users.find(user => user.username === login)
 
     return (
       <div className="todos-data">
         {todos.map((todo, idx) =>
-          <div key={idx}>
-            <span className="comment">{todo.text}</span>
-
-            <div className="comment-info">
-              <Link className="comment-user" to={`/users/${todo.user}`}>
-                {users.find(user => user.id === todo.user).username}
-              </Link>
-
-              <span>=> </span>
-
-              <Link
-                className="comment-user"
-                to={`/projects/${projects.find(project =>
-                  project.id === todo.project).id}`
-                }
-              >
-                {projects.find(project => project.id === todo.project).name}
-              </Link>
-
-              <span className="comment-datetime">
-                {dateFormat(
-                  todo.created, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-                )}
-                <span>. </span>
-              </span>
-
-              <span className="comment-datetime">
-                {todo.created !== todo.updated &&
-                `Обновлено: ${dateFormat(
-                  todo.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}`
-                }
-              </span>
-              {isAuthenticated() && todo.user === user.id &&
-              <span className="btn btn-outline-danger">
-                <span onClick={() => deleteTodo(todo.id)}>Удалить!</span>
-              </span>
-              }
-            </div>
-            <hr/>
-          </div>
+          <TodosDataEl
+            key={idx}
+            todo={todo}
+            users={users}
+            projects={projects}
+            login={login}
+            isAuthenticated={isAuthenticated}
+            deleteTodo={deleteTodo}
+            editTodo={editTodo}
+            todos={todos}
+          />
         )}
+      </div>
+    )
+  }
+}
+
+
+/**
+ * Работа с каждой заметкой отдельно. Показ и скрытие формы заметки в
+ * зависимости от авторизованности пользователя и авторства.
+ * Возможность редактирования и удаления своих заметок
+ */
+class TodosDataEl extends PureComponent {
+  /**
+   * Изначально состояние видимости включено
+   * @param props.visible {Boolean}
+   */
+  constructor(props) {
+    super(props)
+    this.state = {
+      visible: true
+    }
+  }
+
+  /**
+   * Переключатель видимого и невидимого состояния элементов
+   */
+  toggleDetails = () => {
+    const newToggleState = !this.state.visible
+    this.setState({visible: newToggleState})
+  }
+
+  render() {
+    const {
+      todo, users, projects, login, isAuthenticated, deleteTodo, editTodo,
+      todos
+    } = this.props
+    const {visible} = this.state
+    const user = users.find(user => user.username === login)
+    return (
+      <div>
+        {visible && <span className="comment">{todo.text}</span>}
+
+        {isAuthenticated() && todo.user === user.id &&
+        <div>
+            <span
+              onClick={this.toggleDetails}
+              className="btn btn-outline-secondary"
+            >
+          {!visible ? "Отменить" : "Изменить текст"}
+            </span>
+          {!visible &&
+          <div>
+            <TodoForm
+              todoId={todo.id}
+              text={todo.text}
+              editTodo={editTodo}
+              toggleDetails={() => this.toggleDetails()}
+              todos={todos}
+            />
+          </div>
+          }
+        </div>
+        }
+
+        <div className="comment-info">
+          <Link className="comment-user" to={`/users/${todo.user}`}>
+            {users.find(user => user.id === todo.user).username}
+          </Link>
+
+          <span>=> </span>
+
+          <Link
+            className="comment-user"
+            to={`/projects/${projects.find(project =>
+              project.id === todo.project).id}`
+            }
+          >
+            {projects.find(project => project.id === todo.project).name}
+          </Link>
+
+          <span className="comment-datetime">
+            {dateFormat(
+              todo.created, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+            )}
+            <span>. </span>
+          </span>
+
+          <span className="comment-datetime">
+            {todo.created !== todo.updated &&
+            `Обновлено: ${dateFormat(
+              todo.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}`
+            }
+          </span>
+          {isAuthenticated() && todo.user === user.id &&
+          <div>
+            <span className="btn btn-outline-danger">
+              <span onClick={() => deleteTodo(todo.id)}>Удалить заметку</span>
+            </span>
+          </div>
+          }
+        </div>
+        <hr/>
       </div>
     )
   }

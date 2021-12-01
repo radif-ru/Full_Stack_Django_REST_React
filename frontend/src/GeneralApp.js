@@ -204,10 +204,34 @@ export class GeneralApp extends React.Component {
   }
 
   /**
+   * Редактирование заметки. Обновление состояния актуальными данными без
+   * перезагрузки данных из БД.
+   * @param data.text {string} Текст заметки
+   * @param id {number} Идентификатор заметки
+   * @returns {Promise<void>}
+   */
+  async editTodo(data, id) {
+    const {domain, todosEndpoint, todos} = this.state;
+    const newTodo = todos.find(todo => todo.id === id)
+    newTodo.text = data.text
+    await this.setState(
+      {
+        "todos": todos.map(todo =>
+          // Замена текста и даты обновления заметки с помощью фичи ES6
+          todo.id === id
+            ? {...todo, text: data.text, updated: new Date()}
+            : todo
+        )
+      },
+      () => this.editDataREST(data, domain, todosEndpoint, id)
+    )
+  }
+
+  /**
    * Удаление проекта с помощью Django REST.
    * Перерисовка без перезагрузки данных из БД.
    * Вместе с проектом удаляются все связанные заметки.
-   * @param id {int} Идентификатор проекта
+   * @param id {number} Идентификатор проекта
    * @returns {Promise<void>}
    */
   async deleteProject(id) {
@@ -224,7 +248,7 @@ export class GeneralApp extends React.Component {
   /**
    * Удаление заметки с помощью Django REST.
    * Перерисовка без перезагрузки данных из БД.
-   * @param id {int} Идентификатор заметки
+   * @param id {number} Идентификатор заметки
    * @returns {Promise<void>}
    */
   async deleteTodo(id) {
@@ -235,6 +259,11 @@ export class GeneralApp extends React.Component {
     )
   }
 
+  /**
+   * Регистрация пользователя
+   * @param data {Object} Объект данных пользователя
+   * @returns {Promise<void>}
+   */
   async createUser(data) {
     const {domain, usersEndpoint} = this.state;
     await this.createDataREST(data, domain, usersEndpoint);
@@ -254,8 +283,8 @@ export class GeneralApp extends React.Component {
 
   /**
    * Создание заметки с помощью Django REST
-   * @param data.project {int} Идентификатор проекта
-   * @param data.user {int} Идентификатор пользователя
+   * @param data.project {number} Идентификатор проекта
+   * @param data.user {number} Идентификатор пользователя
    * @param data.text {string} Текст заметки
    * @returns {Promise<void>}
    */
@@ -269,8 +298,8 @@ export class GeneralApp extends React.Component {
    * @param domain {string} Домен
    * @param endpoint {string} Конечная точка
    * @const headers {object} Заголовки
-   * @param limit {int} Лимит на количество полученных данных
-   * @param offset {int} Смещение относительно первого объекта
+   * @param limit {number} Лимит на количество полученных данных
+   * @param offset {number} Смещение относительно первого объекта
    * @returns {Promise<void>}
    */
   async getDataREST(
@@ -281,13 +310,8 @@ export class GeneralApp extends React.Component {
     await axios.get(
       `${domain}${endpoint}?limit=${limit}&offset=${offset}/`,
       {headers}).then(response => {
-      // В случае удачного удаления перезагружаю данные с сервера.
-      // Можно конечно просто удалить элемент из состояния, но это может
-      // привести к артефактам, рассинхрону с актуальными данными...
       const users = response.data.results;
-
       this.setAllData(users);
-
     })
       .catch((error) => {
         this.handleErrors(error, "getDataREST");
@@ -412,7 +436,7 @@ export class GeneralApp extends React.Component {
       .map(id => projects.find(project => project.id === id));
     // Сортировка проектов по дате обновления
     projects.sort((a, b) =>
-      new Date(b.updated) - new Date(a.updated)
+      new Date(b.created) - new Date(a.created)
     )
 
     // Заметки всех пользователей
@@ -421,7 +445,7 @@ export class GeneralApp extends React.Component {
     todos = todos.reduce((arr1, arr2) => [...arr1, ...arr2], ...[]);
     // Сортировка заметок по дате обновления
     todos.sort((a, b) =>
-      new Date(b.updated) - new Date(a.updated)
+      new Date(b.created) - new Date(a.created)
     )
 
     this.setState({
@@ -431,9 +455,12 @@ export class GeneralApp extends React.Component {
     })
   }
 
-
   /**
    * POST запрос в Django REST на создание данных
+   * В случае удачной операции создаю уведомление. Перезагружаю данные с
+   * сервера для избежания артефактов, рассинхрона с актуальными данными...
+   * В других методах (удаления, изменения) происходит перерисовка данных,
+   * без повторной загрузки из БД
    * @param data {object} Отправляемые данные
    * @param domain {string} Домен
    * @param endpoint {string} Конечная точка
@@ -443,12 +470,7 @@ export class GeneralApp extends React.Component {
     const headers = this.getHeaders();
     axios.post(`${domain}${endpoint}`, data, {headers})
       .then(response => {
-        // Создаю уведомление
         this.setNotification("Успешная операция!");
-        // В случае удачной операции перезагружаю данные с сервера.
-        // Для избежания артефактов, рассинхрона с актуальными данными...
-        // В методах удаления, для примера, происходит перерисовка данных,
-        // без повторной загрузки из БД
         this.getAllData();
       })
       .catch(error => {
@@ -458,22 +480,43 @@ export class GeneralApp extends React.Component {
   }
 
   /**
-   * Удаление данных с помощью Django REST
+   * Редактирование данных с помощью Django REST. Patch запрос.
+   * Данные перезагружаются только в случае ошибки.
+   * Перерисовка происходит через метод, вызвавший этот метод.
+   * @param data {Object} Объект данных
    * @param domain {string} Домен
-   * @param endpoint {string} Конечная точка заметок
-   * @param id {int} Идентификатор
+   * @param endpoint {string} Конечная точка
+   * @param id {number} Идентификатор изменяемых данных
+   */
+  editDataREST(data, domain, endpoint, id) {
+    const headers = this.getHeaders();
+    axios.patch(`${domain}${endpoint}${id}/`, data, {headers})
+      .then(response => {
+      })
+      .catch(error => {
+          this.handleErrors(error, "createDataREST");
+          this.getAllData()
+        }
+      )
+  }
+
+  /**
+   * Удаление данных с помощью Django REST.
+   * Данные перезагружаются только в случае ошибки.
+   * Перерисовка происходит через метод, вызвавший этот метод.
+   * @param domain {string} Домен
+   * @param endpoint {string} Конечная точка
+   * @param id {number} Идентификатор удаляемых данных
    * @const headers {object} Заголовки
    */
   deleteDataREST(domain, endpoint, id) {
     const headers = this.getHeaders()
     axios.delete(`${domain}${endpoint}${id}`, {headers})
       .then(response => {
-        // Отключил повторную загрузку данных, теперь при удалении происходит
-        // перерисовка через метод, вызвавший этот метод
-        // this.getAllData();
       })
       .catch(error => {
           this.handleErrors(error, "deleteDataREST");
+          this.getAllData();
         }
       )
   }
@@ -498,8 +541,9 @@ export class GeneralApp extends React.Component {
       } else if (error.request.status === 0) {
         alert(`Сервер недоступен! \nПопробуйте зайти позже`);
       } else if (error.request.status === 500) {
-        alert(`Внутренняя ошибка сервера! \nСервер не может обработать Ваш 
-        запрос`);
+        alert(`Сервер не может обработать Ваш запрос.
+        \nВероятно вы отправили некорректные данные.
+        `);
       } else if (error.request.status === 403) {
         alert(`Для Вас это действие запрещено!`)
       } else if (error.request.status === 404) {
@@ -570,6 +614,7 @@ export class GeneralApp extends React.Component {
                       this.createProject(name, repository, users)
                     }
                     deleteProject={(id => this.deleteProject(id))}
+                    editTodo={(data, id) => this.editTodo(data, id)}
                   />
                 }
               />
@@ -601,6 +646,7 @@ export class GeneralApp extends React.Component {
                     }
                     deleteTodo={(id) => this.deleteTodo(id)}
                     deleteProject={(id => this.deleteProject(id))}
+                    editTodo={(data, id) => this.editTodo(data, id)}
                   />
                 }
               />

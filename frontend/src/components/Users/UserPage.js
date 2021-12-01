@@ -20,7 +20,7 @@ export const UserPage = (props) => {
   id = +id;
   const {
     users, projects, todos, isAuthenticated, login, createTodo, createProject,
-    deleteTodo, deleteProject
+    deleteTodo, deleteProject, editTodo
   } = props;
   const user = users.find((user) => user.id === id);
 
@@ -80,12 +80,16 @@ export const UserPage = (props) => {
         </div>
 
         {isAuthenticated() && user.username === login &&
-        <TodoForm
+        <div>
+          <h3>Создать заметку</h3>
+          <TodoForm
           users={users}
           projects={projects}
           login={login}
           createTodo={createTodo}
+          todos={todos}
         />
+        </div>
         }
 
         <h3 className="user-title">Заметки пользователя: </h3>
@@ -98,6 +102,7 @@ export const UserPage = (props) => {
           login={login}
           isAuthenticated={isAuthenticated}
           deleteTodo={deleteTodo}
+          editTodo={editTodo}
         />
 
       </div>
