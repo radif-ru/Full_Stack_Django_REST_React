@@ -28,5 +28,5 @@ class Todo(models.Model):
         """Пользователь не может оставить 2 одинаковые заметки к 1 проекту"""
         verbose_name = 'Заметка'
         verbose_name_plural = 'Заметки'
-        ordering = ['is_active', '-updated', 'project']
+        ordering = ['is_active', '-created', 'project']
         unique_together = (('user', 'text', 'project', 'is_active'),)

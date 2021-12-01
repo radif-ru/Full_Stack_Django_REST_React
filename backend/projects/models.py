@@ -24,4 +24,4 @@ class Project(models.Model):
     class Meta:
         verbose_name = 'Проект'
         verbose_name_plural = 'Проекты'
-        ordering = ['is_active', '-updated', 'name']
+        ordering = ['is_active', '-created', 'name']

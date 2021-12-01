@@ -37,5 +37,5 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-        ordering = ['is_active', '-updated', 'last_name', 'first_name',
+        ordering = ['is_active', '-date_joined', 'last_name', 'first_name',
                     'middle_name', 'birthdate']
