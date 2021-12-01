@@ -12,10 +12,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .filters import UserFilter
 from .mixins import UserDestroyMixin
-from .models import User
+from .models import User, PermissionGroups
 from .paginators import UserLimitOffsetPagination
 from .permissions import UserPermission
-from .serializers import UserModelSerializer, UserModelSerializerGet
+from .serializers import UserModelSerializer, UserModelSerializerGet, \
+    PermissionGroupsSerializer
 
 
 # Понятное дело, что можно использовать просто ModelViewSet
@@ -75,3 +76,10 @@ class UserModelViewSet(UserDestroyMixin, ListModelMixin, RetrieveModelMixin,
         user = get_object_or_404(User, pk=pk)
         return Response(
             {'fio': f'{user.first_name} {user.middle_name} {user.last_name}'})
+
+
+class PermissionGroupsModelViewSet(ListModelMixin, RetrieveModelMixin,
+                                   GenericViewSet):
+    """Роли пользователей"""
+    serializer_class = PermissionGroupsSerializer
+    queryset = PermissionGroups.objects.all()
