@@ -46,7 +46,6 @@ export class TodoForm extends PureComponent {
     createTodo(+projectId, +user, text);
     this.setState({
       "text": "",
-      "projectId": ""
     });
     event.preventDefault();
   }
@@ -94,6 +93,7 @@ export class TodoForm extends PureComponent {
                   this.handleChange(event)
                 }
               >
+                <option value="" defaultValue="" hidden>Список проектов</option>
                 {projects.map((item, idx) =>
                   <option value={item.id} key={idx}>
                     {item.name}

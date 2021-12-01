@@ -52,6 +52,8 @@ export class GeneralApp extends React.Component {
 
       "token": "",
       "login": "",
+
+      "notification": ""
     }
   }
 
@@ -451,6 +453,8 @@ export class GeneralApp extends React.Component {
     const headers = this.getHeaders();
     axios.post(`${domain}${endpoint}`, data, {headers})
       .then(response => {
+        // Создаю уведомление
+        this.setNotification("Успешная операция!");
         // В случае удачной операции перезагружаю данные с сервера.
         // Для избежания артефактов, рассинхрона с актуальными данными...
         // В методах удаления, для примера, происходит перерисовка данных,
@@ -519,6 +523,24 @@ export class GeneralApp extends React.Component {
     } else {
       alert(`Ошибка - ${error}`);
     }
+  }
+
+  /**
+   * Получить уведомление
+   * @returns {string|Notification|*}
+   */
+  getNotification() {
+    return this.state.notification
+  }
+
+  /**
+   * Установка уведомления
+   * @param text {string} Текст уведомления
+   */
+  setNotification(text) {
+    this.setState({
+      "notification": text
+    })
   }
 
   /**
@@ -618,7 +640,11 @@ export class GeneralApp extends React.Component {
                 exact
                 path="/registration"
                 element={
-                  <UserForm createUser={data => this.createUser(data)}/>
+                  <UserForm
+                    createUser={data => this.createUser(data)}
+                    getNotification={() => this.getNotification()}
+                    setNotification={text => this.setNotification(text)}
+                  />
                 }
               />
               <Route exact path="/" element={<Navigate to="/todos"/>}/>

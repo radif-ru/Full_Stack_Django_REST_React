@@ -26,6 +26,40 @@ export class UserForm extends PureComponent {
   }
 
   /**
+   * Вызывается сразу после монтирования (то есть, вставки компонента в DOM).
+   * Обнуление уведомления.
+   */
+  componentDidMount() {
+    const {setNotification} = this.props
+    setNotification("")
+  }
+
+  /**
+   *  Вызывается сразу после обновления. Не вызывается при первом рендере.
+   *  Обработка уведомления. Если пришло, значит регистрация прошла успешно
+   */
+  componentDidUpdate() {
+    const {getNotification, setNotification} = this.props
+    const text = getNotification()
+    if (!!text) {
+      alert(`${text} \nИспользуйте логин и пароль для входа в ЛК!`);
+      setNotification("");
+      this.setState({
+        "username": "",
+        "password": "",
+        "confirmPassword": "",
+        "firstName": "",
+        "lastName": "",
+        "middleName": "",
+        "email": "",
+        "birthdate": "",
+        "roles": ""
+      })
+    }
+  }
+
+
+  /**
    * Присваивание состояний на основе события изменения поля ввода формы
    *
    * @param event {object} Событие, оттуда извлекаются данные пользователя
@@ -42,7 +76,7 @@ export class UserForm extends PureComponent {
    * Присваивание состояний на основе события обработки отправки данных в форме
    * @param event {object} Используется только для остановки события
    */
-  handleSubmit(event) {
+  async handleSubmit(event) {
     const {
       username, password, confirmPassword, firstName, lastName, middleName,
       email, birthdate
@@ -63,19 +97,7 @@ export class UserForm extends PureComponent {
       "birthdate": birthdate,
       "roles": [2]
     }
-    createUser(data);
-
-    this.setState({
-      "username": "",
-      "password": "",
-      "firstName": "",
-      "lastName": "",
-      "middleName": "",
-      "email": "",
-      "birthdate": "",
-      "roles": ""
-    })
-
+    createUser(data)
     event.preventDefault();
   }
 
