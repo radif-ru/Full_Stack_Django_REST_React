@@ -74,7 +74,7 @@ export class UserForm extends PureComponent {
 
   /**
    * Присваивание состояний на основе события обработки отправки данных в форме
-   * Валидация данных. Присвоение роли по умолчанию
+   * Валидация данных. Присвоение роли разработчика по умолчанию.
    * @param event {object} Используется только для остановки события
    */
   async handleSubmit(event) {
@@ -98,7 +98,6 @@ export class UserForm extends PureComponent {
       "birthdate": birthdate,
       "roles": [+roles.find(role => role.role === "разработчик").id]
     }
-    console.log('fasfasf', data)
     createUser(data)
     event.preventDefault();
   }

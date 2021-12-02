@@ -275,8 +275,8 @@ export class GeneralApp extends React.Component {
    */
   async editTodo(data, id) {
     const {domain, todosEndpoint, todos} = this.state;
-    const newTodo = todos.find(todo => todo.id === id)
-    newTodo.text = data.text
+    const newTodo = todos.find(todo => todo.id === id);
+    newTodo.text = data.text;
     await this.setState(
       {
         "todos": todos.map(todo =>
@@ -291,6 +291,18 @@ export class GeneralApp extends React.Component {
   }
 
   /**
+   * Редактирование пользователя. Обновление состояния актуальными данными без
+   * перезагрузки данных из БД.
+   * @param data {Object} Изменяемые данные пользователя
+   * @param id {number} Идентификатор пользователя
+   * @returns {Promise<void>}
+   */
+  async editUser(data, id) {
+    const {domain, usersEndpoint} = this.state;
+    this.editDataREST(data, domain, usersEndpoint, id);
+  }
+
+  /**
    * Удаление проекта с помощью Django REST.
    * Перерисовка без перезагрузки данных из БД.
    * Вместе с проектом удаляются все связанные заметки.
@@ -301,8 +313,8 @@ export class GeneralApp extends React.Component {
     const {domain, projectsEndpoint, projects, todos} = this.state;
     await this.setState(
       {
-        'projects': projects.filter(projects => projects.id !== id),
-        'todos': todos.filter(todo => todo.project !== id)
+        "projects": projects.filter(projects => projects.id !== id),
+        "todos": todos.filter(todo => todo.project !== id)
       },
       () => this.deleteDataREST(domain, projectsEndpoint, id)
     )
@@ -317,7 +329,7 @@ export class GeneralApp extends React.Component {
   async deleteTodo(id) {
     const {domain, todosEndpoint, todos} = this.state;
     await this.setState(
-      {'todos': todos.filter(todo => todo.id !== id)},
+      {"todos": todos.filter(todo => todo.id !== id)},
       () => this.deleteDataREST(domain, todosEndpoint, id)
     )
   }
@@ -333,14 +345,26 @@ export class GeneralApp extends React.Component {
   }
 
   /**
-   * Создание проекта с помощью Django REST
+   * Создание проекта с помощью Django REST.
+   * При создании проекта создателю назначается дополнительная роль -
+   * владелец проекта. Но если он добавляет других пользователей к этому
+   * проекту им не назначается данная роль.
    * @param data.name {string} Имя проекта
    * @param data.repository {url, string} Ссылка на репозиторий проекта
    * @param data.users {array} Массив id пользователей
    * @returns {Promise<void>}
    */
   async createProject(data) {
-    const {domain, projectsEndpoint} = this.state;
+    const {domain, projectsEndpoint, roles, users, login} = this.state;
+    const projectOwnerRole = +roles.find(
+      role => role.role === "владелец проекта"
+    ).id
+    const authUser = users.find(user => user.username === login)
+    if (!authUser.roles.find(role => role === projectOwnerRole)) {
+      await this.editUser({
+        "roles": [...authUser.roles, projectOwnerRole]
+      }, +authUser.id)
+    }
     await this.createDataREST(data, domain, projectsEndpoint);
   }
 
