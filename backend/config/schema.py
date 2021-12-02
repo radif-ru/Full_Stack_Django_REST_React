@@ -55,9 +55,8 @@ class Query(graphene.ObjectType):
                                        last_name=graphene.String())
 
     def resolve_all_roles(self, info):
-        """Поле. Префикс resolve_ - обязателен. all_users - имя поля
-        Возвращение только активных пользователей
-        При вызове связанных полей так же только активные проекты и заметки
+        """Поле. Префикс resolve_ - обязателен. all_users - имя поля.
+        Оптимизация для использования запроса со связанными полями.
         """
         return PermissionGroups.objects.prefetch_related(
             'role_users__user_todos__project',
@@ -68,9 +67,8 @@ class Query(graphene.ObjectType):
         ).all()
 
     def resolve_all_users(self, info):
-        """Поле. Префикс resolve_ - обязателен. all_users - имя поля
-        Возвращение только активных пользователей
-        При вызове связанных полей так же только активные проекты и заметки
+        """ Возвращение только активных пользователей.
+        При вызове связанных полей так же только активные проекты и заметки.
         """
         return User.objects.prefetch_related(
             Prefetch(
