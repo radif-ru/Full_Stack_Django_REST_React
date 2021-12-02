@@ -7,6 +7,7 @@ from .models import User, PermissionGroups
 
 
 class PermissionGroupsSerializer(serializers.ModelSerializer):
+    """Сериализация модели ролей"""
     class Meta:
         model = PermissionGroups
         fields = '__all__'
@@ -87,10 +88,18 @@ class UserModelSerializerGet(UserModelSerializer):
     пользователя, а не только id.
     """
 
-    roles = PermissionGroupsSerializer(many=True)
     user_projects = ProjectSetModelSerializer(many=True, read_only=True)
     user_todos = TodoSetModelSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
         fields = '__all__'
+
+
+class PermissionGroupsSerializerGet(PermissionGroupsSerializer):
+    """ Сериализация модели ролей. Используется для GET - запросов.
+    Далее идёт цепочка связей сформированная другими сериализаторами.
+    Этот сериализатор позволяет получить все необходимые данные для клиента со
+    всех таблиц одним запросом.
+    """
+    role_users = UserModelSerializerGet(many=True)

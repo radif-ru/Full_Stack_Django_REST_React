@@ -35,6 +35,7 @@ export class GeneralApp extends React.Component {
     this.state = {
       "domain": "http://localhost:3333",
 
+      "rolesEndpoint": "/api/roles/",
       "usersEndpoint": "/api/users/",
       "projectsEndpoint": "/api/projects/",
       "todosEndpoint": "/api/todos/",
@@ -42,15 +43,18 @@ export class GeneralApp extends React.Component {
       "graphQLEndpoint": "/graphql/",
 
       "tokenEndpoint": "/api/token/",
+      "tokenRefreshEndpoint": "/api/token/refresh/",
 
       "limit": 1000,
       "offset": 0,
 
+      "roles": [],
       "users": [],
       "projects": [],
       "todos": [],
 
       "token": "",
+      "refreshToken": "",
       "login": "",
 
       "notification": ""
@@ -156,16 +160,83 @@ export class GeneralApp extends React.Component {
     // вкладываются в объекты (словари) с 1 полем id. Ещё и клиент больше
     // нагружается из-за затрат на извлечение id и преобразование их к числу...
     if (!this.isAuthenticated()) {
-      this.getUsersDataGraphQL();
+      this.getRolesDataSetGraphQL();
     } else {
-      this.getUsersDataREST();
+      this.getRolesDataSetREST();
     }
   }
 
   /**
-   * Получить данные пользователей из Django REST
+   * Получить данные ролей из Django REST и все связанные данные других таблиц
    */
-  getUsersDataREST() {
+  getRolesDataSetREST() {
+    const {
+      domain, rolesEndpoint, limit, offset
+    } = this.state;
+
+    this.getDataREST(domain, rolesEndpoint, limit, offset)
+  }
+
+  /**
+   * Получить данные ролей из GraphQL и все связанные данные других таблиц
+   */
+  getRolesDataSetGraphQL() {
+    const {domain, graphQLEndpoint} = this.state;
+    const queryGraphQL = `
+      {
+        allRoles {
+          id
+          role
+          roleUsers {
+            id
+            username
+            firstName
+            lastName
+            middleName
+            email
+            birthdate
+            lastLogin
+            isStaff
+            isActive
+            dateJoined
+            updated
+            roles {
+              id
+            }
+            userProjects {
+              id
+              name
+              repository
+              isActive
+              created
+              updated
+              users {
+                id
+              }
+            }
+            userTodos{
+              id
+              text
+              isActive
+              created
+              updated
+              project {
+                id
+              }
+              user {
+                id
+              }
+            }
+          }
+        }
+      }`;
+    this.getDataGraphQL(domain, graphQLEndpoint, queryGraphQL);
+  }
+
+  /**
+   * Получить данные пользователей из Django REST со связанными данными
+   */
+  getUsersDataSetREST() {
     const {
       domain, usersEndpoint, limit, offset
     } = this.state;
@@ -174,9 +245,9 @@ export class GeneralApp extends React.Component {
   }
 
   /**
-   * Получить данные заметок из Django REST
+   * Получить данные заметок из Django REST со связанными данными
    */
-  getTodosDataREST() {
+  getTodosDataSetREST() {
     const {
       domain, todosEndpoint, limit, offset
     } = this.state;
@@ -185,22 +256,14 @@ export class GeneralApp extends React.Component {
   }
 
   /**
-   * Получить данные проектов из Django REST
+   * Получить данные проектов из Django REST со связанными данными
    */
-  getProjectsDataREST() {
+  getProjectsDataSetREST() {
     const {
       domain, projectsEndpoint, limit, offset
     } = this.state;
 
     this.getDataREST(domain, projectsEndpoint, limit, offset);
-  }
-
-  /**
-   * Получить данные пользователей из GraphQL
-   */
-  getUsersDataGraphQL() {
-    const {domain, graphQLEndpoint} = this.state;
-    this.getDataGraphQL(domain, graphQLEndpoint);
   }
 
   /**
@@ -310,8 +373,8 @@ export class GeneralApp extends React.Component {
     await axios.get(
       `${domain}${endpoint}?limit=${limit}&offset=${offset}/`,
       {headers}).then(response => {
-      const users = response.data.results;
-      this.setAllData(users);
+      const data = response.data.results;
+      this.setAllData(data);
     })
       .catch((error) => {
         this.handleErrors(error, "getDataREST");
@@ -323,64 +386,43 @@ export class GeneralApp extends React.Component {
    * Так же происходит пересборка данных, комментарии ниже
    * @param domain {string} Домен
    * @param graphQLEndpoint {string} Конечная точка
+   * @param queryGraphQL {string} Запрос на языке GraphQL
    * @const headers {object} Заголовки
    * @returns {Promise<void>}
    */
-  async getDataGraphQL(domain, graphQLEndpoint) {
+  async getDataGraphQL(domain, graphQLEndpoint, queryGraphQL) {
     const headers = this.getHeaders();
     await axios.post(
       `${domain}${graphQLEndpoint}`,
       {
-        query: `{
-          allUsers {
-            id
-            username
-            firstName
-            lastName
-            middleName
-            email
-            birthdate
-            roles {
-              id
-              role
-            }
-            userProjects {
-              id
-              name
-              repository
-              isActive
-              created
-              updated
-              users {
-                id
-              }
-            }
-            userTodos{
-              id
-              text
-              isActive
-              created
-              updated
-              project {
-                id
-              }
-              user {
-                id
-              }
-            }
-          }
-        }`,
+        query: queryGraphQL,
         headers: headers,
       }).then(response => {
 
-      const users = response.data.data.allUsers;
+      const rolesSet = response.data.data.allRoles;
+
+      const usersSet = rolesSet.map(role => {
+        // id ролей перевожу в числовой формат.
+        // Хотя и role.id не возвращается, но как мы знаем данные в JS хранятся
+        // по ссылке, так что они изменились глобально.
+        role.id = +role.id;
+        // Возвращаю пользователей для дальнейшей мутации данных
+        return role.roleUsers;
+      })
+        .reduce((arr1, arr2) => [...arr1, ...arr2])
 
       // Во избежание конфликтов пересобираю данные так же, как если бы запрос
       // делался на Django REST, а не на GraphQL. ID перевожу в цифровой формат
 
-      users.map(user => {
+      usersSet.map(user => {
         user.id = +user.id;
-        // Преобразую поля заметок
+        // Преобразую объекты ролей в массив из id
+        const rolesArr = [];
+        user.roles.map(role => {
+          rolesArr.push(+role.id);
+          return role
+        });
+        user.roles = rolesArr;
         user.userTodos.map(todo => {
           // В поле user и project помещаю соответствующие id, вместо объектов
           todo.id = +todo.id;
@@ -403,7 +445,7 @@ export class GeneralApp extends React.Component {
         return user
       })
 
-      this.setAllData(users);
+      this.setAllData(rolesSet);
 
     })
       .catch((error) => {
@@ -412,23 +454,37 @@ export class GeneralApp extends React.Component {
   }
 
   /**
-   * Сохраняю полученные данные из Django REST и GraphQL в состояния
-   * @param data {array} Полученные данные
+   * Сохраняю полученные данные из Django REST и GraphQL в состояния.
+   * Распределяю данные по категориям и сортирую.
+   * @param data {array} Полученные данные.
    */
   setAllData(data) {
-    // Данные пользователей. Сначала делаю копию массива, чтобы изменения не
-    // коснулись других ссылок на данные массива, затем удаляю лишние данные
-    let users = JSON.parse(JSON.stringify(data));
-    users.map(user => {
-      delete user.userProjects;
-      delete user.userTodos;
-      return user;
-    })
+    let roles = [];
+    let projects = [];
+    let todos = [];
 
-    // Проекты всех пользователей
-    let projects = data.map(user => user.userProjects)
-      .filter(project => project.length)
-      .reduce((arr1, arr2) => [...arr1, ...arr2], ...[]);
+    let usersSet = data.map(role => {
+      // Собираю роли
+      roles.push({id: role.id, role: role.role});
+      // Возвращаю набор пользователей со связанными данными
+      return role.roleUsers;
+    })
+      .reduce((arr1, arr2) => [...arr1, ...arr2], ...[])
+
+    const users = usersSet.map(user => {
+      const {userProjects, userTodos, ...rest} = user;
+      // Собираю заметки
+      todos.push(...userTodos);
+      // Собираю проекты
+      projects.push(...userProjects);
+      // Возвращаю чистых пользователей
+      return rest;
+    });
+    // Сортирую пользователей по дате регистрации
+    users.sort((a, b) =>
+      new Date(b.dateJoined) - new Date(a.dateJoined)
+    )
+
     // Уникальные id проектов
     const unique_ids = [...new Set(projects.map(project => project.id))];
     // Уникальные проекты
@@ -439,16 +495,13 @@ export class GeneralApp extends React.Component {
       new Date(b.created) - new Date(a.created)
     )
 
-    // Заметки всех пользователей
-    let todos = data.map(user => user.userTodos).filter(todo => todo.length)
-    // Разворот массивов внутри массива
-    todos = todos.reduce((arr1, arr2) => [...arr1, ...arr2], ...[]);
     // Сортировка заметок по дате обновления
     todos.sort((a, b) =>
       new Date(b.created) - new Date(a.created)
     )
 
     this.setState({
+      "roles": roles,
       "users": users,
       "projects": projects,
       "todos": todos
@@ -582,7 +635,7 @@ export class GeneralApp extends React.Component {
    * @returns {JSX.Element}
    */
   render() {
-    const {users, projects, todos, login} = this.state;
+    const {roles, users, projects, todos, login} = this.state;
 
     return (
       <BrowserRouter>
@@ -601,6 +654,7 @@ export class GeneralApp extends React.Component {
                 path="/users/:id"
                 element={
                   <UserPage
+                    roles={roles}
                     users={users}
                     projects={projects}
                     todos={todos}
@@ -615,6 +669,18 @@ export class GeneralApp extends React.Component {
                     }
                     deleteProject={(id => this.deleteProject(id))}
                     editTodo={(data, id) => this.editTodo(data, id)}
+                  />
+                }
+              />
+              <Route
+                exact
+                path="/registration"
+                element={
+                  <UserForm
+                    roles={roles}
+                    createUser={data => this.createUser(data)}
+                    getNotification={() => this.getNotification()}
+                    setNotification={text => this.setNotification(text)}
                   />
                 }
               />
@@ -669,17 +735,6 @@ export class GeneralApp extends React.Component {
                 element={
                   <LoginForm
                     auth={(login, password) => this.auth(login, password)}
-                  />
-                }
-              />
-              <Route
-                exact
-                path="/registration"
-                element={
-                  <UserForm
-                    createUser={data => this.createUser(data)}
-                    getNotification={() => this.getNotification()}
-                    setNotification={text => this.setNotification(text)}
                   />
                 }
               />

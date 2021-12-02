@@ -19,8 +19,8 @@ export const UserPage = (props) => {
   let {id} = useParams();
   id = +id;
   const {
-    users, projects, todos, isAuthenticated, login, createTodo, createProject,
-    deleteTodo, deleteProject, editTodo
+    roles, users, projects, todos, isAuthenticated, login, createTodo,
+    createProject, deleteTodo, deleteProject, editTodo
   } = props;
   const user = users.find((user) => user.id === id);
 
@@ -35,7 +35,7 @@ export const UserPage = (props) => {
       {user &&
       <div className="user">
 
-        <UserData user={user}/>
+        <UserData user={user} roles={roles}/>
 
         {isAuthenticated() && user.username === login &&
         <h4 className="user-create-title">Создать:

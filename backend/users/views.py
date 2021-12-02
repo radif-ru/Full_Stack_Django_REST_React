@@ -16,7 +16,7 @@ from .models import User, PermissionGroups
 from .paginators import UserLimitOffsetPagination
 from .permissions import UserPermission
 from .serializers import UserModelSerializer, UserModelSerializerGet, \
-    PermissionGroupsSerializer
+    PermissionGroupsSerializer, PermissionGroupsSerializerGet
 
 
 # Понятное дело, что можно использовать просто ModelViewSet
@@ -82,4 +82,16 @@ class PermissionGroupsModelViewSet(ListModelMixin, RetrieveModelMixin,
                                    GenericViewSet):
     """Роли пользователей"""
     serializer_class = PermissionGroupsSerializer
-    queryset = PermissionGroups.objects.all()
+    queryset = PermissionGroups.objects.prefetch_related(
+        'role_users__user_todos__project',
+        'role_users__user_projects__users',
+        'role_users__roles',
+        'role_users__groups',
+        'role_users__user_permissions__content_type',
+    ).all()
+
+    def get_serializer_class(self):
+        """Если запрос Get используется соответственный сериализатор"""
+        if self.request.method in ['GET']:
+            return PermissionGroupsSerializerGet
+        return UserModelSerializer

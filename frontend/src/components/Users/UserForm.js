@@ -9,6 +9,7 @@ export class UserForm extends PureComponent {
   /**
    * Прокидывание свойств (props) от родителя, начальные состояния
    * @param props {object} Данные, переданные родителем
+   * @param props.roles {Array} Роли пользователей
    */
   constructor(props) {
     super(props);
@@ -21,7 +22,7 @@ export class UserForm extends PureComponent {
       "middleName": "",
       "email": "",
       "birthdate": "",
-      "roles": []
+      "roles": props.roles
     }
   }
 
@@ -81,7 +82,7 @@ export class UserForm extends PureComponent {
       username, password, confirmPassword, firstName, lastName, middleName,
       email, birthdate
     } = this.state;
-    const {createUser} = this.props;
+    const {createUser, roles} = this.props;
     if (password !== confirmPassword) {
       alert("Пароли не совпадают!");
       event.preventDefault();
@@ -95,8 +96,9 @@ export class UserForm extends PureComponent {
       "middleName": middleName,
       "email": email,
       "birthdate": birthdate,
-      "roles": [2]
+      "roles": [+roles.find(role => role.role === "разработчик").id]
     }
+    console.log('fasfasf', data)
     createUser(data)
     event.preventDefault();
   }

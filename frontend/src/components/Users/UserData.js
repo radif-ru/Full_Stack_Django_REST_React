@@ -11,7 +11,7 @@ export class UserData extends PureComponent {
 
   render() {
 
-    const {user} = this.props
+    const {user, roles} = this.props
 
     const noData = "нет данных!";
 
@@ -50,8 +50,10 @@ export class UserData extends PureComponent {
         </div>
         <div>
           <span>Роли пользователя: </span>
-          {user.roles.map((role, idx) =>
-            <span key={idx} className="user-data"> | {role.role} |</span>
+          {user.roles.map((role_id, idx) =>
+            <span key={idx} className="user-data"> | {
+              roles.find(role => role.id === role_id) && roles.find(role => role.id === role_id).role
+            } |</span>
           )}
         </div>
         <div>
