@@ -115,7 +115,7 @@ export class ProjectData extends PureComponent {
 
         <p>
           <span>Проект обновлён: </span>
-          <span className="project-data">
+          <span className="project-data project-data-updated">
               {project.created !== project.updated
                 ? `${dateFormat(
                   project.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}`

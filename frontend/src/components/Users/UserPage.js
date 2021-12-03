@@ -20,7 +20,8 @@ export const UserPage = (props) => {
   id = +id;
   const {
     roles, users, projects, todos, isAuthenticated, login, createTodo,
-    createProject, deleteTodo, deleteProject, editTodo, admin, editProject
+    createProject, deleteTodo, deleteProject, editTodo, admin, editProject,
+    editUser, getNotification, setNotification
   } = props;
   const user = users.find((user) => user.id === id);
 
@@ -35,7 +36,16 @@ export const UserPage = (props) => {
       {user &&
       <div className="user">
 
-        <UserData user={user} roles={roles}/>
+        <UserData
+          user={user}
+          roles={roles}
+          editUser={editUser}
+          getNotification={getNotification}
+          setNotification={setNotification}
+          isAuthenticated={isAuthenticated}
+          login={login}
+          admin={admin}
+        />
 
         {isAuthenticated() && user.username === login &&
         <h4 className="user-create-title">Создать:

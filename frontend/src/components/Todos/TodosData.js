@@ -88,7 +88,7 @@ class TodosDataEl extends PureComponent {
           <div>
             Отредактировать тест:
             <TodoForm
-              todo={todo.id}
+              todo={todo}
               text={todo.text}
               editTodo={editTodo}
               toggleDetails={() => this.toggleDetails()}
@@ -124,8 +124,11 @@ class TodosDataEl extends PureComponent {
 
           <span className="comment-datetime">
             {todo.created !== todo.updated &&
-            `Обновлено: ${dateFormat(
-              todo.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}`
+            <span className="comment-updated">
+              <span>Обновлено: </span>
+              {dateFormat(todo.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}
+            </span>
+
             }
           </span>
           {isAuthenticated() && (todo.user === user.id || admin) &&

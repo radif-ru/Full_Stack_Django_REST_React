@@ -14,14 +14,14 @@ export class UserForm extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      "username": "",
+      "username": props.user ? props.user.username : "",
       "password": "",
       "confirmPassword": "",
-      "firstName": "",
-      "lastName": "",
-      "middleName": "",
-      "email": "",
-      "birthdate": "",
+      "firstName": props.user ? props.user.firstName : "",
+      "lastName": props.user ? props.user.lastName : "",
+      "middleName": props.user ? props.user.middleName : "",
+      "email": props.user ? props.user.email : "",
+      "birthdate": props.user ? props.user.birthdate : "",
       "roles": props.roles
     }
   }
@@ -82,7 +82,7 @@ export class UserForm extends PureComponent {
       username, password, confirmPassword, firstName, lastName, middleName,
       email, birthdate
     } = this.state;
-    const {createUser, roles} = this.props;
+    const {createUser, roles, editUser, toggleDetails, user} = this.props;
     if (password !== confirmPassword) {
       alert("Пароли не совпадают!");
       event.preventDefault();
@@ -98,6 +98,14 @@ export class UserForm extends PureComponent {
       "birthdate": birthdate,
       "roles": [+roles.find(role => role.role === "разработчик").id]
     }
+
+    if (editUser) {
+      editUser(data, user.id);
+      toggleDetails();
+      event.preventDefault();
+      return
+    }
+
     createUser(data)
     event.preventDefault();
   }
@@ -119,7 +127,7 @@ export class UserForm extends PureComponent {
           onSubmit={(event => this.handleSubmit(event))}
           className="row todo-form"
         >
-          <legend>Регистрация:</legend>
+          <legend>Данные пользователя:</legend>
           <div className="col-4">
             <input
               required

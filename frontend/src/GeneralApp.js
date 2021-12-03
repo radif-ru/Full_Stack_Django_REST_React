@@ -336,8 +336,24 @@ export class GeneralApp extends React.Component {
    * @returns {Promise<void>}
    */
   async editUser(data, id) {
-    const {domain, usersEndpoint} = this.state;
-    this.editDataREST(data, domain, usersEndpoint, id);
+    const {domain, usersEndpoint, users} = this.state;
+    const newUser = users.find(todo => todo.id === id);
+    // Обновляю проект новыми данными, если есть
+    Object.keys(data).map((objectKey, index) =>
+      newUser[objectKey] = data[objectKey]
+    );
+    await this.setState(
+      {
+        "users": users.map(user =>
+          // Замена обновлённых данных и даты обновления с помощью фичи ES6
+          user.id === id
+            ? {...user, ...newUser, updated: new Date()}
+            : user
+        )
+      },
+      // Отправляю в БД только те данные, которые нужно изменить
+      () => this.editDataREST(data, domain, usersEndpoint, id)
+    )
   }
 
   /**
@@ -753,6 +769,9 @@ export class GeneralApp extends React.Component {
                     editTodo={(data, id) => this.editTodo(data, id)}
                     admin={admin}
                     editProject={(data, id) => this.editProject(data, id)}
+                    editUser={(data, id) => this.editUser(data, id)}
+                    getNotification={() => this.getNotification()}
+                    setNotification={text => this.setNotification(text)}
                   />
                 }
               />

@@ -38,7 +38,7 @@ export class TodoForm extends PureComponent {
   handleSubmit(event) {
     const {text} = this.state;
     const {
-      users, login, createTodo, editTodo, todoId, toggleDetails, todos
+      users, login, createTodo, editTodo, todo, toggleDetails, todos
     } = this.props;
 
     const projectId = this.props.projectId
@@ -56,11 +56,11 @@ export class TodoForm extends PureComponent {
       return
     }
 
-    if (editTodo && todoId) {
+    if (editTodo) {
       const data = {
         "text": text
       }
-      editTodo(data, todoId);
+      editTodo(data, todo.id);
       toggleDetails();
       event.preventDefault();
       return

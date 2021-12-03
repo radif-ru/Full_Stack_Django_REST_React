@@ -65,10 +65,10 @@ export class ProjectForm extends PureComponent {
     }
 
     if (projects.find(el =>
-      el.name === name && el.repository === repository
+      el.name === name && el.repository === repository && el.users === usersId
     )) {
-      alert("Запрещено создавать 2 проекта с совпадающими именем и " +
-        "репозиторием! Отредактируйте текст");
+      alert("Запрещено создавать 2 проекта с совпадающими именем, " +
+        "репозиторием и авторами! Отредактируйте данные или измените авторов");
       event.preventDefault();
       return
     }

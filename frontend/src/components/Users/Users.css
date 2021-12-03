@@ -19,6 +19,9 @@
   font-weight: bold;
   color: #479aa9;
 }
+.user-data-updated {
+  color: #e58f86;
+}
 
 .sure {
   color: red;

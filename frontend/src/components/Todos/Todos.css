@@ -20,5 +20,8 @@
   font-weight: bold;
   padding-right: 0.5em;
 }
+.todos-data .comment-info .comment-updated {
+  color: #e58f86;
+}
 
 /*# sourceMappingURL=Todos.css.map */
