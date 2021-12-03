@@ -22,7 +22,7 @@ export class UserForm extends PureComponent {
       "middleName": props.user ? props.user.middleName : "",
       "email": props.user ? props.user.email : "",
       "birthdate": props.user ? props.user.birthdate : "",
-      "roles": props.roles
+      "roles": props.user ? props.user.roles : ""
     }
   }
 
@@ -96,7 +96,7 @@ export class UserForm extends PureComponent {
       "middleName": middleName,
       "email": email,
       "birthdate": birthdate,
-      "roles": [+roles.find(role => role.role === "разработчик").id]
+      "roles": [+roles.find(role => role.role === "разработчик").id, ...user.roles]
     }
 
     if (editUser) {
