@@ -86,13 +86,13 @@ class TodosDataEl extends PureComponent {
             </span>
           {!visible &&
           <div>
+            Отредактировать тест:
             <TodoForm
-              todoId={todo.id}
+              todo={todo.id}
               text={todo.text}
               editTodo={editTodo}
               toggleDetails={() => this.toggleDetails()}
               todos={todos}
-              admin={admin}
             />
           </div>
           }

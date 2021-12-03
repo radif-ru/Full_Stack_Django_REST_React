@@ -20,7 +20,7 @@ export const UserPage = (props) => {
   id = +id;
   const {
     roles, users, projects, todos, isAuthenticated, login, createTodo,
-    createProject, deleteTodo, deleteProject, editTodo, admin
+    createProject, deleteTodo, deleteProject, editTodo, admin, editProject
   } = props;
   const user = users.find((user) => user.id === id);
 
@@ -72,6 +72,8 @@ export const UserPage = (props) => {
             login={login}
             deleteProject={deleteProject}
             admin={admin}
+            editProject={editProject}
+            projects={projects}
           />
         )}
 

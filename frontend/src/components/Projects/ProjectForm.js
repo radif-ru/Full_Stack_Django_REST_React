@@ -15,9 +15,9 @@ export class ProjectForm extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      "name": "",
-      "repository": "",
-      "usersId": []
+      "name": this.props.project ? this.props.project.name : "",
+      "repository": this.props.project ? this.props.project.repository : "",
+      "usersId": this.props.project ? this.props.project.users : ""
     }
   }
 
@@ -52,13 +52,32 @@ export class ProjectForm extends PureComponent {
    */
   handleSubmit(event) {
     const {name, repository, usersId} = this.state;
-    const {users, login, createProject} = this.props;
-    const user = users.find(user => user.username === login);
+    const {
+      users, login, createProject, editProject, project, toggleDetails,
+      projects
+    } = this.props;
+    const user = users && users.find(user => user.username === login);
     const allUsersId = [...usersId, user.id]
     const data = {
       "name": name,
       "repository": repository,
       "users": allUsersId
+    }
+
+    if (projects.find(el =>
+      el.name === name && el.repository === repository
+    )) {
+      alert("Запрещено создавать 2 проекта с совпадающими именем и " +
+        "репозиторием! Отредактируйте текст");
+      event.preventDefault();
+      return
+    }
+
+    if (editProject) {
+      editProject(data, project.id);
+      toggleDetails();
+      event.preventDefault();
+      return
     }
     createProject(data);
     this.setState({
@@ -75,7 +94,7 @@ export class ProjectForm extends PureComponent {
    */
   render() {
     const {name, repository} = this.state;
-    const {users, login} = this.props;
+    const {users, login, project} = this.props;
     const user = users.find(user => user.username === login);
     const otherUsers = users.filter(el => el.id !== user.id);
 
@@ -84,7 +103,6 @@ export class ProjectForm extends PureComponent {
         onSubmit={(event => this.handleSubmit(event))}
         className="row todo-form"
       >
-        <legend>Создать проект:</legend>
         <div className="col-3">
           <input
             required
@@ -121,6 +139,7 @@ export class ProjectForm extends PureComponent {
         <div className="col-3">
           <select
             multiple
+            defaultValue={project && project.users}
             name="usersId"
             className="form-control form-select"
             aria-describedby="textHelpSelect"
@@ -129,11 +148,11 @@ export class ProjectForm extends PureComponent {
               this.handleChange(event)
             }
           >
-            {otherUsers.map((item, idx) =>
-              <option value={item.id} key={idx}>
-                {item.username}
-              </option>)
-            }
+            {otherUsers.map((user, idx) =>
+                <option value={user.id} key={idx}>
+                  {user.username}
+                </option>
+            )}
           </select>
           <span id="textHelpSelect" className="form-text">
             Добавьте тех, кто так же работают с проектом

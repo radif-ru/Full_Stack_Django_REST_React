@@ -282,74 +282,6 @@ export class GeneralApp extends React.Component {
   }
 
   /**
-   * Редактирование заметки. Обновление состояния актуальными данными без
-   * перезагрузки данных из БД.
-   * @param data.text {string} Текст заметки
-   * @param id {number} Идентификатор заметки
-   * @returns {Promise<void>}
-   */
-  async editTodo(data, id) {
-    const {domain, todosEndpoint, todos} = this.state;
-    const newTodo = todos.find(todo => todo.id === id);
-    newTodo.text = data.text;
-    await this.setState(
-      {
-        "todos": todos.map(todo =>
-          // Замена текста и даты обновления заметки с помощью фичи ES6
-          todo.id === id
-            ? {...todo, text: data.text, updated: new Date()}
-            : todo
-        )
-      },
-      () => this.editDataREST(data, domain, todosEndpoint, id)
-    )
-  }
-
-  /**
-   * Редактирование пользователя. Обновление состояния актуальными данными без
-   * перезагрузки данных из БД.
-   * @param data {Object} Изменяемые данные пользователя
-   * @param id {number} Идентификатор пользователя
-   * @returns {Promise<void>}
-   */
-  async editUser(data, id) {
-    const {domain, usersEndpoint} = this.state;
-    this.editDataREST(data, domain, usersEndpoint, id);
-  }
-
-  /**
-   * Удаление проекта с помощью Django REST.
-   * Перерисовка без перезагрузки данных из БД.
-   * Вместе с проектом удаляются все связанные заметки.
-   * @param id {number} Идентификатор проекта
-   * @returns {Promise<void>}
-   */
-  async deleteProject(id) {
-    const {domain, projectsEndpoint, projects, todos} = this.state;
-    await this.setState(
-      {
-        "projects": projects.filter(projects => projects.id !== id),
-        "todos": todos.filter(todo => todo.project !== id)
-      },
-      () => this.deleteDataREST(domain, projectsEndpoint, id)
-    )
-  }
-
-  /**
-   * Удаление заметки с помощью Django REST.
-   * Перерисовка без перезагрузки данных из БД.
-   * @param id {number} Идентификатор заметки
-   * @returns {Promise<void>}
-   */
-  async deleteTodo(id) {
-    const {domain, todosEndpoint, todos} = this.state;
-    await this.setState(
-      {"todos": todos.filter(todo => todo.id !== id)},
-      () => this.deleteDataREST(domain, todosEndpoint, id)
-    )
-  }
-
-  /**
    * Регистрация пользователя
    * @param data {Object} Объект данных пользователя
    * @returns {Promise<void>}
@@ -394,6 +326,107 @@ export class GeneralApp extends React.Component {
   async createTodo(data) {
     const {domain, todosEndpoint} = this.state;
     await this.createDataREST(data, domain, todosEndpoint);
+  }
+
+  /**
+   * Редактирование пользователя. Обновление состояния актуальными данными без
+   * перезагрузки данных из БД.
+   * @param data {Object} Изменяемые данные пользователя
+   * @param id {number} Идентификатор пользователя
+   * @returns {Promise<void>}
+   */
+  async editUser(data, id) {
+    const {domain, usersEndpoint} = this.state;
+    this.editDataREST(data, domain, usersEndpoint, id);
+  }
+
+  /**
+   * Редактирование проекта. Обновление состояния актуальными данными без
+   * перезагрузки данных из БД.
+   * @param data {Object} Объект со свойствами проекта
+   * @param id {number} Идентификатор проекта
+   * @returns {Promise<void>}
+   */
+  async editProject(data, id) {
+    const {domain, projectsEndpoint, projects} = this.state;
+    const newProject = projects.find(todo => todo.id === id);
+    // Обновляю проект новыми данными, если есть
+    Object.keys(data).map((objectKey, index) =>
+      newProject[objectKey] = data[objectKey]
+    );
+    await this.setState(
+      {
+        "projects": projects.map(project =>
+          // Замена обновлённых данных и даты обновления с помощью фичи ES6
+          project.id === id
+            ? {...project, ...newProject, updated: new Date()}
+            : project
+        )
+      },
+      // Отправляю в БД только те данные, которые нужно изменить
+      () => this.editDataREST(data, domain, projectsEndpoint, id)
+    )
+  }
+
+  /**
+   * Редактирование заметки. Обновление состояния актуальными данными без
+   * перезагрузки данных из БД.
+   * @param data {Object} Объект со свойствами заметки
+   * @param data.text {string} Текст заметки
+   * @param id {number} Идентификатор заметки
+   * @returns {Promise<void>}
+   */
+  async editTodo(data, id) {
+    const {domain, todosEndpoint, todos} = this.state;
+    const newTodo = todos.find(todo => todo.id === id);
+    // Обновляю заметку новыми данными, если есть
+    Object.keys(data).map((objectKey, index) =>
+      newTodo[objectKey] = data[objectKey]
+    );
+    await this.setState(
+      {
+        "todos": todos.map(todo =>
+          // Замена обновлённых данных и даты обновления с помощью фичи ES6
+          todo.id === id
+            ? {...todo, ...newTodo, updated: new Date()}
+            : todo
+        )
+      },
+      // Отправляю в БД только те данные, которые нужно изменить
+      () => this.editDataREST(data, domain, todosEndpoint, id)
+    )
+  }
+
+  /**
+   * Удаление проекта с помощью Django REST.
+   * Перерисовка без перезагрузки данных из БД.
+   * Вместе с проектом удаляются все связанные заметки.
+   * @param id {number} Идентификатор проекта
+   * @returns {Promise<void>}
+   */
+  async deleteProject(id) {
+    const {domain, projectsEndpoint, projects, todos} = this.state;
+    await this.setState(
+      {
+        "projects": projects.filter(projects => projects.id !== id),
+        "todos": todos.filter(todo => todo.project !== id)
+      },
+      () => this.deleteDataREST(domain, projectsEndpoint, id)
+    )
+  }
+
+  /**
+   * Удаление заметки с помощью Django REST.
+   * Перерисовка без перезагрузки данных из БД.
+   * @param id {number} Идентификатор заметки
+   * @returns {Promise<void>}
+   */
+  async deleteTodo(id) {
+    const {domain, todosEndpoint, todos} = this.state;
+    await this.setState(
+      {"todos": todos.filter(todo => todo.id !== id)},
+      () => this.deleteDataREST(domain, todosEndpoint, id)
+    )
   }
 
   /**
@@ -544,7 +577,6 @@ export class GeneralApp extends React.Component {
     if (this.isAuthenticated()) {
       admin = this.isAdmin(this.state.login, users, roles);
     }
-    console.log('sadas', admin)
 
     this.setState({
       "roles": roles,
@@ -720,6 +752,7 @@ export class GeneralApp extends React.Component {
                     deleteProject={(id => this.deleteProject(id))}
                     editTodo={(data, id) => this.editTodo(data, id)}
                     admin={admin}
+                    editProject={(data, id) => this.editProject(data, id)}
                   />
                 }
               />
@@ -766,6 +799,7 @@ export class GeneralApp extends React.Component {
                     deleteProject={(id => this.deleteProject(id))}
                     editTodo={(data, id) => this.editTodo(data, id)}
                     admin={admin}
+                    editProject={(data, id) => this.editProject(data, id)}
                   />
                 }
               />

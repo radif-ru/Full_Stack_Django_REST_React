@@ -41,9 +41,17 @@ export class TodoForm extends PureComponent {
       users, login, createTodo, editTodo, todoId, toggleDetails, todos
     } = this.props;
 
-    if (todos.find(todo => todo.text === text)) {
-      alert(`Запрещено к одному проекту оставлять 2 одинаковые заметки!
-      \nОтредактируйте текст`);
+    const projectId = this.props.projectId
+      ? this.props.projectId
+      : this.state.projectId
+
+    const user = users && users.find(user => user.username === login);
+
+    if (todos.find(todo =>
+      todo.text === text && todo.project === projectId && todo.user === user.id
+    )) {
+      alert("Запрещено одному и тому же пользователю оставлять 2 одинаковые " +
+        "заметки к одному проекту! Отредактируйте текст");
       event.preventDefault();
       return
     }
@@ -58,13 +66,9 @@ export class TodoForm extends PureComponent {
       return
     }
 
-    const projectId = this.props.projectId
-      ? this.props.projectId
-      : this.state.projectId
-    const user = users.find(user => user.username === login).id;
     const data = {
       "project": +projectId,
-      "user": +user,
+      "user": +user.id,
       "text": text
     }
     createTodo(data);
