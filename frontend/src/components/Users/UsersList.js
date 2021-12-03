@@ -8,7 +8,7 @@ import {UserItem} from "./UserItem";
 export class UsersList extends PureComponent {
 
   render() {
-    const {users} = this.props;
+    const {users, roles} = this.props;
 
     return (
       <div>
@@ -34,10 +34,15 @@ export class UsersList extends PureComponent {
             <th>
               Дата рождения
             </th>
+            <th>
+              Роли
+            </th>
           </tr>
           </thead>
           <tbody>
-          {users.map((user, idx) => <UserItem key={idx} user={user}/>)}
+          {users.map((user, idx) =>
+            <UserItem key={idx} user={user} roles={roles}/>
+          )}
           </tbody>
         </table>
       </div>

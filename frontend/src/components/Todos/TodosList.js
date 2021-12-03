@@ -11,7 +11,7 @@ export class TodosList extends PureComponent {
 
   render() {
     const {
-      users, projects, todos, deleteTodo, isAuthenticated, login
+      users, projects, todos, deleteTodo, isAuthenticated, login, admin
     } = this.props;
 
     return (
@@ -48,6 +48,7 @@ export class TodosList extends PureComponent {
               deleteTodo={deleteTodo}
               isAuthenticated={isAuthenticated}
               login={login}
+              admin={admin}
             />
           )}
           </tbody>

@@ -14,7 +14,8 @@ export class TodosData extends PureComponent {
   render() {
 
     const {
-      todos, users, projects, login, isAuthenticated, deleteTodo, editTodo
+      todos, users, projects, login, isAuthenticated, deleteTodo, editTodo,
+      admin
     } = this.props
 
     return (
@@ -30,6 +31,7 @@ export class TodosData extends PureComponent {
             deleteTodo={deleteTodo}
             editTodo={editTodo}
             todos={todos}
+            admin={admin}
           />
         )}
       </div>
@@ -66,7 +68,7 @@ class TodosDataEl extends PureComponent {
   render() {
     const {
       todo, users, projects, login, isAuthenticated, deleteTodo, editTodo,
-      todos
+      todos, admin
     } = this.props
     const {visible} = this.state
     const user = users.find(user => user.username === login)
@@ -74,7 +76,7 @@ class TodosDataEl extends PureComponent {
       <div>
         {visible && <span className="comment">{todo.text}</span>}
 
-        {isAuthenticated() && todo.user === user.id &&
+        {isAuthenticated() && (todo.user === user.id || admin) &&
         <div>
             <span
               onClick={this.toggleDetails}
@@ -90,6 +92,7 @@ class TodosDataEl extends PureComponent {
               editTodo={editTodo}
               toggleDetails={() => this.toggleDetails()}
               todos={todos}
+              admin={admin}
             />
           </div>
           }
@@ -125,7 +128,7 @@ class TodosDataEl extends PureComponent {
               todo.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}`
             }
           </span>
-          {isAuthenticated() && todo.user === user.id &&
+          {isAuthenticated() && (todo.user === user.id || admin) &&
           <div>
             <span className="btn btn-outline-danger">
               <span onClick={() => deleteTodo(todo.id)}>Удалить заметку</span>

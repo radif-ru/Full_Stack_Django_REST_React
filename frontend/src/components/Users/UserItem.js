@@ -10,7 +10,7 @@ export class UserItem extends PureComponent {
 
   render() {
 
-    const {user} = this.props;
+    const {user, roles} = this.props;
 
     return (
       <tr>
@@ -31,6 +31,15 @@ export class UserItem extends PureComponent {
         </td>
         <td>
           {user.birthdate && dateFormat(user.birthdate, "fullDate")}
+        </td>
+        <td>
+          {user.roles.map(
+           (role_id, idx) =>
+             <span key={idx}>
+               {roles.find(role => role.id === role_id).role}
+               <br/>
+             </span>
+          )}
         </td>
       </tr>
     )

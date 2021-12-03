@@ -8,7 +8,9 @@ import {ProjectItem} from "./ProjectItem";
 export class ProjectsList extends PureComponent {
 
   render() {
-    const {projects, users, deleteProject, login, isAuthenticated} = this.props
+    const {
+      projects, users, deleteProject, login, isAuthenticated, admin
+    } = this.props
 
     return (
       <div>
@@ -37,6 +39,7 @@ export class ProjectsList extends PureComponent {
               login={login}
               isAuthenticated={isAuthenticated}
               deleteProject={deleteProject}
+              admin={admin}
             />
           )}
           </tbody>

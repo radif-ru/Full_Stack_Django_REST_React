@@ -24,4 +24,4 @@ class Project(models.Model):
         verbose_name = 'Проект'
         verbose_name_plural = 'Проекты'
         ordering = ['is_active', '-created', 'name']
-        unique_together = (('name', 'repository'),)
+        unique_together = (('name', 'repository', 'updated'),)

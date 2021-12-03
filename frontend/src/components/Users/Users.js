@@ -12,11 +12,11 @@ export class Users extends PureComponent {
 
   render() {
 
-    const users = this.props.users;
+    const {users, roles} = this.props;
 
     return (
       <div>
-        <UsersList users={users}/>
+        <UsersList users={users} roles={roles}/>
       </div>
     )
   }

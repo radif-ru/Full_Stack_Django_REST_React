@@ -13,7 +13,7 @@ export class TodoItem extends PureComponent {
 
   render() {
     const {
-      todo, users, projects, deleteTodo, isAuthenticated, login
+      todo, users, projects, deleteTodo, isAuthenticated, login, admin
     } = this.props;
     const user = users.find(user => user.id === todo.user);
     const project = projects.find(project => project.id === todo.project);
@@ -39,7 +39,7 @@ export class TodoItem extends PureComponent {
             : "---"
           }
         </td>
-        {isAuthenticated() && user.username === login &&
+        {isAuthenticated() && (user.username === login || admin) &&
         <td className="btn btn-outline-danger">
           <div onClick={() => deleteTodo(todo.id)}>Del</div>
         </td>

@@ -56,6 +56,7 @@ export class GeneralApp extends React.Component {
       "token": "",
       "refreshToken": "",
       "login": "",
+      "admin": false,
 
       "notification": ""
     }
@@ -101,10 +102,23 @@ export class GeneralApp extends React.Component {
 
   /**
    * Проверка - авторизован ли пользователь
-   * @returns {boolean} - возвращает true или false
+   * @returns {boolean} Возвращает true или false
    */
   isAuthenticated() {
-    return !!(this.state.token);
+    return !!(this.state.token)
+  }
+
+  /**
+   * Проверка - является ли администратором пользователь
+   * @param login {string} Логин пользователя
+   * @param users {Array} Массив объектов пользователей
+   * @param roles {Array} Массив объектов ролей
+   * @returns {boolean} Возвращает true или false
+   */
+  isAdmin(login, users, roles) {
+    const user = users.find(user => user.username === login);
+    const adminRole = roles.find(role => role.role === "администратор");
+    return !!user.roles.find(role_id => role_id === adminRole.id)
   }
 
   /**
@@ -127,14 +141,15 @@ export class GeneralApp extends React.Component {
   }
 
   /**
-   * Присвоение токена и логина в Cookies и состояния приложения
-   * @param token {string}  - Токен
-   * @param login {string}  - Логин
+   * Присвоение токена и логина в Cookies для всех путей и состояния приложения
+   * @param token {string} Токен
+   * @param login {string} Логин
    */
   setToken(token, login) {
     const cookies = new Cookies();
-    cookies.set("token", token);
-    cookies.set("login", login);
+    cookies.set("token", token, {path: "/"});
+    cookies.set("login", login, {path: "/"});
+
 
     this.setState({"token": token, "login": login},
       () => {
@@ -356,6 +371,8 @@ export class GeneralApp extends React.Component {
    */
   async createProject(data) {
     const {domain, projectsEndpoint, roles, users, login} = this.state;
+    await this.createDataREST(data, domain, projectsEndpoint);
+
     const projectOwnerRole = +roles.find(
       role => role.role === "владелец проекта"
     ).id
@@ -365,7 +382,6 @@ export class GeneralApp extends React.Component {
         "roles": [...authUser.roles, projectOwnerRole]
       }, +authUser.id)
     }
-    await this.createDataREST(data, domain, projectsEndpoint);
   }
 
   /**
@@ -524,11 +540,18 @@ export class GeneralApp extends React.Component {
       new Date(b.created) - new Date(a.created)
     )
 
+    let admin = false;
+    if (this.isAuthenticated()) {
+      admin = this.isAdmin(this.state.login, users, roles);
+    }
+    console.log('sadas', admin)
+
     this.setState({
       "roles": roles,
       "users": users,
       "projects": projects,
-      "todos": todos
+      "todos": todos,
+      "admin": admin
     })
   }
 
@@ -659,7 +682,7 @@ export class GeneralApp extends React.Component {
    * @returns {JSX.Element}
    */
   render() {
-    const {roles, users, projects, todos, login} = this.state;
+    const {roles, users, projects, todos, login, admin} = this.state;
 
     return (
       <BrowserRouter>
@@ -672,7 +695,10 @@ export class GeneralApp extends React.Component {
           />
           <div className="main-content">
             <Routes>
-              <Route exact path="/users" element={<Users users={users}/>}/>
+              <Route
+                exact path="/users"
+                element={<Users users={users} roles={roles}/>}
+              />
               <Route
                 exact
                 path="/users/:id"
@@ -693,6 +719,7 @@ export class GeneralApp extends React.Component {
                     }
                     deleteProject={(id => this.deleteProject(id))}
                     editTodo={(data, id) => this.editTodo(data, id)}
+                    admin={admin}
                   />
                 }
               />
@@ -718,6 +745,7 @@ export class GeneralApp extends React.Component {
                     isAuthenticated={() => this.isAuthenticated()}
                     login={login}
                     deleteProject={(id => this.deleteProject(id))}
+                    admin={admin}
                   />
                 }
               />
@@ -737,6 +765,7 @@ export class GeneralApp extends React.Component {
                     deleteTodo={(id) => this.deleteTodo(id)}
                     deleteProject={(id => this.deleteProject(id))}
                     editTodo={(data, id) => this.editTodo(data, id)}
+                    admin={admin}
                   />
                 }
               />
@@ -750,6 +779,7 @@ export class GeneralApp extends React.Component {
                     isAuthenticated={() => this.isAuthenticated()}
                     deleteTodo={id => this.deleteTodo(id)}
                     login={login}
+                    admin={admin}
                   />
                 }
               />

@@ -20,7 +20,7 @@ export const ProjectPage = (props) => {
   id = +id;
   const {
     users, projects, todos, isAuthenticated, login, createTodo, deleteTodo,
-    deleteProject, editTodo
+    deleteProject, editTodo, admin
   } = props;
 
   const project = projects.find(project => project.id === id);
@@ -63,6 +63,7 @@ export const ProjectPage = (props) => {
           isAuthenticated={isAuthenticated}
           deleteTodo={deleteTodo}
           editTodo={editTodo}
+          admin={admin}
         />
 
       </div>

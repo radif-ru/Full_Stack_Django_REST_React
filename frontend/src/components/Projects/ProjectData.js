@@ -12,7 +12,9 @@ export class ProjectData extends PureComponent {
 
   render() {
 
-    const {project, users, login, isAuthenticated, deleteProject} = this.props
+    const {
+      project, users, login, isAuthenticated, deleteProject, admin
+    } = this.props
     const user = users.find(user => user.username === login);
 
     const noData = "нет данных!";
@@ -71,8 +73,8 @@ export class ProjectData extends PureComponent {
               }
           </span>
         </p>
-        {isAuthenticated() && project.users
-          .find(el => el === user.id) &&
+        {isAuthenticated() && (project.users
+          .find(el => el === user.id) || admin) &&
         <div className="btn btn-outline-danger">
           <div onClick={() => deleteProject(project.id)}>Удалить!</div>
         </div>

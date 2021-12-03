@@ -12,7 +12,7 @@ export class Todos extends PureComponent {
 
   render() {
     const {
-      users, projects, todos, deleteTodo, isAuthenticated, login
+      users, projects, todos, deleteTodo, isAuthenticated, login, admin
     } = this.props;
 
     return (
@@ -23,6 +23,7 @@ export class Todos extends PureComponent {
         deleteTodo={deleteTodo}
         isAuthenticated={isAuthenticated}
         login={login}
+        admin={admin}
       />
     )
   }
