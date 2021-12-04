@@ -25,10 +25,10 @@ export const UserPage = (props) => {
   } = props;
   const user = users.find((user) => user.id === id);
 
-  const user_todos = todos.filter(todo => todo.user === id);
+  const userTodos = todos.filter(todo => todo.user === id);
 
-  const user_projects = projects.filter(
-    project => project.users.find(proj_user => proj_user === id)
+  const userProjects = projects.filter(
+    project => project.users.find(projUser => projUser === id)
   );
 
   return (
@@ -62,18 +62,22 @@ export const UserPage = (props) => {
         </div>
 
         {isAuthenticated() && user.username === login &&
-        <ProjectForm
-          users={users}
-          projects={projects}
-          login={login}
-          createProject={createProject}
-        />
+          <div>
+            <h3>Создать проект</h3>
+            <ProjectForm
+              users={users}
+              projects={projects}
+              login={login}
+              createProject={createProject}
+            />
+          </div>
+
         }
 
         <h3 className="user-title">Проекты пользователя: </h3>
         <br/>
 
-        {user_projects.map((project, idx) =>
+        {userProjects.map((project, idx) =>
           <ProjectData
             key={idx}
             project={project}
@@ -109,7 +113,7 @@ export const UserPage = (props) => {
         <br/>
 
         <TodosData
-          todos={user_todos}
+          todos={userTodos}
           users={users}
           projects={projects}
           login={login}

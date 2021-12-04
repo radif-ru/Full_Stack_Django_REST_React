@@ -118,7 +118,7 @@ export class GeneralApp extends React.Component {
   isAdmin(login, users, roles) {
     const user = users.find(user => user.username === login);
     const adminRole = roles.find(role => role.role === "администратор");
-    return !!user.roles.find(role_id => role_id === adminRole.id)
+    return !!user.roles.find(roleId => roleId === adminRole.id)
   }
 
   /**
@@ -575,9 +575,9 @@ export class GeneralApp extends React.Component {
     )
 
     // Уникальные id проектов
-    const unique_ids = [...new Set(projects.map(project => project.id))];
+    const uniqueIds = [...new Set(projects.map(project => project.id))];
     // Уникальные проекты
-    projects = unique_ids
+    projects = uniqueIds
       .map(id => projects.find(project => project.id === id));
     // Сортировка проектов по дате обновления
     projects.sort((a, b) =>

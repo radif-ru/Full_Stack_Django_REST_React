@@ -31,7 +31,9 @@ DEBUG = int(os.environ.get('DEBUG', default=1))
 
 # Разрешённые хосты из настроек переменных окружения, иначе из default
 ALLOWED_HOSTS = os.environ.get(
-    'DJANGO_ALLOWED_HOSTS', default='localhost 127.0.0.1 [::1] web').split(' ')
+    'DJANGO_ALLOWED_HOSTS',
+    default='localhost 127.0.0.1 [::1] backend frontend'
+).split(' ')
 
 # Application definition
 
@@ -87,6 +89,14 @@ CORS_ALLOWED_ORIGINS = [
     'http://0.0.0.0:3000',
     'http://192.168.56.1:3000',
 
+    'http://localhost',
+    'http://127.0.0.1',
+    'http://0.0.0.0',
+
+    'http://localhost:80',
+    'http://127.0.0.1:80',
+    'http://0.0.0.0:80',
+
     # Для запуска фронтенда на Django
     'http://localhost:3333',
     'http://127.0.0.1:3333',
@@ -99,8 +109,8 @@ TEMPLATES = [
         'DIRS': [
             # Добавление шаблонов из корневой директории templates
             os.path.join(BASE_DIR, 'templates'),
-            # Путь к фронтенду для запуска на Django
-            os.path.join(BASE_DIR, '../frontend/build/'),
+            # Путь к фронтенду для запуска на отладочном Django сервере
+            # os.path.join(BASE_DIR, '../frontend/build/'),
         ],
         # Поиск шаблонов будет вестись по установленным приложениям (APP_DIRS):
         'APP_DIRS': True,
@@ -173,8 +183,8 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = (
-    # Путь к статике фронтенда для запуска на Django
-    os.path.join(BASE_DIR, '../frontend/build/static'),
+    # Путь к статике фронтенда для запуска на отладочном Django сервере
+    # os.path.join(BASE_DIR, '../frontend/build/static'),
 
     os.path.join(BASE_DIR, 'static'),
 )
@@ -236,6 +246,10 @@ JSON_PATH = 'json'
 REST_FRAMEWORK = {
     # Настройки рендеринга
     'DEFAULT_RENDERER_CLASSES': [
+        # API в браузере
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        # Стиль удобного администрирования в браузере
+        'rest_framework.renderers.AdminRenderer',
         # Верблюжий стиль для отображения JSON и браузерного API
         'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
         'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
@@ -243,12 +257,10 @@ REST_FRAMEWORK = {
     ],
     # Настройки парсеров
     'DEFAULT_PARSER_CLASSES': (
-        # If you use MultiPartFormParser or FormParser,
-        # we also have a camel case version
+        # Форматирование данных из верблюжьего стиля в змеиный
         'djangorestframework_camel_case.parser.CamelCaseFormParser',
         'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
         'djangorestframework_camel_case.parser.CamelCaseJSONParser',
-        # Any other parsers
     ),
     # Библиотека для фильтрации запросов
     'DEFAULT_FILTER_BACKENDS': [
@@ -265,6 +277,14 @@ REST_FRAMEWORK = {
     ],
     # Методы авторизации для всего проекта
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        # Базовая аутентификация Django REST по HTTP. Не безопасно!
+        # 'rest_framework.authentication.BasicAuthentication',
+        # Аутентификация Django REST, позволяет хранить сессии для работы в
+        # браузере с API
+        'rest_framework.authentication.SessionAuthentication',
+        # Аутентификация Django REST с помощью токенов
+        # 'rest_framework.authentication.TokenAuthentication',
+
         # Аутентификация с помощью JSON токенов JWT. Наиболее безопасная
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
@@ -391,22 +411,6 @@ GRAPHENE = {
 }
 
 if DEBUG:
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].extend([
-        # API в браузере
-        'rest_framework.renderers.BrowsableAPIRenderer',
-        # Стиль удобного администрирования в браузере
-        'rest_framework.renderers.AdminRenderer',
-    ])
-    # Методы авторизации для всего проекта
-    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'].extend([
-        # Базовая аутентификация Django REST по HTTP. Не безопасно!
-        # 'rest_framework.authentication.BasicAuthentication',
-        # Аутентификация Django REST, позволяет хранить сессии для работы в
-        # браузере с API
-        'rest_framework.authentication.SessionAuthentication',
-        # Аутентификация Django REST с помощью токенов
-        # 'rest_framework.authentication.TokenAuthentication',
-    ])
     # Логирование
     LOGGING = {
         'version': 1,
@@ -426,7 +430,7 @@ if DEBUG:
     }
 
 # Затирание переменных локальными настройками (если есть):
-try:
-    from .local_settings import *
-except ImportError or ModuleNotFoundError:
-    pass
+# try:
+#     from .local_settings import *
+# except ImportError or ModuleNotFoundError:
+#     pass

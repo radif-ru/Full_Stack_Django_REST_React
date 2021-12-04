@@ -37,4 +37,3 @@ class ProjectModelViewSet(ProjectDestroyMixin, ModelViewSet):
         if self.request.method in ['GET']:
             return ProjectModelSerializerGet
         return ProjectModelSerializer
-

@@ -74,10 +74,10 @@ export class UserData extends PureComponent {
           </div>
           <div>
             <span>Роли пользователя: </span>
-            {user.roles.map((role_id, idx) =>
+            {user.roles.map((roleId, idx) =>
               <span key={idx} className="user-data"> | {
-                roles.find(role => role.id === role_id) && roles
-                  .find(role => role.id === role_id).role
+                roles.find(role => role.id === roleId) && roles
+                  .find(role => role.id === roleId).role
               } |</span>
             )}
           </div>

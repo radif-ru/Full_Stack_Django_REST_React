@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView
+# from django.views.generic import TemplateView
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from graphene_django.views import GraphQLView
@@ -10,7 +10,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView, \
     TokenObtainPairView
 
-from config.settings import DEBUG
+# from config.settings import DEBUG
 from projects.views import ProjectModelViewSet
 from todos.views import TodoModelViewSet
 from users.views import UserModelViewSet, PermissionGroupsModelViewSet
@@ -62,18 +62,20 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0),
          name='schema-redoc'),
     # Выдача документации в JSON или YAML формате
-    re_path('^swagger(?P<format>\.json|\.yaml)$',
+    re_path(r'^swagger(?P<format>\.json|\.yaml)$',
             schema_view.without_ui(cache_timeout=0), name='schema-json'),
 
     # GraphQL. При установке graphiql=True, включается интерактивный режим
-    # для отладки, в релизе следует отключить. Настроил соответственно:
+    # для отладки, в релизе следует отключить. Для демонстрации оставил.
+    # Чтобы отключить в релизе - убрать запятую и разкомментить код ниже.
     # csrf_exempt - отключает проверку CSRF-токена для данного адреса
-    path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True))) if DEBUG
-    else path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=False))),
+    path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True))),
+    # if DEBUG
+    # else path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=False))),
 
-    # Пути для запуска фронтенда на Django
-    re_path('^(''|todos|users|users?/\d|projects|projects?/\d|registration)$',
-            TemplateView.as_view(template_name='index.html')),
+    # Пути для запуска фронтенда на отладочном Django сервере
+    # re_path(r'^(""|todos|users|users?/\d|projects|projects?/\d|registration)$',
+    #         TemplateView.as_view(template_name='index.html')),
 
     #######################
 

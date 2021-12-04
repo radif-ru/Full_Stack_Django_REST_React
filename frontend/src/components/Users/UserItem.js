@@ -34,9 +34,9 @@ export class UserItem extends PureComponent {
         </td>
         <td>
           {user.roles.map(
-           (role_id, idx) =>
+           (roleId, idx) =>
              <span key={idx}>
-               {roles.find(role => role.id === role_id).role}
+               {roles.find(role => role.id === roleId).role}
                <br/>
              </span>
           )}

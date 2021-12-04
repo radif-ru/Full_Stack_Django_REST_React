@@ -2,7 +2,7 @@ import random
 
 from django.core.management.base import BaseCommand
 from django.db import OperationalError, ProgrammingError, IntegrityError
-from django.db.models import Q
+# from django.db.models import Q
 
 from scripts import load_from_json
 from todos.models import Todo, Project
@@ -40,9 +40,11 @@ class Command(BaseCommand):
                 rand_u_id = random.choice(users_id)
                 # Рандомный id проекта из списка проектов
                 rand_proj_id = random.choice(projects_id)
-                if not todo_objs.filter(
-                    # Фильтрация AND, где одновременно выполняются 2 условия
-                        Q(text=todo['text']) & Q(user_id=todo['user_id'])):
+                # if not todo_objs.filter(
+                # Фильтрация AND, где одновременно выполняются 2 условия
+                # Отключил так как теперь в файле уникальные тексты
+                #     Q(text=todo['text']) & Q(user_id=todo['user_id'])):
+                if not todo_objs.filter(text=todo['text']):
                     todo_objs.create(
                         user_id=rand_u_id, text=todo['text'],
                         project_id=rand_proj_id)

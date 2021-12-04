@@ -4,7 +4,6 @@ from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APIRequestFactory, force_authenticate, \
     APIClient, APITestCase, APISimpleTestCase
-from django.contrib.auth.models import User
 
 from mixer.auto import mixer
 from rest_framework_simplejwt.views import TokenObtainPairView

@@ -25,7 +25,7 @@ export const ProjectPage = (props) => {
 
   const project = projects.find(project => project.id === id);
 
-  const project_todos = todos.filter(todo => todo.project === id)
+  const projectTodos = todos.filter(todo => todo.project === id)
 
   return (
     <div className="project-page">
@@ -59,7 +59,7 @@ export const ProjectPage = (props) => {
 
         <h3>Заметки к проекту: </h3><br/>
         <TodosData
-          todos={project_todos}
+          todos={projectTodos}
           users={users}
           projects={projects}
           login={login}

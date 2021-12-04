@@ -97,7 +97,7 @@ class Query(graphene.ObjectType):
         """
         try:
             return User.objects.get(id=id)
-        except User.DoesNotExist as exception:
+        except User.DoesNotExist:
             raise User.DoesNotExist('Пользователь не найден')
 
     def resolve_todo_by_user_login(self, info, login=None, first_name=None,
@@ -129,7 +129,7 @@ class UserUpdateMutation(graphene.Mutation):
             user.birthdate = birthdate
             user.save()
             return UserUpdateMutation(user)
-        except User.DoesNotExist as exception:
+        except User.DoesNotExist:
             raise User.DoesNotExist('Пользователь не найден')
 
 
