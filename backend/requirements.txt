@@ -16,6 +16,7 @@ graphene==2.1.9
 graphene-django==2.15.0
 graphql-core==2.3.2
 graphql-relay==2.0.1
+gunicorn==20.1.0
 idna==3.3
 inflection==0.5.1
 itypes==1.2.0
@@ -25,6 +26,7 @@ MarkupSafe==2.0.1
 mixer==7.2.0
 packaging==21.3
 promise==2.3
+psycopg2-binary==2.9.2
 PyJWT==2.3.0
 pyparsing==3.0.6
 python-dateutil==2.8.2

@@ -1,0 +1,50 @@
+FROM python:3.10-slim as builder
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+ARG HOME
+ARG APP_HOME
+ARG STATIC_FILES
+ARG MEDIA_FILES
+
+WORKDIR $APP_HOME
+
+RUN pip install --upgrade pip
+RUN pip install flake8
+COPY . .
+RUN flake8 --ignore=E501,F401 .
+
+COPY ./requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir $APP_HOME/wheels -r requirements.txt
+
+
+FROM python:3.10-slim
+
+ARG HOME
+ARG APP_HOME
+ARG STATIC_FILES
+ARG MEDIA_FILES
+
+RUN mkdir -p $HOME
+
+RUN adduser --system --group app
+
+RUN mkdir $APP_HOME
+RUN mkdir $STATIC_FILES
+RUN mkdir $MEDIA_FILES
+
+WORKDIR $APP_HOME
+
+RUN apt-get update
+COPY --from=builder $APP_HOME/wheels /wheels
+COPY --from=builder $APP_HOME/requirements.txt .
+RUN pip install --no-cache /wheels/*
+
+COPY . $APP_HOME
+
+RUN chown -R app:app $APP_HOME
+
+USER app
+
+ENTRYPOINT ["/home/app/backend/entrypoint.prod.sh"]

@@ -1,0 +1,15 @@
+# IntellijIdea files
+**/.idea
+
+# Кэши сасс файлов и пайчарма
+**/.sass-cache
+**/__pycache__
+
+# Виртуальное окружение проекта
+**/venv
+
+# Миграции
+**/migrations
+
+# Генерируемые PyTest данные
+**/.coverage

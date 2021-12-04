@@ -33,6 +33,18 @@
 > То есть разработчик клиентской части (без разницы - web, мобильного, десктопного и др. приложения на любом языке) может сразу начать писать согласованный с сервером код.
 >
 > `graphene-django` (v. 2.15.0), так же подтягиваются `promise` (v. 2.3), `graphql-core` (v. 2.3.2) и другие библиотеки для работы с альтернативой `REST` - `GraphQL` на `Django`. Используется другая архитектура, язык и механизмы создания, отправки запросов к БД и т.д.
+>
+> `psycopg2-binary` (v. 2.9.2) - скомпиленный wheel-пакет с бинарниками. Адаптер базы данных PostgreSQL для языка программирования Python. Его основными функциями является полная реализация спецификации Python DB API 2.0 и безопасность потоков. Предназначен для сильно многопоточных приложений
+> 
+> `gunicorn` (v. 20.1.0) - HTTP-сервер с интерфейсом шлюза веб-сервера Python (WSGI).
+
+#### Внутри `docker-compose` используются образы для контейнеров из докер хаба:
+
+> `python:3.10-slim`
+>
+> `postgres:14.1-alpine ` - Система, комплекс приложений и утилит для работы `PostgreSQL` - свободная объектно-реляционная система управления базами данных (СУБД).
+> 
+> `nginx:1.21.4-alpine` - Система, комплекс приложений и утилит для работы `Nginx` - веб-сервер и почтовый прокси-сервер, работающий на `Unix`-подобных операционных системах.
 
 ### Библиотеки на основе JavaScript, Node.js и др.
 
@@ -291,32 +303,31 @@
 
 > `npx create-react-app frontend` - Создание/установка проекта на React + Babel, webpack и другие полезные зависимости для комфортной работы, `npx` - режим одноразового запуска, пакет для запуска пакетов без установки в систему.
 
-> `npm run start` - Запуск фронтенд проекта, выполнять в корне фронта (в данном случае в каталоге frontend)
+> `npm run start` - Запуск фронтенд проекта на отладочном сервере, выполнять в корне фронта (в данном случае в каталоге frontend)
 
 > `npx react-codemod rename-unsafe-lifecycles` - Переименовать все устаревшие жизненные циклы на их новые имена
 
+> `npm run build` - Сборка проекта для продакшн
 
 ### Консольные команды для Docker-compose: 
 
-> `docker-compose build` - Создать образ
+> `docker-compose build` или `docker-compose -f docker-compose.prod.yml build` - Создать образ. Префикс `-f` `имя_файла`, после `docker-compose` позволяет запускаться из файла с нестандартным именем для выполнения любых возможных команд
 
-> `docker-compose -f docker-compose.prod.yml build` - Создать образ (запуск из файла `docker-compose.prod.yml`). Префикс `-f` `имя_файла`, после `docker-compose` позволяет запускаться из файла с нестандартным именем для выполнения любых возможных команд
+> `docker-compose up` или `docker-compose -f docker-compose.prod.yml up` - Запустить контейнер
 
-> `docker-compose up` - Запустить контейнер
-
-> `docker-compose up -d --build` - Создать образ и запустить контейнер в фоне
+> `docker-compose up -d --build` или `docker-compose -f docker-compose.prod.yml up -d --build` - Создать образ и запустить контейнер в фоне (`-d`).
 
 > `docker image ls -a && docker container ls -a && docker volume ls` - Посмотреть все образы/контейнеры/тома
 
+> `docker exec -it <CONTAINER ID> bash` - Зайти в работающий контейнер 
+
+> `docker-compose down` или `docker-compose -f docker-compose.prod.yml down` - Остановить запущенные контейнеры и сети
+
+> `docker-compose down -v` или `docker-compose -f docker-compose.prod.yml down -v` - Удалить тома вместе с контейнерами
+
 > `docker container prune && docker image prune && docker volume prune` - Удалить неиспользуемые контейнеры/образы/тома
 
-> `docker-compose down -v` - Удалить тома вместе с контейнерами 
-
-> `docker-compose -f docker-compose.prod.yml down -v` - Удалить тома вместе с контейнерами (запуск из файла docker-compose.prod.yml)
-
-> `docker-compose logs -f` - Проверка наличия ошибок в журналах, просмотр логов
-
-> `docker exec -it <CONTAINER ID> bash` - Зайти в работающий контейнер 
+> `docker-compose logs -f` или `docker-compose -f docker-compose.prod.yml logs -f` - Проверка наличия ошибок в журналах, просмотр логов
 
 > `docker volume inspect django-on-docker_postgres_data` - Проверить, что том (volume) был создан
 

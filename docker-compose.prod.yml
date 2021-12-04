@@ -1,0 +1,82 @@
+version: "3.7"
+
+services:
+#  redis:
+#    restart: always
+#    build:
+#      context: ./docker/redis
+#      dockerfile: Dockerfile
+#    ports:
+#      - "6379:6379"
+  db:
+    restart: always
+    privileged: true
+    build:
+      context: ./docker/postgres
+      dockerfile: Dockerfile
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.prod.db
+    ports:
+      # Бд доступна на порту 5432, можно и для других приложений использовать
+      - "5432:5432"
+    # Решение проблемы когда бэкенд запускается раньше чем БД
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d todos -U radif" ]
+      interval: 3s
+      timeout: 3s
+      retries: 9
+  backend:
+    restart: always
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+      args:
+        HOME: /home/app
+        APP_HOME: /home/app/backend
+        STATIC_FILES: /home/app/backend/staticfiles
+        MEDIA_FILES: /home/app/backend/mediafiles
+    volumes:
+      - static:/home/app/backend/static
+      - static_volume:/home/app/backend/staticfiles
+      - media_volume:/home/app/backend/mediafiles
+    depends_on:
+      - db
+    # Доступен для внутренней сети, но недоступен для наружней
+    expose:
+      - 3333
+    env_file:
+      - ./.env.prod
+  nginx:
+    restart: always
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      # Бэкенд доступен на порту 3333
+      - "3333:80"
+    volumes:
+      - static_volume:/home/app/backend/staticfiles
+      - media_volume:/home/app/backend/mediafiles
+  frontend:
+    restart: always
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      # Фронтенд доступен на порту 80, то есть адрес по умолчанию
+      - "80:80"
+    depends_on:
+      - nginx
+    volumes:
+      - frontend_volume:/var/www
+
+volumes:
+  postgres_data:
+  static:
+  static_volume:
+  media_volume:
+  frontend_volume:
