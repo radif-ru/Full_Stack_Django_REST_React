@@ -33,7 +33,7 @@ export class GeneralApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      "domain": "http://localhost:3333",
+      "domain": "http://127.0.0.1:3333",
 
       "rolesEndpoint": "/api/roles/",
       "usersEndpoint": "/api/users/",

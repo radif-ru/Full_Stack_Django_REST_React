@@ -15,7 +15,7 @@ services:
       context: ./docker/postgres
       dockerfile: Dockerfile
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data
     env_file:
       - ./.env.dev.db
     ports:
