@@ -559,9 +559,13 @@ export class GeneralApp extends React.Component {
       return role.roleUsers;
     })
       .reduce((arr1, arr2) => [...arr1, ...arr2], ...[])
-
-    const users = usersSet.map(user => {
-      const {userProjects, userTodos, ...rest} = user;
+    // Уникальные id пользователей
+    const uniqueUsersIds = [...new Set(usersSet.map(project => project.id))];
+    // Уникальные пользователи
+    const users = uniqueUsersIds.map(userId => {
+      const {userProjects, userTodos, ...rest} = usersSet.find(
+        user => user.id === userId
+      );
       // Собираю заметки
       todos.push(...userTodos);
       // Собираю проекты
@@ -575,9 +579,9 @@ export class GeneralApp extends React.Component {
     )
 
     // Уникальные id проектов
-    const uniqueIds = [...new Set(projects.map(project => project.id))];
+    const uniqueProjectsIds = [...new Set(projects.map(project => project.id))];
     // Уникальные проекты
-    projects = uniqueIds
+    projects = uniqueProjectsIds
       .map(id => projects.find(project => project.id === id));
     // Сортировка проектов по дате обновления
     projects.sort((a, b) =>
@@ -643,7 +647,7 @@ export class GeneralApp extends React.Component {
       })
       .catch(error => {
           this.handleErrors(error, "createDataREST");
-          this.getAllData()
+          this.getAllData();
         }
       )
   }
