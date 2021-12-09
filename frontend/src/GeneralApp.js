@@ -33,7 +33,7 @@ export class GeneralApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      "domain": "http://127.0.0.1:3333",
+      "domain": "https://backend.radif.ru",
 
       "rolesEndpoint": "/api/roles/",
       "usersEndpoint": "/api/users/",
@@ -45,7 +45,7 @@ export class GeneralApp extends React.Component {
       "tokenEndpoint": "/api/token/",
       "tokenRefreshEndpoint": "/api/token/refresh/",
 
-      "limit": 1000,
+      "limit": 999,
       "offset": 0,
 
       "roles": [],

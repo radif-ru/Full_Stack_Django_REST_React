@@ -32,8 +32,8 @@ DEBUG = int(os.environ.get('DEBUG', default=1))
 # Разрешённые хосты из настроек переменных окружения, иначе из default
 ALLOWED_HOSTS = os.environ.get(
     'DJANGO_ALLOWED_HOSTS',
-    default='localhost 127.0.0.1 [::1] backend frontend'
-).split(' ')
+    default='localhost 127.0.0.1 [::1] backend.radif.ru frontend.radif.ru '
+            'backend frontend').split(' ')
 
 # Application definition
 
@@ -83,25 +83,27 @@ ROOT_URLCONF = 'config.urls'
 # Настройка политики CORS - доступ с другого домена/порта
 # Работа с заголовками для доступа React к Django, разрешенные адреса
 # CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'http://0.0.0.0:3000',
-    'http://192.168.56.1:3000',
-
-    'http://localhost',
-    'http://127.0.0.1',
-    'http://0.0.0.0',
-
-    'http://localhost:80',
-    'http://127.0.0.1:80',
-    'http://0.0.0.0:80',
-
-    # Для запуска фронтенда на Django
-    'http://localhost:3333',
-    'http://127.0.0.1:3333',
-    'http://0.0.0.0:3333',
-]
+# Не даёт работать боевому серверу, по этому отключил. Обрабатываю в Nginx
+# CORS_ALLOWED_ORIGINS = [
+#     'https://frontend.radif.ru',
+#     'https://backend.radif.ru',
+#     'http://frontend.radif.ru',
+#     'http://backend.radif.ru',
+#
+#     'http://localhost:3000',
+#     'http://127.0.0.1:3000',
+#     'http://0.0.0.0:3000',
+#     'http://192.168.56.1:3000',
+#
+#     'http://localhost',
+#     'http://127.0.0.1',
+#     'http://0.0.0.0',
+#
+#     # Для запуска фронтенда на Django
+#     'http://localhost:3333',
+#     'http://127.0.0.1:3333',
+#     'http://0.0.0.0:3333',
+# ]
 
 TEMPLATES = [
     {

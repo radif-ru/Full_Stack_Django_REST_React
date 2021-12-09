@@ -27,6 +27,8 @@ COPY . $APP_HOME
 
 RUN chown -R app:app $APP_HOME
 
+RUN chmod +x entrypoint.sh
+
 USER app
 
 ENTRYPOINT ["/home/app/backend/entrypoint.sh"]
