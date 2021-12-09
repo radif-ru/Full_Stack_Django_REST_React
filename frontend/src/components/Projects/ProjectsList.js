@@ -2,6 +2,7 @@ import {PureComponent} from "react";
 
 import {ProjectItem} from "./ProjectItem";
 
+
 /**
  * Формирование заголовков таблицы и данных для заполнения ячеек
  */

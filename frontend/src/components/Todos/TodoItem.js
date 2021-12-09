@@ -1,6 +1,5 @@
 import {PureComponent} from "react";
 import {Link} from "react-router-dom";
-import dateFormat from "dateformat";
 
 
 /**
@@ -30,14 +29,10 @@ export class TodoItem extends PureComponent {
           <Link to={`/projects/${todo.project}`}>{project.name}</Link>
         </td>
         <td>
-          {dateFormat(todo.created, "dddd, mmmm dS, yyyy, h:MM:ss TT")}
+          {todo.created}
         </td>
         <td>
-          {todo.updated !== todo.created
-            ? `${dateFormat(
-              todo.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}`
-            : "---"
-          }
+          {todo.updated !== todo.created ? todo.updated : "---"}
         </td>
         {isAuthenticated() && (user.username === login || admin) &&
         <td className="btn btn-outline-danger">

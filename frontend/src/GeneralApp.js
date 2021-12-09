@@ -19,6 +19,7 @@ import {UserPage} from "./components/Users/UserPage";
 import {ProjectPage} from "./components/Projects/ProjectPage";
 import {LoginForm} from "./components/Authorization";
 import {UserForm} from "./components/Users/UserForm";
+import dateFormat from "dateformat";
 
 
 /**
@@ -544,7 +545,7 @@ export class GeneralApp extends React.Component {
 
   /**
    * Сохраняю полученные данные из Django REST и GraphQL в состояния.
-   * Распределяю данные по категориям и сортирую.
+   * Мутирую данные, распределяю по категориям, сортирую...
    * @param data {array} Полученные данные.
    */
   setAllData(data) {
@@ -564,10 +565,35 @@ export class GeneralApp extends React.Component {
     // Уникальные пользователи
     const users = uniqueUsersIds.map(userId => {
       const {userProjects, userTodos, ...rest} = usersSet.find(
-        user => user.id === userId
+        user => {
+          if (user.id === userId) {
+            // Сразу, при сборке данных привожу даты в нужный формат
+            user.birthdate = dateFormat(user.birthdate, "fullDate");
+            user.updated = dateFormat(
+              user.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+            );
+            user.dateJoined = dateFormat(
+              user.dateJoined, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+            );
+            user.lastLogin = dateFormat(
+              user.lastLogin, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+            )
+            return true
+          }
+          return false
+        }
       );
       // Собираю заметки
-      todos.push(...userTodos);
+      todos.push(...userTodos.map(todo => {
+        // Сразу, при сборке данных привожу даты в нужный формат
+        todo.created = dateFormat(
+          todo.created, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+        );
+        todo.updated = dateFormat(
+          todo.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+        );
+        return todo
+      }));
       // Собираю проекты
       projects.push(...userProjects);
       // Возвращаю чистых пользователей
@@ -582,7 +608,20 @@ export class GeneralApp extends React.Component {
     const uniqueProjectsIds = [...new Set(projects.map(project => project.id))];
     // Уникальные проекты
     projects = uniqueProjectsIds
-      .map(id => projects.find(project => project.id === id));
+      .map(id => projects.find(project => {
+        if (project.id === id) {
+          // Сразу, при сборке данных привожу дату в нужный формат
+          project.created = dateFormat(
+            project.created, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+          );
+          // Сразу, при сборке данных привожу дату в нужный формат
+          project.updated = dateFormat(
+            project.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT"
+          );
+          return true
+        }
+        return false
+      }));
     // Сортировка проектов по дате обновления
     projects.sort((a, b) =>
       new Date(b.created) - new Date(a.created)

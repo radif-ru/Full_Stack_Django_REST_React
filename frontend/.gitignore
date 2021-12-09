@@ -1,69 +1,23 @@
-# IntellijIdea files
-**/.idea
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# Карты сгенерированные препроцессорами (в моём случае Sass)
-**/*css.map
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
 
-# Генерируемые PyTest данные
-**/.coverage
+# testing
+/coverage
 
-# Celery
-**/celerybeat-schedule.bak
-**/celerybeat-schedule.dat
-**/celerybeat-schedule.dir
+# production
+/build
 
-# Собранные с помощью collect_static статические файлы
-**/staticfiles/
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-**/mediafiles/
-
-# Переменные окружения, секреты
-**/local_settings
-**/local_settings.py
-#**/.env
-#**/.env.dev
-#**/.env.def.db
-#**/.env.prod
-#**/.env.prod.db
-
-# Нод модули во всех каталогах
-**/node_modules
-
-# Компоненты Bower
-**/bower_components/
-
-# Дополнительно:
-**/dist
-**.DS_Store
-**/*.pyc
-**/.vs/
-**/.vscode
-
-# Кэши сасс файлов и пайчарма
-**/.sass-cache
-**/__pycache__
-
-# Базы данных
-**/db.sqlite3
-#**/*.db
-
-# Миграции. Исключить все, внутри папки, кроме файла __init__.py
-!**/migrations/__init__.py
-**/migrations/**
-
-# Логи от Silenium
-**/geckodriver.log
-
-# Локальные файлы, использовались для секретов, но теперь они вне проекта
-**/local__*
-
-# Виртуальное окружение проекта
-**/env
-**/venv
-**/virtualenv
-**/environment
-**/virtual_environment
-**/venv_3_8
-**/venv38
-**/venv_3_9
-**/venv39
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

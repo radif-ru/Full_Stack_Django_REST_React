@@ -2,8 +2,8 @@ import "./Users.css"
 
 import {PureComponent} from "react";
 
-import dateFormat from "dateformat";
 import {UserForm} from "./UserForm";
+
 
 /**
  * Компонент данных пользователя
@@ -32,7 +32,8 @@ export class UserData extends PureComponent {
 
     const {
       user, roles, editUser, setNotification, getNotification, isAuthenticated,
-    login, admin} = this.props;
+      login, admin
+    } = this.props;
     const {visible} = this.state;
 
     const noData = "нет данных!";
@@ -66,10 +67,7 @@ export class UserData extends PureComponent {
           <div>
             <span>Дата рождения: </span>
             <span className="user-data">
-              {user.birthdate
-                ? dateFormat(user.birthdate, "fullDate")
-                : noData
-              }
+              {user.birthdate ? user.birthdate : noData}
           </span>
           </div>
           <div>
@@ -83,29 +81,17 @@ export class UserData extends PureComponent {
           </div>
           <div>
             <span>Зарегистрировался(-ась): </span>
-            <span className="user-data">
-              {dateFormat(
-                user.dateJoined, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-              )}
-          </span>
+            <span className="user-data">{user.dateJoined}</span>
           </div>
           <div>
             <span>Последний раз заходил(-а): </span>
-            <span className="user-data">
-              {dateFormat(
-                user.lastLogin, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-              )}
-          </span>
+            <span className="user-data">{user.lastLogin}</span>
           </div>
           <div>
             <span>Данные обновлены: </span>
             <span className="user-data user-data-updated">
-                {user.updated !== user.dateJoined
-                  ? dateFormat(
-                    user.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-                  )
-                  : <span>---</span>}
-          </span>
+                {user.updated !== user.dateJoined ? user.updated : "---"}
+            </span>
           </div>
         </div>
         }

@@ -12,6 +12,7 @@ import ReactDOM from "react-dom";
 import reportWebVitals from "./reportWebVitals";
 import {GeneralApp} from "./GeneralApp";
 
+
 /**
  * Корень развёртывания приложения. Подключение главного компонента
  * к элементу найденному по id root
