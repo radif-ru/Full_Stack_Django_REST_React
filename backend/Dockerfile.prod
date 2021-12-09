@@ -22,7 +22,7 @@ COPY ./requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir $APP_HOME/wheels -r requirements.txt
 
 
-FROM python:3.10-slim
+FROM builder
 
 ARG HOME
 ARG APP_HOME

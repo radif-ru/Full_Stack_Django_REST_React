@@ -88,7 +88,7 @@ services:
     depends_on:
       - nginx
     volumes:
-      - frontend_volume:/var/www
+      - ./frontend/build:/var/www/frontend
       - /etc/letsencrypt:/etc/letsencrypt
 #      - ./frontend.nginx.cond:/etc/nginx/nginx.conf
     networks:
@@ -96,12 +96,12 @@ services:
 
 volumes:
   postgres_data:
+    name: postgres_data
   static:
   static_volume:
     name: static_volume
   media_volume:
     name: media_volume
-  frontend_volume:
 
 networks:
   my_network:
