@@ -35,6 +35,12 @@ export class GeneralApp extends React.Component {
     super(props);
     this.state = {
       "domain": "https://backend.radif.ru",
+      "swaggerEndpoint": "/swagger/",
+      "swaggerJsonEndpoint": "/swagger.json/",
+      "swaggerYamlEndpoint": "/swagger.yaml/",
+      "reDocEndpoint": "/redoc/",
+      "RESTAPIEndpoint": "/api/",
+      "adminEndpoint": "administration",
 
       "rolesEndpoint": "/api/roles/",
       "usersEndpoint": "/api/users/",
@@ -773,7 +779,11 @@ export class GeneralApp extends React.Component {
    * @returns {JSX.Element}
    */
   render() {
-    const {roles, users, projects, todos, login, admin} = this.state;
+    const {
+      roles, users, projects, todos, login, admin, domain, swaggerEndpoint,
+      swaggerJsonEndpoint, swaggerYamlEndpoint, reDocEndpoint, RESTAPIEndpoint,
+      graphQLEndpoint, tokenEndpoint, tokenRefreshEndpoint, adminEndpoint
+    } = this.state;
 
     return (
       <BrowserRouter>
@@ -893,7 +903,18 @@ export class GeneralApp extends React.Component {
             </Routes>
           </div>
         </div>
-        <Footer/>
+        <Footer
+          domain={domain}
+          swaggerEndpoint={swaggerEndpoint}
+          swaggerJsonEndpoint={swaggerJsonEndpoint}
+          swaggerYamlEndpoint={swaggerYamlEndpoint}
+          redocEndpoint={reDocEndpoint}
+          RESTAPIEndpoint={RESTAPIEndpoint}
+          graphQLEndpoint={graphQLEndpoint}
+          tokenEndpoint={tokenEndpoint}
+          tokenRefreshEndpoint={tokenRefreshEndpoint}
+          adminEndpoint={adminEndpoint}
+        />
       </BrowserRouter>
     )
   }

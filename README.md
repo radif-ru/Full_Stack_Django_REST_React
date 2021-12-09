@@ -1,4 +1,6 @@
 # Full Stack разработка. 
+> ### [https://backend.radif.ru/ ](https://backend.radif.ru/)
+> ### [https://frontend.radif.ru/](https://frontend.radif.ru/)
 ## Django REST framework. React. OpenAPI. GraphQL. JWT.
 ### Проект «Web-сервис для работы с TODO-заметками».
 
