@@ -44,6 +44,7 @@ services:
       - static:/home/app/backend/static
       - static_volume:/home/app/backend/staticfiles
       - media_volume:/home/app/backend/mediafiles
+    # Зависимость от сервиса db - где запущен PostgreSQL
     depends_on:
       - db
     # Доступен для внутренней сети, но недоступен для наружней
@@ -53,6 +54,7 @@ services:
       - ./.env.prod
     networks:
       - my_network
+# Тут Nginx - балансировщик нагрузки для обработки множества запросов на сервер
   nginx:
     restart: always
     build:

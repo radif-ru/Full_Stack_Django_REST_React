@@ -44,6 +44,7 @@ services:
       - static:/home/app/backend/static
       - static_volume:/home/app/backend/staticfiles
       - media_volume:/home/app/backend/mediafiles
+      - tmp:/home/app/backend/tmp
     depends_on:
       - db
     # Доступен для внутренней сети, но недоступен для наружней
@@ -53,6 +54,7 @@ services:
       - ./.env.dev
     networks:
       - my_network
+# Тут Nginx - балансировщик нагрузки для обработки множества запросов на сервер
   nginx:
     restart: always
     build:
@@ -102,6 +104,7 @@ volumes:
     name: static_volume
   media_volume:
     name: media_volume
+  tmp:
 
 networks:
   my_network:

@@ -21,8 +21,8 @@ RUN flake8 --ignore=E501,F401 .
 COPY ./requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir $APP_HOME/wheels -r requirements.txt
 
-
 FROM builder
+# Вместо builder (alias на образ выше) можно указать другой образ
 
 ARG HOME
 ARG APP_HOME
