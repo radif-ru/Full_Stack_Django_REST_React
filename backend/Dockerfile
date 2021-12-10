@@ -12,9 +12,9 @@ RUN mkdir -p $HOME
 
 RUN adduser --system --group app
 
-RUN mkdir $APP_HOME
-RUN mkdir $STATIC_FILES
-RUN mkdir $MEDIA_FILES
+RUN mkdir -p $APP_HOME
+RUN mkdir -p $STATIC_FILES
+RUN mkdir -p $MEDIA_FILES
 
 WORKDIR $APP_HOME
 

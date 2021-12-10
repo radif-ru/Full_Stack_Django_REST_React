@@ -32,5 +32,5 @@ class Command(BaseCommand):
     @staticmethod
     def collect_static():
         """Сборка стандартных и подготовленных статических файлов"""
-        os.system('mkdir static')
+        os.system('mkdir -p static')
         os.system('python manage.py collectstatic --no-input --clear')
