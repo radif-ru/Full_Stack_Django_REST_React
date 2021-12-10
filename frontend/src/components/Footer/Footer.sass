@@ -1,18 +1,47 @@
 @import "variables"
+@import "../../assets/variables"
 
 // Стилизация футера
 
-.App-logo
-  height: 40vmin
-  pointer-events: none
+.footer
+  //flex: 0 0 auto
+  text-align: center
+  background: #061f26
+  width: $width-site
+  //margin-bottom: $footer-margin-bottom
+  margin: 0 auto
 
   position: fixed
-  width: 80%
-  display: flex
+  bottom: 0
   justify-content: center
+  padding-bottom: 10px
+
+
+//.footer-modal
+//  position: fixed
+//  display: flex
+//  align-items: center
+//  justify-content: center
+//  top: 0
+//  left: 0
+//  width: calc(100vw - 16px)
+//  height: 100vh
+//  // Включить возможность клика по фону
+//  pointer-events: none
+
+.App-logo
+  position: absolute
+  height: 400px
+  pointer-events: none
+  width: 550px
+  display: inline-block
+  justify-content: center
+  text-align: center
   z-index: 1000
-  bottom: 15px
   opacity: 0.6
+  bottom: 50px
+  margin: 0 auto
+  left: 303px
 
 @media (prefers-reduced-motion: no-preference)
   .App-logo
@@ -29,7 +58,3 @@
   z-index: 1001
   text-decoration: none
 
-.footer
-  flex: 0 0 auto
-  text-align: center
-  margin-bottom: $footer-margin-bottom

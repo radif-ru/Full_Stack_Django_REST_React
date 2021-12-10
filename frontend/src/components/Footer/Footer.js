@@ -111,7 +111,9 @@ export class Footer extends PureComponent {
           &copy; 2021 &reg;Radif.ru
         </a>
         <br/>
-        <img src={logo} className="App-logo" alt="logo"/>
+        <div className="footer-modal">
+          <img src={logo} className="App-logo" alt="logo"/>
+        </div>
       </footer>
     )
   }

@@ -144,24 +144,24 @@ code {
 html,
 body {
   height: 100%;
-  background: lightgrey;
 }
 
 body {
   overflow-y: scroll;
+  background: #d7e0e1;
+  min-width: 1140px;
 }
 
 .wrapper, #root {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
-  width: 80%;
   position: relative;
-  margin: 0 auto;
-  background: #ffffff;
 }
 .wrapper .content, #root .content {
   flex: 1 0 auto;
+  width: 1140px;
+  margin: 0 auto 99px auto;
+  background: #eaeeea;
 }
 .wrapper .content .main-content, #root .content .main-content {
   margin: 55px 2% 0 2%;

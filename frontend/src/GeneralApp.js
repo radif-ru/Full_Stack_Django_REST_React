@@ -20,6 +20,11 @@ import {ProjectPage} from "./components/Projects/ProjectPage";
 import {LoginForm} from "./components/Authorization";
 import {UserForm} from "./components/Users/UserForm";
 import dateFormat from "dateformat";
+import {i18n} from "dateformat";
+import {getMyDateFormat} from "./scripts/getMyDateFormat";
+
+// Меняю форматирование даты на свой кастомный язык
+getMyDateFormat(dateFormat, i18n)
 
 
 /**
@@ -36,12 +41,14 @@ export class GeneralApp extends React.Component {
     this.state = {
       "domain": "https://backend.radif.ru",
       "swaggerEndpoint": "/swagger/",
-      "swaggerJsonEndpoint": "/swagger.json/",
-      "swaggerYamlEndpoint": "/swagger.yaml/",
+      "swaggerJsonEndpoint": "/swagger.json",
+      "swaggerYamlEndpoint": "/swagger.yaml",
       "reDocEndpoint": "/redoc/",
       "RESTAPIEndpoint": "/api/",
-      "adminEndpoint": "administration",
+      "adminEndpoint": "/administration/",
 
+      // Включены вложенные объекты данных, для получения данных без
+      // вложенности есть много других endpoint-ов, подробнее в OpenAPI проекта
       "rolesEndpoint": "/api/roles/",
       "usersEndpoint": "/api/users/",
       "projectsEndpoint": "/api/projects/",
@@ -354,7 +361,11 @@ export class GeneralApp extends React.Component {
         "users": users.map(user =>
           // Замена обновлённых данных и даты обновления с помощью фичи ES6
           user.id === id
-            ? {...user, ...newUser, updated: new Date()}
+            ? {
+              ...user, ...newUser, updated: dateFormat(
+                new Date(), "dddd, d mmmm, yyyy года, h:MM:ss tt"
+              )
+            }
             : user
         )
       },
@@ -382,7 +393,11 @@ export class GeneralApp extends React.Component {
         "projects": projects.map(project =>
           // Замена обновлённых данных и даты обновления с помощью фичи ES6
           project.id === id
-            ? {...project, ...newProject, updated: new Date()}
+            ? {
+              ...project, ...newProject, updated: dateFormat(
+                new Date(), "dddd, d mmmm, yyyy года, h:MM:ss tt"
+              )
+            }
             : project
         )
       },
@@ -411,7 +426,11 @@ export class GeneralApp extends React.Component {
         "todos": todos.map(todo =>
           // Замена обновлённых данных и даты обновления с помощью фичи ES6
           todo.id === id
-            ? {...todo, ...newTodo, updated: new Date()}
+            ? {
+              ...todo, ...newTodo, updated: dateFormat(
+                new Date(), "dddd, d mmmm, yyyy года, h:MM:ss tt"
+              )
+            }
             : todo
         )
       },
@@ -574,16 +593,15 @@ export class GeneralApp extends React.Component {
         user => {
           if (user.id === userId) {
             // Сразу, при сборке данных привожу даты в нужный формат
-            user.birthdate = dateFormat(user.birthdate, "fullDate");
-            user.updated = dateFormat(
-              user.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-            );
-            user.dateJoined = dateFormat(
-              user.dateJoined, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-            );
-            user.lastLogin = dateFormat(
-              user.lastLogin, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-            )
+            user.updated = user.updated ? dateFormat(
+              user.updated, "dddd, d mmmm, yyyy года, h:MM:ss tt"
+            ) : null;
+            user.dateJoined = user.dateJoined ? dateFormat(
+              user.dateJoined, "dddd, d mmmm, yyyy года, h:MM:ss tt"
+            ) : null;
+            user.lastLogin = user.lastLogin ? dateFormat(
+              user.lastLogin, "dddd, d mmmm, yyyy года, h:MM:ss tt"
+            ) : null;
             return true
           }
           return false
@@ -592,12 +610,12 @@ export class GeneralApp extends React.Component {
       // Собираю заметки
       todos.push(...userTodos.map(todo => {
         // Сразу, при сборке данных привожу даты в нужный формат
-        todo.created = dateFormat(
-          todo.created, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-        );
-        todo.updated = dateFormat(
-          todo.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-        );
+        todo.created = todo.created ? dateFormat(
+          todo.created, "dddd, d mmmm, yyyy года, h:MM:ss tt"
+        ) : null;
+        todo.updated = todo.updated ? dateFormat(
+          todo.updated, "dddd, d mmmm, yyyy года, h:MM:ss tt"
+        ) : null;
         return todo
       }));
       // Собираю проекты
@@ -617,13 +635,13 @@ export class GeneralApp extends React.Component {
       .map(id => projects.find(project => {
         if (project.id === id) {
           // Сразу, при сборке данных привожу дату в нужный формат
-          project.created = dateFormat(
-            project.created, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-          );
+          project.created = project.created ? dateFormat(
+            project.created, "dddd, d mmmm, yyyy года, h:MM:ss tt"
+          ) : null;
           // Сразу, при сборке данных привожу дату в нужный формат
-          project.updated = dateFormat(
-            project.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-          );
+          project.updated = project.updated ? dateFormat(
+            project.updated, "dddd, d mmmm, yyyy года, h:MM:ss tt"
+          ) : null;
           return true
         }
         return false
@@ -902,19 +920,19 @@ export class GeneralApp extends React.Component {
               <Route path="*" element={<NotFound404/>}/>
             </Routes>
           </div>
+          <Footer
+            domain={domain}
+            swaggerEndpoint={swaggerEndpoint}
+            swaggerJsonEndpoint={swaggerJsonEndpoint}
+            swaggerYamlEndpoint={swaggerYamlEndpoint}
+            reDocEndpoint={reDocEndpoint}
+            RESTAPIEndpoint={RESTAPIEndpoint}
+            graphQLEndpoint={graphQLEndpoint}
+            tokenEndpoint={tokenEndpoint}
+            tokenRefreshEndpoint={tokenRefreshEndpoint}
+            adminEndpoint={adminEndpoint}
+          />
         </div>
-        <Footer
-          domain={domain}
-          swaggerEndpoint={swaggerEndpoint}
-          swaggerJsonEndpoint={swaggerJsonEndpoint}
-          swaggerYamlEndpoint={swaggerYamlEndpoint}
-          redocEndpoint={reDocEndpoint}
-          RESTAPIEndpoint={RESTAPIEndpoint}
-          graphQLEndpoint={graphQLEndpoint}
-          tokenEndpoint={tokenEndpoint}
-          tokenRefreshEndpoint={tokenRefreshEndpoint}
-          adminEndpoint={adminEndpoint}
-        />
       </BrowserRouter>
     )
   }

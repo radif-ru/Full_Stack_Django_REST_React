@@ -3,6 +3,7 @@ import "./Users.css"
 import {PureComponent} from "react";
 
 import {UserForm} from "./UserForm";
+import dateFormat from "dateformat";
 
 
 /**
@@ -67,7 +68,9 @@ export class UserData extends PureComponent {
           <div>
             <span>Дата рождения: </span>
             <span className="user-data">
-              {user.birthdate ? user.birthdate : noData}
+              {user.birthdate
+                ? dateFormat(user.birthdate, "dddd, d mmmm, yyyy года")
+                : noData}
           </span>
           </div>
           <div>

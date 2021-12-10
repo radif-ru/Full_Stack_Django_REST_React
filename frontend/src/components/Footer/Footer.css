@@ -1,13 +1,27 @@
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.footer {
+  text-align: center;
+  background: #061f26;
+  width: 1140px;
+  margin: 0 auto;
   position: fixed;
-  width: 80%;
-  display: flex;
+  bottom: 0;
   justify-content: center;
+  padding-bottom: 10px;
+}
+
+.App-logo {
+  position: absolute;
+  height: 400px;
+  pointer-events: none;
+  width: 550px;
+  display: inline-block;
+  justify-content: center;
+  text-align: center;
   z-index: 1000;
-  bottom: 15px;
   opacity: 0.6;
+  bottom: 50px;
+  margin: 0 auto;
+  left: 303px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -27,12 +41,6 @@
   color: #61dafb;
   z-index: 1001;
   text-decoration: none;
-}
-
-.footer {
-  flex: 0 0 auto;
-  text-align: center;
-  margin-bottom: 10px;
 }
 
 /*# sourceMappingURL=Footer.css.map */
