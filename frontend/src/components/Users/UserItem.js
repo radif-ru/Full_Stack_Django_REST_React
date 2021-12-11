@@ -1,5 +1,6 @@
 import {PureComponent} from "react";
 import {Link} from "react-router-dom";
+import dateFormat from "dateformat";
 
 
 /**
@@ -29,7 +30,7 @@ export class UserItem extends PureComponent {
           {user.email}
         </td>
         <td>
-          {user.birthdate}
+          {user.birthdate && dateFormat(user.birthdate, "dddd, d mmmm, yyyy года")}
         </td>
         <td>
           {user.roles.map(
