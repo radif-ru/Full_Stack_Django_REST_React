@@ -3,6 +3,7 @@ from django.db import models
 
 
 class PermissionGroups(models.Model):
+    """Модель групп разрешений - ролей"""
     role = models.CharField(verbose_name='роль', max_length=33, null=False,
                             unique=True)
 
@@ -39,3 +40,17 @@ class User(AbstractUser):
         verbose_name_plural = 'Пользователи'
         ordering = ['is_active', '-date_joined', 'last_name', 'first_name',
                     'middle_name', 'birthdate']
+
+
+class HitCount(models.Model):
+    """Модель подсчёта количества посещений страниц"""
+    url = models.CharField(max_length=256, verbose_name='адрес страницы',
+                           primary_key=True)
+    hits = models.IntegerField(verbose_name='количество просмотров', default=1)
+
+    def __str__(self):
+        return f'{self.url} {self.hits}'
+
+    class Meta:
+        verbose_name = 'Количество просмотров страницы'
+        verbose_name_plural = 'Количество просмотров страниц'
