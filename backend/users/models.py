@@ -42,15 +42,20 @@ class User(AbstractUser):
                     'middle_name', 'birthdate']
 
 
-class HitCount(models.Model):
+class PageVisits(models.Model):
     """Модель подсчёта количества посещений страниц"""
-    url = models.CharField(max_length=256, verbose_name='адрес страницы',
-                           primary_key=True)
-    hits = models.IntegerField(verbose_name='количество просмотров', default=1)
+    url = models.CharField(max_length=256, verbose_name='адрес страницы')
+    hits = models.IntegerField(verbose_name='количество посещений', default=1)
+    user = models.ForeignKey(
+        User, verbose_name='пользователь', on_delete=models.CASCADE, null=True)
+    updated = models.DateTimeField(verbose_name='дата обновления',
+                                   auto_now=True, null=True, blank=True)
 
     def __str__(self):
-        return f'{self.url} {self.hits}'
+        return f'url {self.url} | hits {self.hits} | user {self.user} | upd ' \
+               f'{self.updated}'
 
     class Meta:
-        verbose_name = 'Количество просмотров страницы'
-        verbose_name_plural = 'Количество просмотров страниц'
+        verbose_name = 'Количество посещений страницы'
+        verbose_name_plural = 'Количество посещений страниц'
+        unique_together = ('url', 'user')

@@ -1,7 +1,7 @@
-from users.models import HitCount
+from users.models import PageVisits
 
 
-class PatchCountMiddleware:
+class PageVisitsMiddleware:
     """Подсчёт количества посещений страниц"""
 
     def __init__(self, get_response):
@@ -9,7 +9,13 @@ class PatchCountMiddleware:
 
     def __call__(self, request):
         """Увеличение количества посещений страниц и сохранение в БД"""
-        hc, created = HitCount.objects.get_or_create(url=request.path)
+        if request.user.is_authenticated:
+            hc, created = PageVisits.objects.get_or_create(
+                url=request.path, user=request.user)
+            hc.user = request.user
+        else:
+            hc, created = PageVisits.objects.get_or_create(url=request.path,
+                                                           user=None)
         hc.hits += 1
         hc.save()
         response = self.get_response(request)

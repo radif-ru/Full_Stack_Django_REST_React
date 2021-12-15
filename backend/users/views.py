@@ -12,11 +12,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .filters import UserFilter
 from .mixins import UserDestroyMixin
-from .models import User, PermissionGroups
+from .models import User, PermissionGroups, PageVisits
 from .paginators import UserLimitOffsetPagination
 from .permissions import UserPermission
 from .serializers import UserModelSerializer, UserModelSerializerGet, \
-    PermissionGroupsSerializer, PermissionGroupsSerializerGet
+    PermissionGroupsSerializer, PermissionGroupsSerializerGet, \
+    PageVisitsSerializer
 
 
 # Понятное дело, что можно использовать просто ModelViewSet
@@ -119,3 +120,9 @@ class PermissionGroupsModelViewSet(ListModelMixin, RetrieveModelMixin,
         roles = PermissionGroups.objects.all()
         serializer = PermissionGroupsSerializer(roles, many=True)
         return Response(serializer.data)
+
+
+class PageVisitsViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+    """Набор представлений для модели подсчёта посещений страниц"""
+    serializer_class = PageVisitsSerializer
+    queryset = PageVisits.objects.all()

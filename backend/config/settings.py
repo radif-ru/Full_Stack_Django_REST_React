@@ -77,7 +77,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # Подключаю свой middleware для подсчёта количества посещений страниц
-    'users.middleware.PatchCountMiddleware',
+    'users.middleware.PageVisitsMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'

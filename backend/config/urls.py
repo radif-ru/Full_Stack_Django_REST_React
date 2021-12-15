@@ -13,7 +13,8 @@ from rest_framework_simplejwt.views import TokenRefreshView, \
 # from config.settings import DEBUG
 from projects.views import ProjectModelViewSet
 from todos.views import TodoModelViewSet
-from users.views import UserModelViewSet, PermissionGroupsModelViewSet
+from users.views import UserModelViewSet, PermissionGroupsModelViewSet, \
+    PageVisitsViewSet
 
 # Swagger - инструменты для реализации OpenAPI. Авто-генерация документации API
 schema_view = get_schema_view(
@@ -36,6 +37,7 @@ router.register('users', UserModelViewSet)
 router.register('projects', ProjectModelViewSet, basename='projects')
 router.register('todos', TodoModelViewSet)
 router.register('roles', PermissionGroupsModelViewSet)
+router.register('visits', PageVisitsViewSet)
 
 urlpatterns = [
     path('administration/', admin.site.urls),

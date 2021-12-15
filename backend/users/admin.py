@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import User, PermissionGroups, HitCount
+from .models import User, PermissionGroups, PageVisits
 
 admin.site.register(User)
 admin.site.register(PermissionGroups)
-admin.site.register(HitCount)
+admin.site.register(PageVisits)
