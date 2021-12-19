@@ -15,7 +15,7 @@ export class ProjectsList extends PureComponent {
 
     return (
       <div>
-        <h3>Projects</h3>
+        <h3>Проекты</h3>
         <table className="table">
           <thead>
           <tr>

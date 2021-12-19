@@ -84,11 +84,11 @@ export class UserData extends PureComponent {
           </div>
           <div>
             <span>Зарегистрировался(-ась): </span>
-            <span className="user-data">{user.dateJoined}</span>
+            <span className="user-data">{user.dateJoined || "---"}</span>
           </div>
           <div>
             <span>Последний раз заходил(-а): </span>
-            <span className="user-data">{user.lastLogin}</span>
+            <span className="user-data">{user.lastLogin || "---"}</span>
           </div>
           <div>
             <span>Данные обновлены: </span>

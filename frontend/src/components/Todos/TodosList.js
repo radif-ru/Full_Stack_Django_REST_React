@@ -17,7 +17,7 @@ export class TodosList extends PureComponent {
 
     return (
       <div>
-        <h3>Todos</h3>
+        <h3>Заметки</h3>
         <table className="table">
           <thead>
           <tr>
