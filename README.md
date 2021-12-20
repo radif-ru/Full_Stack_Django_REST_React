@@ -21,7 +21,7 @@
 > 
 > [https://frontend.radif.ru/](https://frontend.radif.ru/) - `Fronted` - клиент
 
-## Django REST framework. React. JWT. OpenAPI. Swagger. ReDoc. GraphQL. Docker Compose. Gunicorn. Nginx. Linux. VPS-сервер.
+## Django REST framework. React. JWT. OpenAPI. Swagger. ReDoc. GraphQL. AsyncIO. Aiohttp. Contextvars. Docker Compose. Gunicorn. Nginx. Linux. VPS-сервер.
 ### Проект «Web-сервис для работы с TODO-заметками».
 
 > В проекте нет упора на вёрстку или стили - при желании делаю `Pixel Perfect` под любой дизайн, работаю с `препроцессорами`, `переменными`, `миксинами`, `расширениями` для стилей и т.д...
@@ -60,7 +60,16 @@
 > 
 > `gunicorn` (v. 20.1.0) - `HTTP`-сервер с интерфейсом шлюза веб-сервера `Python` (`WSGI`).
 > 
-> `AsyncIO` - библиотека для асинхронного программирования
+> `asyncio` - встроенная библиотека для асинхронного программирования
+> 
+> `aiohttp` (v. 3.8.1) - тянет за собой `aiosignal` (v. 1.2.0), `async-timeout` (v. 4.0.2),
+> `frozenlist` (v. 1.2.0), `multidict` (v. 5.2.0), `yarl` (v. 1.7.2), `attrs` (v. 21.2.0),
+> Библиотека aiohttp предоставляет асинхронный `HTTP`-клиент, построенный поверх `asyncio`. 
+> Эта библиотека позволяет отправлять запросы последовательно, но 
+> не дожидаясь первого ответа, прежде чем отправлять новый.
+> 
+> `contextvars` - встроенный модуль - предоставляет `API`-интерфейсы для управления, 
+> хранения и доступа к локальному контексту состояния.
 
 #### Внутри docker-compose используются образы для контейнеров из докер хаба:
 
@@ -268,6 +277,8 @@
 
 #### Extra Actions:
 
+> https://backend.radif.ru/api/todos/async_fish_todos - `GET`, `HEAD`, `OPTIONS` - Получить сгенерированные Рыба-тексты, асинхронно загруженные с помощью `asyncio` и `aiohttp`, через `API` https://fish-text.ru/api
+> 
 > https://backend.radif.ru/api/todos/active - `GET`, `HEAD`, `OPTIONS` - Получить все активные заметки без вложенных объектов
 > 
 > https://backend.radif.ru/api/todos/inactive - `GET`, `HEAD`, `OPTIONS` - Получить все неактивные заметки без вложенных объектов

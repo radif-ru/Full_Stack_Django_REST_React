@@ -11,6 +11,7 @@ from .models import Todo
 from .paginators import TodoLimitOffsetPagination
 from .permissions import TodoPermission
 from .serializers import TodoModelSerializer, TodoModelSerializerGet
+from asyncioAiohttp import get_fish_texts
 
 
 class TodoModelViewSet(TodoDestroyMixin, ModelViewSet):
@@ -49,3 +50,9 @@ class TodoModelViewSet(TodoDestroyMixin, ModelViewSet):
         todos = Todo.objects.filter(is_active=0)
         serializer = TodoModelSerializer(todos, many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=['GET'])
+    def async_fish_todos(self, request):
+        """Асинхронное (asyncio, aiohttp) получение и вывод Рыба-текстов"""
+        fish_todos = get_fish_texts()
+        return Response(fish_todos)
