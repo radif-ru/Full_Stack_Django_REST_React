@@ -20,6 +20,9 @@ class ImageModelViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin,
     def get_serializer_class(self):
         """ Добавление изображения """
         if self.request.method in ['POST']:
+            if self.action == 'resize':
+                # Сериализатор для изменения размера изображения
+                return ImageModelResizeSerializer
             return ImageModelSerializerPost
         return ImageModelSerializer
 
@@ -28,6 +31,24 @@ class ImageModelViewSet(ListModelMixin, RetrieveModelMixin, CreateModelMixin,
         """ Изменение размера изображения """
         image = get_object_or_404(Image, pk=pk)
         serializer = ImageModelResizeSerializer(image, data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.create(image=image, data=request.data)
-        return Response(status=status.HTTP_201_CREATED)
+        if serializer.is_valid(raise_exception=True):
+            serializer.create(image=image, data=request.data)
+            get_serializer = ImageModelSerializer(serializer.instance)
+            return Response(get_serializer.data,
+                            status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
+
+    def create(self, request, *args, **kwargs):
+        """ Добавление изображения """
+        self.serializer_class = ImageModelSerializer
+        serializer = ImageModelSerializerPost(data=request.data)
+        if serializer.is_valid():
+            save_serializer = serializer.save()
+            get_serializer = ImageModelSerializer(save_serializer)
+            return Response(get_serializer.data,
+                            status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)

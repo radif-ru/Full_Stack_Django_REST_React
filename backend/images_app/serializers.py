@@ -18,10 +18,12 @@ class ImageModelSerializer(serializers.ModelSerializer):
     height = serializers.SerializerMethodField()
 
     def get_width(self, obj):
+        """ Получение ширины изображения """
         if obj.picture:
             return obj.picture.width
 
     def get_height(self, obj):
+        """ Получение высоты изображения """
         if obj.picture:
             return obj.picture.height
 
@@ -46,13 +48,13 @@ class ImageModelSerializerPost(serializers.ModelSerializer):
         if image.url:
             if not image.name:
                 image.name = image.url.split('/')[-1]
-            picture_name = image.name
+            picture_name = image.url.split('/')[-1]
             picture_url = f'{MEDIA_ROOT}/{IMAGES_UPLOAD_DIRECTORY}/' \
-                          f'{image.name}'
+                          f'{picture_name}'
             while os.path.exists(picture_url):
-                picture_name = f'{"".join(image.name.split(".")[:-1])}_' \
+                picture_name = f'{"".join(picture_name.split(".")[:-1])}_' \
                                f'{str(uuid.uuid4())[-7:]}' \
-                               f'.{image.name.split(".")[-1]}'
+                               f'.{picture_name.split(".")[-1]}'
                 picture_url = f'{MEDIA_ROOT}/{IMAGES_UPLOAD_DIRECTORY}/' \
                               f'{picture_name}'
             resp = requests.get(image.url)
@@ -135,10 +137,13 @@ class ImageModelResizeSerializer(serializers.ModelSerializer):
         resize_image.save(picture_url)
 
         image.name = image_name
+        # Делаю копию текущего объекта в родительское поле, так как ниже
+        # происходит замена первичного ключа
         image.parent_picture = copy(image)
         image.picture = f'{IMAGES_UPLOAD_DIRECTORY}/{picture_name}'
 
         image.url = None
+        # None - для получения нового первичного ключа
         image.pk = None
         image.save()
         return image

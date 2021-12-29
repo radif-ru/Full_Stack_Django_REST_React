@@ -13,3 +13,5 @@ def image_delete(sender, instance, **kwargs) -> None:
         os.remove(instance.picture.path)
     except FileNotFoundError:
         print('Файл не найден')
+    except Exception as error:
+        print(f'Ошибка: {error}')
