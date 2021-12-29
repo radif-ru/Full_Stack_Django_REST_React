@@ -102,11 +102,9 @@ urlpatterns = [
     # path('api/projects/2.0/', include('projects.urls', namespace='2.0')),
 ]
 
+# Для доступа к media файлам
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:
-    # Для доступа к media файлам в режиме разработчика
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
-
     # Debug Toolbar. Инструменты разработчика
     import debug_toolbar
 

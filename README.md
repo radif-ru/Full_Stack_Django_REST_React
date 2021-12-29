@@ -468,7 +468,9 @@
 
 > `docker image ls -a && docker container ls -a && docker volume ls && docker network ls` - Посмотреть все образы/контейнеры/тома/сети
 
-> `docker exec -it <CONTAINER ID> bash` или `docker exec -it <CONTAINER ID> sh` и т.д. - Зайти в работающий контейнер 
+> `docker exec -it <CONTAINER ID or NAME> bash` или `docker exec -it <CONTAINER ID or NAME> sh` и т.д. - Зайти в работающий контейнер 
+
+> `docker stop $(docker ps -aq)` - Остановить контейнеры
 
 > `docker-compose down` или `docker-compose -f docker-compose.prod.yml down` - Остановить запущенные контейнеры и сети
 

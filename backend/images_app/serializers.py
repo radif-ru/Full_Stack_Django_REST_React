@@ -1,15 +1,14 @@
 import os
+import uuid
 from copy import copy
+from io import BytesIO
 
 import requests
+from PIL import Image as PilImage
 from requests.exceptions import SSLError
 from rest_framework import serializers
 
 from config.settings import MEDIA_ROOT, IMAGES_UPLOAD_DIRECTORY
-from PIL import Image as PilImage
-from io import BytesIO
-import uuid
-
 from .models import Image
 
 
@@ -121,10 +120,10 @@ class ImageModelResizeSerializer(serializers.ModelSerializer):
         image = kwargs['image']
 
         pil_image = PilImage.open(image.picture)
-        height = int('height' in kwargs['data'] and kwargs['data']['height']
-                     or image.picture.height)
-        width = int('width' in kwargs['data'] and kwargs['data']['width']
-                    or image.picture.width)
+        height = int('height' in kwargs['data'] and kwargs['data'][
+            'height'] or image.picture.height)
+        width = int('width' in kwargs['data'] and kwargs['data'][
+            'width'] or image.picture.width)
 
         resize_image = pil_image.resize((width, height))
 
