@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'projects.apps.ProjectsConfig',
     'todos.apps.TodosConfig',
+    "images_app.apps.ImagesAppConfig"
 ]
 
 MIDDLEWARE = [
@@ -195,6 +196,7 @@ STATICFILES_DIRS = (
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+IMAGES_UPLOAD_DIRECTORY = 'upload_images'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -414,7 +416,20 @@ GRAPHENE = {
     'SCHEMA': 'config.schema.schema',
 }
 
+
+# Debug Toolbar. Инструменты разработчика
+def show_toolbar_callback(_):
+    return DEBUG
+
+
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": "config.settings.show_toolbar_callback"}
+
 if DEBUG:
+    # Debug Toolbar. Инструменты разработчика
+    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
+    INSTALLED_APPS.extend(("debug_toolbar",))
+
     # Логирование
     LOGGING = {
         'version': 1,

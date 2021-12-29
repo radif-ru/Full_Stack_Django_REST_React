@@ -40,6 +40,7 @@ services:
         APP_HOME: /home/app/backend
         STATIC_FILES: /home/app/backend/staticfiles
         MEDIA_FILES: /home/app/backend/mediafiles
+        UPLOAD_IMAGES: /home/app/backend/mediafiles/upload_images
     volumes:
       - static:/home/app/backend/static
       - static_volume:/home/app/backend/staticfiles

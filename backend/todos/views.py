@@ -11,7 +11,7 @@ from .models import Todo
 from .paginators import TodoLimitOffsetPagination
 from .permissions import TodoPermission
 from .serializers import TodoModelSerializer, TodoModelSerializerGet
-from asyncioAiohttp import get_fish_texts
+from todos.asyncioAiohttp import get_fish_texts
 
 
 class TodoModelViewSet(TodoDestroyMixin, ModelViewSet):
