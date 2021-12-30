@@ -22,6 +22,7 @@ import {UserForm} from "./components/Users/UserForm";
 import dateFormat from "dateformat";
 import {i18n} from "dateformat";
 import {getMyDateFormat} from "./scripts/getMyDateFormat";
+import {AsyncioAiohttp} from "./components/AsyncioAiohttp";
 
 // Меняю форматирование даты на свой кастомный язык
 getMyDateFormat(dateFormat, i18n)
@@ -53,6 +54,8 @@ export class GeneralApp extends React.Component {
       "usersEndpoint": "/api/users/",
       "projectsEndpoint": "/api/projects/",
       "todosEndpoint": "/api/todos/",
+      "imagesEndpoint": "/api/images/",
+      "asyncioAiohttpEndpoint": "/api/todos/async_fish_todos/",
 
       "graphQLEndpoint": "/graphql/",
 
@@ -482,7 +485,10 @@ export class GeneralApp extends React.Component {
    */
   async getDataREST(
     domain = "http://localhost:3333",
-    endpoint, limit = 100, offset = 0) {
+    endpoint,
+    limit = 100,
+    offset = 0
+  ) {
 
     const headers = this.getHeaders();
     await axios.get(
@@ -505,7 +511,11 @@ export class GeneralApp extends React.Component {
    * @const headers {object} Заголовки
    * @returns {Promise<void>}
    */
-  async getDataGraphQL(domain, graphQLEndpoint, queryGraphQL) {
+  async getDataGraphQL(
+    domain,
+    graphQLEndpoint,
+    queryGraphQL
+  ) {
     const headers = this.getHeaders();
     await axios.post(
       `${domain}${graphQLEndpoint}`,
@@ -800,7 +810,8 @@ export class GeneralApp extends React.Component {
     const {
       roles, users, projects, todos, login, admin, domain, swaggerEndpoint,
       swaggerJsonEndpoint, swaggerYamlEndpoint, reDocEndpoint, RESTAPIEndpoint,
-      graphQLEndpoint, tokenEndpoint, tokenRefreshEndpoint, adminEndpoint
+      graphQLEndpoint, tokenEndpoint, tokenRefreshEndpoint, adminEndpoint,
+      asyncioAiohttpEndpoint, limit, offset
     } = this.state;
 
     return (
@@ -916,6 +927,23 @@ export class GeneralApp extends React.Component {
                   />
                 }
               />
+              <Route
+                exact
+                path="asyncio-aiohttp"
+                element={
+                  <AsyncioAiohttp
+                    domain={domain}
+                    asyncioAiohttpEndpoint={asyncioAiohttpEndpoint}
+                    limit={limit}
+                    offset={offset}
+                    getHeaders={() => this.getHeaders()}
+                    handleErrors={
+                      (error, text) => this.handleErrors(error, text)
+                    }
+                  />
+                }
+              />
+
               <Route exact path="/" element={<Navigate to="/todos"/>}/>
               <Route path="*" element={<NotFound404/>}/>
             </Routes>

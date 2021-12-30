@@ -29,6 +29,11 @@ const Menu = (props) => {
         <li>
           <Link className="menu-link" to="/todos">Заметки</Link>
         </li>
+        <li>
+          <Link className="menu-link" to="/asyncio-aiohttp">
+            AsyncIO/Aiohttp
+          </Link>
+        </li>
         {isAuthenticated() && user &&
         <li>
           <Link
