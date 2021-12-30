@@ -34,6 +34,11 @@ const Menu = (props) => {
             AsyncIO/Aiohttp
           </Link>
         </li>
+        <li>
+          <Link className="menu-link" to="/upload-images">
+            Upload Images
+          </Link>
+        </li>
         {isAuthenticated() && user &&
         <li>
           <Link

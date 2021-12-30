@@ -23,6 +23,7 @@ import dateFormat from "dateformat";
 import {i18n} from "dateformat";
 import {getMyDateFormat} from "./scripts/getMyDateFormat";
 import {AsyncioAiohttp} from "./components/AsyncioAiohttp";
+import {UploadImages} from "./components/UploadImages";
 
 // Меняю форматирование даты на свой кастомный язык
 getMyDateFormat(dateFormat, i18n)
@@ -54,8 +55,9 @@ export class GeneralApp extends React.Component {
       "usersEndpoint": "/api/users/",
       "projectsEndpoint": "/api/projects/",
       "todosEndpoint": "/api/todos/",
-      "imagesEndpoint": "/api/images/",
+
       "asyncioAiohttpEndpoint": "/api/todos/async_fish_todos/",
+      "uploadImagesEndpoint": "/api/images/",
 
       "graphQLEndpoint": "/graphql/",
 
@@ -811,7 +813,7 @@ export class GeneralApp extends React.Component {
       roles, users, projects, todos, login, admin, domain, swaggerEndpoint,
       swaggerJsonEndpoint, swaggerYamlEndpoint, reDocEndpoint, RESTAPIEndpoint,
       graphQLEndpoint, tokenEndpoint, tokenRefreshEndpoint, adminEndpoint,
-      asyncioAiohttpEndpoint, limit, offset
+      asyncioAiohttpEndpoint, limit, offset, uploadImagesEndpoint
     } = this.state;
 
     return (
@@ -934,6 +936,22 @@ export class GeneralApp extends React.Component {
                   <AsyncioAiohttp
                     domain={domain}
                     asyncioAiohttpEndpoint={asyncioAiohttpEndpoint}
+                    limit={limit}
+                    offset={offset}
+                    getHeaders={() => this.getHeaders()}
+                    handleErrors={
+                      (error, text) => this.handleErrors(error, text)
+                    }
+                  />
+                }
+              />
+              <Route
+                exact
+                path="upload-images"
+                element={
+                  <UploadImages
+                    domain={domain}
+                    uploadImagesEndpoint={uploadImagesEndpoint}
                     limit={limit}
                     offset={offset}
                     getHeaders={() => this.getHeaders()}

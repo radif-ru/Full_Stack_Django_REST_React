@@ -1,0 +1,19 @@
+.images-title {
+  color: #cc25d3;
+}
+.images-name {
+  color: rebeccapurple;
+  font-weight: bold;
+}
+.images-el {
+  color: #105b8a;
+}
+.images-parrent {
+  color: darkred;
+  font-weight: bold;
+}
+.images-img {
+  max-width: 1040px;
+}
+
+/*# sourceMappingURL=UploadImages.css.map */
