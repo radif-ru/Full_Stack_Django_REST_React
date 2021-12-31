@@ -157,3 +157,11 @@ class ImageModelResizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = ('height', 'width')
+
+
+class ImageModelUpdateSerializer(serializers.ModelSerializer):
+    """ Сериализация модели Изображений для изменения данных """
+
+    class Meta:
+        model = Image
+        fields = ('name', )

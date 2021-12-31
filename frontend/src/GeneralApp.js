@@ -58,6 +58,7 @@ export class GeneralApp extends React.Component {
 
       "asyncioAiohttpEndpoint": "/api/todos/async_fish_todos/",
       "uploadImagesEndpoint": "/api/images/",
+      "imageResizeEndpoint": "/resize/",
 
       "graphQLEndpoint": "/graphql/",
 
@@ -813,7 +814,8 @@ export class GeneralApp extends React.Component {
       roles, users, projects, todos, login, admin, domain, swaggerEndpoint,
       swaggerJsonEndpoint, swaggerYamlEndpoint, reDocEndpoint, RESTAPIEndpoint,
       graphQLEndpoint, tokenEndpoint, tokenRefreshEndpoint, adminEndpoint,
-      asyncioAiohttpEndpoint, limit, offset, uploadImagesEndpoint
+      asyncioAiohttpEndpoint, limit, offset, uploadImagesEndpoint,
+      imageResizeEndpoint
     } = this.state;
 
     return (
@@ -958,6 +960,8 @@ export class GeneralApp extends React.Component {
                     handleErrors={
                       (error, text) => this.handleErrors(error, text)
                     }
+                    isAuthenticated={() => this.isAuthenticated()}
+                    imageResizeEndpoint={imageResizeEndpoint}
                   />
                 }
               />

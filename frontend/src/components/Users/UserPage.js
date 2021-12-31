@@ -71,7 +71,6 @@ export const UserPage = (props) => {
               createProject={createProject}
             />
           </div>
-
         }
 
         <h3 className="user-title">Проекты пользователя: </h3>
