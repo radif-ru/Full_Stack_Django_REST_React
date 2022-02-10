@@ -24,7 +24,7 @@ class Command(BaseCommand):
         roles_id список id существующих ролей в БД группы зависимостей
         """
         try:
-            if not User.objects.filter(username='radif'):
+            if not User.objects.exists(username='radif'):
                 roles_id = [r_id['id'] for r_id in
                             PermissionGroups.objects.all().values('id')]
                 User.objects.create_superuser(
@@ -53,7 +53,7 @@ class Command(BaseCommand):
         for user in users:
             rand_roles_id = {*random.choices(roles_id, k=quantity_roles)}
             try:
-                if not User.objects.filter(username=user['name']):
+                if not User.objects.exists(username=user['name']):
                     User.objects.create_user(
                         username=user['name'],
                         first_name=user['first_name'],
