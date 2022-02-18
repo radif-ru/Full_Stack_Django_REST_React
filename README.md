@@ -21,14 +21,13 @@
 > 
 > [https://frontend.radif.ru/](https://frontend.radif.ru/) - `Fronted` - клиент
 
-## Django REST framework. React. JWT. OpenAPI. Swagger. ReDoc. GraphQL. AsyncIO. Aiohttp. Contextvars. Docker Compose. Gunicorn. Nginx. Linux. VPS-сервер.
-### Проект «Web-сервис для работы с TODO-заметками».
+## Django REST framework. React. JWT. OpenAPI. Swagger. ReDoc. GraphQL. AsyncIO. Aiohttp. Contextvars. Cookies. Docker Compose. Gunicorn. Nginx. Linux. VPS-сервер и т.д.
 
 > В проекте нет упора на вёрстку или стили - при желании делаю `Pixel Perfect` под любой дизайн, работаю с `препроцессорами`, `переменными`, `миксинами`, `расширениями` для стилей и т.д...
 
 > Главное - освоение новых технологий, функциональность, производительность, обеспечение безопасности, целостности данных, оптимизация запросов к БД, взаимодействие `Backend` (серверной части) и `Frontend` (клиентской части) и т.д.
 
-## Стек технологий
+## Подробный стек технологий, версии:
 
 ### Библиотеки на основе Python 3.10
 

@@ -27,7 +27,7 @@ async def get_fish_text(num: int) -> None:
             TextsList.set(texts_list)
 
 
-async def main(quantity=33) -> None:
+async def main(quantity: int = 33) -> None:
     """Создание асинхронных задач и обработка результатов выполнения"""
     await asyncio.gather(*(get_fish_text(num) for num in range(1, quantity)))
 
