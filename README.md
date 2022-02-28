@@ -442,11 +442,16 @@
 > 10. `sudo update-grub` - и вручную обновить конфигурацию `grub`.
 > 
 
-#### Получение сертификатов
+#### Получение Let's Encrypt сертификатов
 
-> `sudo certbot certonly --dry-run --standalone -d frontend.radif.ru -d backend.radif.ru -d django.radif.ru -d intergalactic.radif.ru -d radif.ru` - Проверка возможности получения, возможные ошибки. Делается так как существует ограничение на выдачу сертификатов и лучше сначала проверить команду
+> `docker container stop 7ff82ed6e6a5 d266589c0e18 6decb775db24` - Временно останавливаю контейнеры с сервисами, использующими порты 80 и 443. Если бы использовалась монолитная архитектура с Nginx или Apache на основной системе, то необходимо было бы остановить их
 > 
-> `sudo certbot certonly --standalone -d frontend.radif.ru -d backend.radif.ru -d django.radif.ru -d intergalactic.radif.ru -d radif.ru` - Получение сертификатов `--standalone` - позволяет получить быстро, без доп манипуляций с конфигами `nginx`
+> `sudo certbot certonly --dry-run --standalone -d frontend.radif.ru -d backend.radif.ru -d django.radif.ru -d intergalactic.radif.ru -d radif.ru -d pro-gidroizolyaciya.ru` - Проверка возможности получения, возможные ошибки. Делается так как существует ограничение на выдачу сертификатов и лучше сначала проверить команду
+> 
+> `sudo certbot certonly --standalone -d frontend.radif.ru -d backend.radif.ru -d django.radif.ru -d intergalactic.radif.ru -d radif.ru -d pro-gidroizolyaciya.ru` - Получение сертификатов `--standalone` - позволяет получить быстро, без доп манипуляций с конфигами `nginx`
+>
+> `docker container start 7ff82ed6e6a5 d266589c0e18 6decb775db24` - Запускаю приостановленные контейнеры
+>
 
 ### Консольные команды Git:
 
