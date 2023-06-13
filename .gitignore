@@ -34,7 +34,7 @@
 **/bower_components/
 
 # Код для продакшн
-**/build
+#**/build
 
 # Дополнительно:
 **/dist
