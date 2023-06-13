@@ -19,6 +19,14 @@ import {UserPage} from "./components/Users/UserPage";
 import {ProjectPage} from "./components/Projects/ProjectPage";
 import {LoginForm} from "./components/Authorization";
 import {UserForm} from "./components/Users/UserForm";
+import dateFormat from "dateformat";
+import {i18n} from "dateformat";
+import {getMyDateFormat} from "./scripts/getMyDateFormat";
+import {AsyncioAiohttp} from "./components/AsyncioAiohttp";
+import {UploadImages} from "./components/UploadImages";
+
+// Меняю форматирование даты на свой кастомный язык
+getMyDateFormat(dateFormat, i18n)
 
 
 /**
@@ -33,19 +41,31 @@ export class GeneralApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      "domain": "http://127.0.0.1:3333",
+      "domain": "https://backend.radif.ru",
+      "swaggerEndpoint": "/swagger/",
+      "swaggerJsonEndpoint": "/swagger.json",
+      "swaggerYamlEndpoint": "/swagger.yaml",
+      "reDocEndpoint": "/redoc/",
+      "RESTAPIEndpoint": "/api/",
+      "adminEndpoint": "/administration/",
 
+      // Включены вложенные объекты данных, для получения данных без
+      // вложенности есть много других endpoint-ов, подробнее в OpenAPI проекта
       "rolesEndpoint": "/api/roles/",
       "usersEndpoint": "/api/users/",
       "projectsEndpoint": "/api/projects/",
       "todosEndpoint": "/api/todos/",
+
+      "asyncioAiohttpEndpoint": "/api/todos/async_fish_todos/",
+      "uploadImagesEndpoint": "/api/images/",
+      "imageResizeEndpoint": "/resize/",
 
       "graphQLEndpoint": "/graphql/",
 
       "tokenEndpoint": "/api/token/",
       "tokenRefreshEndpoint": "/api/token/refresh/",
 
-      "limit": 1000,
+      "limit": 999,
       "offset": 0,
 
       "roles": [],
@@ -347,7 +367,11 @@ export class GeneralApp extends React.Component {
         "users": users.map(user =>
           // Замена обновлённых данных и даты обновления с помощью фичи ES6
           user.id === id
-            ? {...user, ...newUser, updated: new Date()}
+            ? {
+              ...user, ...newUser, updated: dateFormat(
+                new Date(), "dddd, d mmmm, yyyy года, h:MM:ss tt"
+              )
+            }
             : user
         )
       },
@@ -375,7 +399,11 @@ export class GeneralApp extends React.Component {
         "projects": projects.map(project =>
           // Замена обновлённых данных и даты обновления с помощью фичи ES6
           project.id === id
-            ? {...project, ...newProject, updated: new Date()}
+            ? {
+              ...project, ...newProject, updated: dateFormat(
+                new Date(), "dddd, d mmmm, yyyy года, h:MM:ss tt"
+              )
+            }
             : project
         )
       },
@@ -404,7 +432,11 @@ export class GeneralApp extends React.Component {
         "todos": todos.map(todo =>
           // Замена обновлённых данных и даты обновления с помощью фичи ES6
           todo.id === id
-            ? {...todo, ...newTodo, updated: new Date()}
+            ? {
+              ...todo, ...newTodo, updated: dateFormat(
+                new Date(), "dddd, d mmmm, yyyy года, h:MM:ss tt"
+              )
+            }
             : todo
         )
       },
@@ -456,7 +488,10 @@ export class GeneralApp extends React.Component {
    */
   async getDataREST(
     domain = "http://localhost:3333",
-    endpoint, limit = 100, offset = 0) {
+    endpoint,
+    limit = 100,
+    offset = 0
+  ) {
 
     const headers = this.getHeaders();
     await axios.get(
@@ -479,7 +514,11 @@ export class GeneralApp extends React.Component {
    * @const headers {object} Заголовки
    * @returns {Promise<void>}
    */
-  async getDataGraphQL(domain, graphQLEndpoint, queryGraphQL) {
+  async getDataGraphQL(
+    domain,
+    graphQLEndpoint,
+    queryGraphQL
+  ) {
     const headers = this.getHeaders();
     await axios.post(
       `${domain}${graphQLEndpoint}`,
@@ -544,7 +583,7 @@ export class GeneralApp extends React.Component {
 
   /**
    * Сохраняю полученные данные из Django REST и GraphQL в состояния.
-   * Распределяю данные по категориям и сортирую.
+   * Мутирую данные, распределяю по категориям, сортирую...
    * @param data {array} Полученные данные.
    */
   setAllData(data) {
@@ -559,11 +598,39 @@ export class GeneralApp extends React.Component {
       return role.roleUsers;
     })
       .reduce((arr1, arr2) => [...arr1, ...arr2], ...[])
-
-    const users = usersSet.map(user => {
-      const {userProjects, userTodos, ...rest} = user;
+    // Уникальные id пользователей
+    const uniqueUsersIds = [...new Set(usersSet.map(project => project.id))];
+    // Уникальные пользователи
+    const users = uniqueUsersIds.map(userId => {
+      const {userProjects, userTodos, ...rest} = usersSet.find(
+        user => {
+          if (user.id === userId) {
+            // Сразу, при сборке данных привожу даты в нужный формат
+            user.updated = user.updated ? dateFormat(
+              user.updated, "dddd, d mmmm, yyyy года, h:MM:ss tt"
+            ) : null;
+            user.dateJoined = user.dateJoined ? dateFormat(
+              user.dateJoined, "dddd, d mmmm, yyyy года, h:MM:ss tt"
+            ) : null;
+            user.lastLogin = user.lastLogin ? dateFormat(
+              user.lastLogin, "dddd, d mmmm, yyyy года, h:MM:ss tt"
+            ) : null;
+            return true
+          }
+          return false
+        }
+      );
       // Собираю заметки
-      todos.push(...userTodos);
+      todos.push(...userTodos.map(todo => {
+        // Сразу, при сборке данных привожу даты в нужный формат
+        todo.created = todo.created ? dateFormat(
+          todo.created, "dddd, d mmmm, yyyy года, h:MM:ss tt"
+        ) : null;
+        todo.updated = todo.updated ? dateFormat(
+          todo.updated, "dddd, d mmmm, yyyy года, h:MM:ss tt"
+        ) : null;
+        return todo
+      }));
       // Собираю проекты
       projects.push(...userProjects);
       // Возвращаю чистых пользователей
@@ -575,10 +642,23 @@ export class GeneralApp extends React.Component {
     )
 
     // Уникальные id проектов
-    const uniqueIds = [...new Set(projects.map(project => project.id))];
+    const uniqueProjectsIds = [...new Set(projects.map(project => project.id))];
     // Уникальные проекты
-    projects = uniqueIds
-      .map(id => projects.find(project => project.id === id));
+    projects = uniqueProjectsIds
+      .map(id => projects.find(project => {
+        if (project.id === id) {
+          // Сразу, при сборке данных привожу дату в нужный формат
+          project.created = project.created ? dateFormat(
+            project.created, "dddd, d mmmm, yyyy года, h:MM:ss tt"
+          ) : null;
+          // Сразу, при сборке данных привожу дату в нужный формат
+          project.updated = project.updated ? dateFormat(
+            project.updated, "dddd, d mmmm, yyyy года, h:MM:ss tt"
+          ) : null;
+          return true
+        }
+        return false
+      }));
     // Сортировка проектов по дате обновления
     projects.sort((a, b) =>
       new Date(b.created) - new Date(a.created)
@@ -643,7 +723,7 @@ export class GeneralApp extends React.Component {
       })
       .catch(error => {
           this.handleErrors(error, "createDataREST");
-          this.getAllData()
+          this.getAllData();
         }
       )
   }
@@ -730,7 +810,13 @@ export class GeneralApp extends React.Component {
    * @returns {JSX.Element}
    */
   render() {
-    const {roles, users, projects, todos, login, admin} = this.state;
+    const {
+      roles, users, projects, todos, login, admin, domain, swaggerEndpoint,
+      swaggerJsonEndpoint, swaggerYamlEndpoint, reDocEndpoint, RESTAPIEndpoint,
+      graphQLEndpoint, tokenEndpoint, tokenRefreshEndpoint, adminEndpoint,
+      asyncioAiohttpEndpoint, limit, offset, uploadImagesEndpoint,
+      imageResizeEndpoint
+    } = this.state;
 
     return (
       <BrowserRouter>
@@ -845,12 +931,58 @@ export class GeneralApp extends React.Component {
                   />
                 }
               />
+              <Route
+                exact
+                path="asyncio-aiohttp"
+                element={
+                  <AsyncioAiohttp
+                    domain={domain}
+                    asyncioAiohttpEndpoint={asyncioAiohttpEndpoint}
+                    limit={limit}
+                    offset={offset}
+                    getHeaders={() => this.getHeaders()}
+                    handleErrors={
+                      (error, text) => this.handleErrors(error, text)
+                    }
+                  />
+                }
+              />
+              <Route
+                exact
+                path="upload-images"
+                element={
+                  <UploadImages
+                    domain={domain}
+                    uploadImagesEndpoint={uploadImagesEndpoint}
+                    limit={limit}
+                    offset={offset}
+                    getHeaders={() => this.getHeaders()}
+                    handleErrors={
+                      (error, text) => this.handleErrors(error, text)
+                    }
+                    isAuthenticated={() => this.isAuthenticated()}
+                    imageResizeEndpoint={imageResizeEndpoint}
+                  />
+                }
+              />
+
               <Route exact path="/" element={<Navigate to="/todos"/>}/>
               <Route path="*" element={<NotFound404/>}/>
             </Routes>
           </div>
+          <Footer
+            domain={domain}
+            swaggerEndpoint={swaggerEndpoint}
+            swaggerJsonEndpoint={swaggerJsonEndpoint}
+            swaggerYamlEndpoint={swaggerYamlEndpoint}
+            reDocEndpoint={reDocEndpoint}
+            RESTAPIEndpoint={RESTAPIEndpoint}
+            graphQLEndpoint={graphQLEndpoint}
+            tokenEndpoint={tokenEndpoint}
+            tokenRefreshEndpoint={tokenRefreshEndpoint}
+            adminEndpoint={adminEndpoint}
+          />
         </div>
-        <Footer/>
       </BrowserRouter>
     )
   }

@@ -3,11 +3,12 @@ from rest_framework import serializers
 from projects.models import Project
 from todos.models import Todo
 from .decorators import is_young_serializer_validate_decorator
-from .models import User, PermissionGroups
+from .models import User, PermissionGroups, PageVisits
 
 
 class PermissionGroupsSerializer(serializers.ModelSerializer):
     """Сериализация модели ролей"""
+
     class Meta:
         model = PermissionGroups
         fields = '__all__'
@@ -103,3 +104,11 @@ class PermissionGroupsSerializerGet(PermissionGroupsSerializer):
     всех таблиц одним запросом.
     """
     role_users = UserModelSerializerGet(many=True)
+
+
+class PageVisitsSerializer(serializers.ModelSerializer):
+    """Сериализация модели подсчёта посещений страниц"""
+
+    class Meta:
+        model = PageVisits
+        fields = '__all__'

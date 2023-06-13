@@ -12,11 +12,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .filters import UserFilter
 from .mixins import UserDestroyMixin
-from .models import User, PermissionGroups
+from .models import User, PermissionGroups, PageVisits
 from .paginators import UserLimitOffsetPagination
 from .permissions import UserPermission
 from .serializers import UserModelSerializer, UserModelSerializerGet, \
-    PermissionGroupsSerializer, PermissionGroupsSerializerGet
+    PermissionGroupsSerializer, PermissionGroupsSerializerGet, \
+    PageVisitsSerializer
 
 
 # Понятное дело, что можно использовать просто ModelViewSet
@@ -62,20 +63,37 @@ class UserModelViewSet(UserDestroyMixin, ListModelMixin, RetrieveModelMixin,
     # Дополнительные Endpoint-ы
     @action(detail=False, methods=['GET'])
     def superusers(self, request):
+        """Получить администраторов Django"""
         users = User.objects.filter(is_superuser=1)
         serializer = UserModelSerializer(users, many=True)
         return Response(serializer.data)
 
     @action(detail=True, methods=['GET'])
     def login(self, request, pk=None):
+        """Узнать логин по идентификатору пользователя"""
         user = get_object_or_404(User, pk=pk)
         return Response({'login': user.username})
 
     @action(detail=True, methods=['GET'])
     def fio(self, request, pk=None):
+        """Получить ФИО по идентификатору пользователя"""
         user = get_object_or_404(User, pk=pk)
         return Response(
             {'fio': f'{user.first_name} {user.middle_name} {user.last_name}'})
+
+    @action(detail=False, methods=['GET'])
+    def active(self, request):
+        """Получить всех активных пользователей без вложенных объектов"""
+        users = User.objects.filter(is_active=1)
+        serializer = UserModelSerializer(users, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['GET'])
+    def inactive(self, request):
+        """Получить всех неактивных пользователей без вложенных объектов"""
+        users = User.objects.filter(is_active=0)
+        serializer = UserModelSerializer(users, many=True)
+        return Response(serializer.data)
 
 
 class PermissionGroupsModelViewSet(ListModelMixin, RetrieveModelMixin,
@@ -94,4 +112,17 @@ class PermissionGroupsModelViewSet(ListModelMixin, RetrieveModelMixin,
         """Если запрос Get используется соответственный сериализатор"""
         if self.request.method in ['GET']:
             return PermissionGroupsSerializerGet
-        return UserModelSerializer
+        return PermissionGroupsSerializer
+
+    @action(detail=False, methods=['GET'])
+    def only(self, request):
+        """Получить все роли без вложенных объектов"""
+        roles = PermissionGroups.objects.all()
+        serializer = PermissionGroupsSerializer(roles, many=True)
+        return Response(serializer.data)
+
+
+class PageVisitsViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+    """Набор представлений для модели подсчёта посещений страниц"""
+    serializer_class = PageVisitsSerializer
+    queryset = PageVisits.objects.all()

@@ -55,10 +55,22 @@ class Query(graphene.ObjectType):
                                        last_name=graphene.String())
 
     def resolve_all_roles(self, info):
-        """Поле. Префикс resolve_ - обязателен. all_users - имя поля.
+        """Поле. Префикс resolve_ - обязателен. all_roles - имя поля.
         Оптимизация для использования запроса со связанными полями.
         """
         return PermissionGroups.objects.prefetch_related(
+            Prefetch(
+                'role_users',
+                queryset=User.objects.filter(is_active=1)
+            ),
+            Prefetch(
+                'role_users__user_projects',
+                queryset=Project.objects.filter(is_active=1)
+            ),
+            Prefetch(
+                'role_users__user_todos',
+                queryset=Todo.objects.filter(is_active=1)
+            ),
             'role_users__user_todos__project',
             'role_users__user_projects__users',
             'role_users__roles',

@@ -3,7 +3,6 @@ import "./Projects.css"
 import {PureComponent} from "react";
 import {Link} from "react-router-dom";
 
-import dateFormat from "dateformat";
 import {ProjectForm} from "./ProjectForm";
 
 /**
@@ -107,9 +106,7 @@ export class ProjectData extends PureComponent {
         <p>
           <span>Проект создан: </span>
           <span className="project-data">
-              {dateFormat(
-                project.created, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-              )}
+              {project.created}
           </span>
         </p>
 
@@ -117,8 +114,7 @@ export class ProjectData extends PureComponent {
           <span>Проект обновлён: </span>
           <span className="project-data project-data-updated">
               {project.created !== project.updated
-                ? `${dateFormat(
-                  project.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}`
+                ? `${project.updated}`
                 : "---"
               }
           </span>

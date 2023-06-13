@@ -2,7 +2,6 @@ import "./Todos.css"
 
 import {PureComponent} from "react";
 import {Link} from "react-router-dom";
-import dateFormat from "dateformat";
 import {TodoForm} from "./TodoForm";
 
 
@@ -115,22 +114,13 @@ class TodosDataEl extends PureComponent {
             {projects.find(project => project.id === todo.project).name}
           </Link>
 
-          <span className="comment-datetime">
-            {dateFormat(
-              todo.created, "dddd, mmmm dS, yyyy, h:MM:ss TT"
-            )}
-            <span>. </span>
-          </span>
+          <span className="comment-datetime">{todo.created}. </span>
 
           <span className="comment-datetime">
             {todo.created !== todo.updated &&
-            <span className="comment-updated">
-              <span>Обновлено: </span>
-              {dateFormat(todo.updated, "dddd, mmmm dS, yyyy, h:MM:ss TT")}
-            </span>
-
-            }
+            <span className="comment-updated">Обновлено: {todo.updated}</span>}
           </span>
+
           {isAuthenticated() && (todo.user === user.id || admin) &&
           <div>
             <span className="btn btn-outline-danger">

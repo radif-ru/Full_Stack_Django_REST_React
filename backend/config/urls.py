@@ -1,3 +1,4 @@
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.decorators.csrf import csrf_exempt
@@ -6,14 +7,16 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from graphene_django.views import GraphQLView
 from rest_framework.permissions import AllowAny
-from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView, \
     TokenObtainPairView
 
-# from config.settings import DEBUG
+from config import settings
+from config.routers import router
+from images_app.views import ImageModelViewSet
 from projects.views import ProjectModelViewSet
 from todos.views import TodoModelViewSet
-from users.views import UserModelViewSet, PermissionGroupsModelViewSet
+from users.views import UserModelViewSet, PermissionGroupsModelViewSet, \
+    PageVisitsViewSet
 
 # Swagger - инструменты для реализации OpenAPI. Авто-генерация документации API
 schema_view = get_schema_view(
@@ -31,11 +34,12 @@ schema_view = get_schema_view(
 )
 
 # Роутер для авто-создания набора url-адресов (связь с id, get, set и т.д.)
-router = DefaultRouter()
 router.register('users', UserModelViewSet)
 router.register('projects', ProjectModelViewSet, basename='projects')
 router.register('todos', TodoModelViewSet)
 router.register('roles', PermissionGroupsModelViewSet)
+router.register('visits', PageVisitsViewSet)
+router.register('images', ImageModelViewSet)
 
 urlpatterns = [
     path('administration/', admin.site.urls),
@@ -58,6 +62,8 @@ urlpatterns = [
     # Swagger - Генерация документации API в HTML формате, в браузере
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0),
          name='schema-swagger-ui'),
+    path('', schema_view.with_ui('swagger', cache_timeout=0),
+         name='schema-swagger-ui'),
     # ReDoc - другое использование и отображение созданной спецификации
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0),
          name='schema-redoc'),
@@ -70,7 +76,7 @@ urlpatterns = [
     # Чтобы отключить в релизе - убрать запятую и разкомментить код ниже.
     # csrf_exempt - отключает проверку CSRF-токена для данного адреса
     path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=True))),
-    # if DEBUG
+    # if settings.DEBUG
     # else path("graphql/", csrf_exempt(GraphQLView.as_view(graphiql=False))),
 
     # Пути для запуска фронтенда на отладочном Django сервере
@@ -95,3 +101,13 @@ urlpatterns = [
     # path('api/projects/1.0/', include('projects.urls', namespace='1.0')),
     # path('api/projects/2.0/', include('projects.urls', namespace='2.0')),
 ]
+
+# Для доступа к media файлам
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    # Debug Toolbar. Инструменты разработчика
+    import debug_toolbar
+
+    urlpatterns = [
+        path("api/__debug__/", include(debug_toolbar.urls)),
+    ] + urlpatterns

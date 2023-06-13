@@ -32,8 +32,8 @@ DEBUG = int(os.environ.get('DEBUG', default=1))
 # Разрешённые хосты из настроек переменных окружения, иначе из default
 ALLOWED_HOSTS = os.environ.get(
     'DJANGO_ALLOWED_HOSTS',
-    default='localhost 127.0.0.1 [::1] backend frontend'
-).split(' ')
+    default='localhost 127.0.0.1 [::1] backend.radif.ru frontend.radif.ru '
+            'backend frontend').split(' ')
 
 # Application definition
 
@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'projects.apps.ProjectsConfig',
     'todos.apps.TodosConfig',
+    'images_app.apps.ImagesAppConfig',
 ]
 
 MIDDLEWARE = [
@@ -76,6 +77,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Подключаю свой middleware для подсчёта количества посещений страниц
+    'users.middleware.PageVisitsMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -83,25 +86,27 @@ ROOT_URLCONF = 'config.urls'
 # Настройка политики CORS - доступ с другого домена/порта
 # Работа с заголовками для доступа React к Django, разрешенные адреса
 # CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'http://0.0.0.0:3000',
-    'http://192.168.56.1:3000',
-
-    'http://localhost',
-    'http://127.0.0.1',
-    'http://0.0.0.0',
-
-    'http://localhost:80',
-    'http://127.0.0.1:80',
-    'http://0.0.0.0:80',
-
-    # Для запуска фронтенда на Django
-    'http://localhost:3333',
-    'http://127.0.0.1:3333',
-    'http://0.0.0.0:3333',
-]
+# Не даёт работать боевому серверу, по этому отключил. Обрабатываю в Nginx
+# CORS_ALLOWED_ORIGINS = [
+#     'https://frontend.radif.ru',
+#     'https://backend.radif.ru',
+#     'http://frontend.radif.ru',
+#     'http://backend.radif.ru',
+#
+#     'http://localhost:3000',
+#     'http://127.0.0.1:3000',
+#     'http://0.0.0.0:3000',
+#     'http://192.168.56.1:3000',
+#
+#     'http://localhost',
+#     'http://127.0.0.1',
+#     'http://0.0.0.0',
+#
+#     # Для запуска фронтенда на Django
+#     'http://localhost:3333',
+#     'http://127.0.0.1:3333',
+#     'http://0.0.0.0:3333',
+# ]
 
 TEMPLATES = [
     {
@@ -191,6 +196,7 @@ STATICFILES_DIRS = (
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+IMAGES_UPLOAD_DIRECTORY = 'upload_images'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -410,7 +416,20 @@ GRAPHENE = {
     'SCHEMA': 'config.schema.schema',
 }
 
+
+# Debug Toolbar. Инструменты разработчика
+def show_toolbar_callback(_):
+    return DEBUG
+
+
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": "config.settings.show_toolbar_callback"}
+
 if DEBUG:
+    # Debug Toolbar. Инструменты разработчика
+    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
+    INSTALLED_APPS.extend(("debug_toolbar",))
+
     # Логирование
     LOGGING = {
         'version': 1,

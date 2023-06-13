@@ -30,14 +30,14 @@ export class UserItem extends PureComponent {
           {user.email}
         </td>
         <td>
-          {user.birthdate && dateFormat(user.birthdate, "fullDate")}
+          {user.birthdate && dateFormat(user.birthdate, "dddd, d mmmm, yyyy года")}
         </td>
         <td>
           {user.roles.map(
-           (roleId, idx) =>
-             <span key={idx}>
+            (roleId, idx) =>
+              <span key={idx}>
                {roles.find(role => role.id === roleId).role}
-               <br/>
+                <br/>
              </span>
           )}
         </td>

@@ -1,3 +1,5 @@
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from djangorestframework_camel_case.render import CamelCaseJSONRenderer, \
@@ -37,3 +39,17 @@ class ProjectModelViewSet(ProjectDestroyMixin, ModelViewSet):
         if self.request.method in ['GET']:
             return ProjectModelSerializerGet
         return ProjectModelSerializer
+
+    @action(detail=False, methods=['GET'])
+    def active(self, request):
+        """Получить все активные проекты без вложенных объектов"""
+        projects = Project.objects.filter(is_active=1)
+        serializer = ProjectModelSerializer(projects, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['GET'])
+    def inactive(self, request):
+        """Получить все неактивные проекты без вложенных объектов"""
+        projects = Project.objects.filter(is_active=0)
+        serializer = ProjectModelSerializer(projects, many=True)
+        return Response(serializer.data)

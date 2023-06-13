@@ -9,6 +9,7 @@ services:
 #    ports:
 #      - "6379:6379"
   db:
+# Постоянная перезагрузка контейнера. Даже в случае остановки или рестарта ОС
     restart: always
     privileged: true
     build:
@@ -27,6 +28,8 @@ services:
       interval: 3s
       timeout: 3s
       retries: 9
+    networks:
+      - my_network
   backend:
     restart: always
     build:
@@ -37,10 +40,12 @@ services:
         APP_HOME: /home/app/backend
         STATIC_FILES: /home/app/backend/staticfiles
         MEDIA_FILES: /home/app/backend/mediafiles
+        UPLOAD_IMAGES: /home/app/backend/mediafiles/upload_images
     volumes:
       - static:/home/app/backend/static
       - static_volume:/home/app/backend/staticfiles
       - media_volume:/home/app/backend/mediafiles
+      - tmp:/home/app/backend/tmp
     depends_on:
       - db
     # Доступен для внутренней сети, но недоступен для наружней
@@ -48,6 +53,9 @@ services:
       - 3333
     env_file:
       - ./.env.dev
+    networks:
+      - my_network
+# Тут Nginx - балансировщик нагрузки для обработки множества запросов на сервер
   nginx:
     restart: always
     build:
@@ -56,27 +64,54 @@ services:
     depends_on:
       - backend
     ports:
-      # Бэкенд доступен на порту 3333
-      - "3333:80"
+# Бэкенд доступен на порту 222 и 333. Для доступа добавить к ip или домену
+# Но в главном контейнере, где стоит основной Nginx сервис раздаётся на
+# https://backend.radif.ru
+      - "222:80"
+      - "333:443"
     volumes:
       - static_volume:/home/app/backend/staticfiles
       - media_volume:/home/app/backend/mediafiles
+# Подключаю сертификаты, которые получил в центре сертификации - Let's Encrypt
+      - /etc/letsencrypt:/etc/letsencrypt
+#      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+    networks:
+      - my_network
   frontend:
     restart: always
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      # Фронтенд доступен на порту 80, то есть адрес по умолчанию
-      - "80:80"
+# Фронтенд доступен на порту 22222 и 33333. Для доступа добавить к ip или домену
+# Но в главном контейнере, где стоит основной Nginx сервис раздаётся на
+# https://frontend.radif.ru
+      - "22222:80"
+      - "33333:443"
     depends_on:
       - nginx
     volumes:
       - frontend_volume:/var/www
+      - /etc/letsencrypt:/etc/letsencrypt
+#      - ./frontend.nginx.cond:/etc/nginx/nginx.conf
+    networks:
+      - my_network
 
 volumes:
   postgres_data:
+    name: postgres_data
   static:
   static_volume:
+    name: static_volume
   media_volume:
-  frontend_volume:
+    name: media_volume
+  tmp:
+
+networks:
+  my_network:
+# Драйвер сети
+    driver: bridge
+# Имя сети
+    name: my_network
+# Подключение к внешней сети. Если её нет - необходимо создать!
+    external: true
