@@ -33,7 +33,7 @@ class Command(BaseCommand):
             for project in projects:
                 # Уникальное множество id из всех пользователей
                 rand_users_id = {*random.choices(users_id, k=quantity_users)}
-                if not project_objs.filter(name=project['name']):
+                if not project_objs.filter(name=project['name']).exists():
                     project_objs.create(
                         name=project['name'],
                         repository=project['repository']).users.add(
