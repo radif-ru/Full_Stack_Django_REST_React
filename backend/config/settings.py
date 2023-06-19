@@ -63,7 +63,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'projects.apps.ProjectsConfig',
     'todos.apps.TodosConfig',
-    "images_app.apps.ImagesAppConfig"
+    'images_app.apps.ImagesAppConfig',
 ]
 
 MIDDLEWARE = [

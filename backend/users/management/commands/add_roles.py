@@ -21,7 +21,7 @@ class Command(BaseCommand):
         try:
             permission_groups_objs = PermissionGroups.objects
             for role in roles:
-                if not permission_groups_objs.filter(role=role):
+                if not permission_groups_objs.filter(role=role).exists():
                     permission_groups_objs.create(role=role)
         except OperationalError or ProgrammingError as error:
             print(f'\n{error}\n')

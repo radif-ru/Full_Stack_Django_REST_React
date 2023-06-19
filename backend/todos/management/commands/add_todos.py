@@ -44,7 +44,7 @@ class Command(BaseCommand):
                 # Фильтрация AND, где одновременно выполняются 2 условия
                 # Отключил так как теперь в файле уникальные тексты
                 #     Q(text=todo['text']) & Q(user_id=todo['user_id'])):
-                if not todo_objs.filter(text=todo['text']):
+                if not todo_objs.filter(text=todo['text']).exists():
                     todo_objs.create(
                         user_id=rand_u_id, text=todo['text'],
                         project_id=rand_proj_id)
